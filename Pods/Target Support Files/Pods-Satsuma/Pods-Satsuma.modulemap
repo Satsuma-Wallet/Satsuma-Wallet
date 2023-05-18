@@ -1,0 +1,6 @@
+module Pods_Satsuma {
+  umbrella header "Pods-Satsuma-umbrella.h"
+
+  export *
+  module * { export * }
+}

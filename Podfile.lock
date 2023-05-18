@@ -1,0 +1,24 @@
+PODS:
+  - LibWally (0.0.1)
+
+DEPENDENCIES:
+  - LibWally (from `https://github.com/Sjors/LibWally-Swift.git`, tag `v0.0.9`)
+
+EXTERNAL SOURCES:
+  LibWally:
+    :git: https://github.com/Sjors/LibWally-Swift.git
+    :submodules: true
+    :tag: v0.0.9
+
+CHECKOUT OPTIONS:
+  LibWally:
+    :git: https://github.com/Sjors/LibWally-Swift.git
+    :submodules: true
+    :tag: v0.0.9
+
+SPEC CHECKSUMS:
+  LibWally: ce1e98813b64aa26b4cc3a92d3c7f57db97b2fb2
+
+PODFILE CHECKSUM: 0402da0035625a6215094d0ff8ff8f753e88bb6e
+
+COCOAPODS: 1.11.3
