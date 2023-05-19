@@ -8,6 +8,18 @@
 import Foundation
 import UIKit
 
+public extension UIViewController {
+    func showAlert(title: String, message: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { action in }))
+            alert.popoverPresentationController?.sourceView = self.view
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+}
+
 public extension Data {
     var utf8String:String? {
         return String(bytes: self, encoding: .utf8)
@@ -82,6 +94,11 @@ public extension String {
         guard data.count > 0 else { return nil }
         
         return data
+    }
+    
+    func random(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0...length-1).map{ _ in letters.randomElement()! })
     }
 }
 
