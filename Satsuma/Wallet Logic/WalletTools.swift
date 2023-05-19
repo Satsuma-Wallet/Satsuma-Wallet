@@ -48,17 +48,25 @@ class WalletTools {
                     return
                 }
                 
-                guard let recAddresses = self.addresses(wallet: Wallet(dict), coinType: self.coinType, change: 0),
-                      let changeAddresses = self.addresses(wallet: Wallet(dict), coinType: self.coinType, change: 1) else {
+                guard let recAddresses = self.addresses(wallet: Wallet(dict),
+                                                        coinType: self.coinType,
+                                                        change: 0),
+                      let changeAddresses = self.addresses(wallet: Wallet(dict),
+                                                           coinType: self.coinType,
+                                                           change: 1) else {
                     completion(("Address derivation failed.", false))
                     return
                 }
                 
                 for (i, recAddress) in recAddresses.enumerated() {
-                    self.saveAddress(dict: recAddress, entityName: .receiveAddr, completion: completion)
+                    self.saveAddress(dict: recAddress,
+                                     entityName: .receiveAddr,
+                                     completion: completion)
                     if i + 1 == recAddresses.count {
                         for (x, changeAddress) in changeAddresses.enumerated() {
-                            self.saveAddress(dict: changeAddress, entityName: .changeAddr, completion: completion)
+                            self.saveAddress(dict: changeAddress,
+                                             entityName: .changeAddr,
+                                             completion: completion)
                             if x + 1 == changeAddresses.count {
                                 completion((nil, true))
                             }
@@ -68,7 +76,7 @@ class WalletTools {
             }
         }
     }
-        
+    
     private func seedWords() -> String? {
         print("seedWords")
         /// Generate 32 bytes of cryptographically secure entropy with the secure element.
@@ -142,7 +150,7 @@ class WalletTools {
     
     /// Here we loop through our keypool to find any new utxos or detect consumed utxos.
     private func createUtxosFromAddresses(addresses: [[String:Any]],
-                                         completion: @escaping ((message: String?, success: Bool)) -> Void) {
+                                          completion: @escaping ((message: String?, success: Bool)) -> Void) {
         print("createUtxosFromAddresses")
         CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
             guard let self = self else { return }
@@ -165,15 +173,15 @@ class WalletTools {
             /// Converts the address dictionary from Core Data to an easy to use struct.
             let addr = Address_Cache(address)
             
-            /// The wallets current receive address index.
-            let receiveIndex = Int(wallet.receiveIndex)
+            /// Wallet receive address index.
+            let walletReceiveIndex = Int(wallet.receiveIndex)
             
-            /// The wallets current change address index.
-            let changeIndex = Int(wallet.changeIndex)
+            /// Wallet change address index.
+            let walletChangeIndex = Int(wallet.changeIndex)
             
             /// If the address in question has an index less then or equal to the wallet index we check it for utxos from mempool/esplora.
-            let shouldFetchReceive = !self.isChangeAddress(address: addr) && Int(addr.index) <= receiveIndex
-            let shouldFetchChange = self.isChangeAddress(address: addr) && Int(addr.index) <= changeIndex
+            let shouldFetchReceive = !self.isChangeAddress(address: addr) && Int(addr.index) <= walletReceiveIndex
+            let shouldFetchChange = self.isChangeAddress(address: addr) && Int(addr.index) <= walletChangeIndex
             
             if shouldFetchReceive || shouldFetchChange {
                 /// Fetch utxos from the API.
@@ -196,14 +204,25 @@ class WalletTools {
                         }
                     }
                     
-                    CoreDataService.retrieveEntity(entityName: .utxos) { existingUtxos in
-                        guard let existingUtxos = existingUtxos else {
+                    CoreDataService.retrieveEntity(entityName: .utxos) { existingUtxoDicts in
+                        guard let existingUtxoDicts = existingUtxoDicts else {
                             completion(("Utxo Core Data entity does not exist", false))
                             return
                         }
+                        var filteredUtxos:[[String:Any]] = []
                         
-                        if existingUtxos.count == 0 && fetchedUtxos.count > 0 {
-                            self.saveFetchedUtxos(fetchedUtxos: fetchedUtxos, address: addr, wallet: wallet) { (message, success) in
+                        for existingUtxoDict in existingUtxoDicts {
+                            let existingUtxo = Utxo_Cache(existingUtxoDict)
+                            if existingUtxo.address == addr.address {
+                                filteredUtxos.append(existingUtxoDict)
+                            }
+                        }
+                        
+                        if filteredUtxos.count == 0 && fetchedUtxos.count > 0 {
+                            print("filteredUtxos.count == 0 && fetchedUtxos.count > 0")
+                            self.saveFetchedUtxos(fetchedUtxos: fetchedUtxos,
+                                                  address: addr,
+                                                  wallet: wallet) { (message, success) in
                                 guard success else {
                                     completion((message, false))
                                     return
@@ -212,24 +231,97 @@ class WalletTools {
                             }
                         } else if fetchedUtxos.count == 0 {
                             // check local utxos here to delete any associated with that address
-                            print("check local utxos here to delete any associated with the address. Can probably delete the address from keypool too.")
-                            if existingUtxos.count == 0 {
+                            print("Check local utxos here to delete any associated with the address. Can probably delete the address from keypool too.")
+                            if filteredUtxos.count == 0  {
                                 finish()
                             } else {
-                                for (i, existingUtxo) in existingUtxos.enumerated() {
+                                for (i, existingUtxo) in filteredUtxos.enumerated() {
                                     let existingUtxo = Utxo_Cache(existingUtxo)
-                                    if existingUtxo.address == addr.address {
-                                        print("delete this utxo: \(existingUtxo.address)")
-                                        CoreDataService.deleteEntity(id: existingUtxo.id, entityName: .utxos) { deleted in
-                                            guard deleted else {
-                                                completion(("Failed deleting consumed utxo.", false))
-                                                return
-                                            }
-                                            if i + 1 == existingUtxos.count {
-                                                finish()
-                                            }
+                                    print("delete this utxo: \(existingUtxo.address)")
+                                    CoreDataService.deleteEntity(id: existingUtxo.id, entityName: .utxos) { deleted in
+                                        guard deleted else {
+                                            completion(("Failed deleting consumed utxo.", false))
+                                            return
                                         }
-                                    } else if i + 1 == existingUtxos.count {
+                                        if self.isChangeAddress(address: addr) && wallet.changeIndex > addr.index {
+                                            print("delete change address: \(addr.address)")
+                                            CoreDataService.deleteEntity(id: addr.id, entityName: .changeAddr) { deleted in
+                                                guard deleted else {
+                                                    completion(("Failed deleting used change address.", false))
+                                                    return
+                                                }
+                                                // add new change address to keypool here
+                                                CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddr in
+                                                    guard let changeAddr = changeAddr else { return }
+                                                    
+                                                    var maxInd = 0.0
+                                                    for changeAddr in changeAddr {
+                                                        let cA = Address_Cache(changeAddr)
+                                                        maxInd += cA.index
+                                                    }
+                                                    
+                                                    guard let newChangeAddress = self.address(wallet: wallet,
+                                                                                              isChange: 1,
+                                                                                              index: maxIndex + 1) else {
+                                                        completion(("Failed deriving a new change address.", false))
+                                                        return
+                                                    }
+                                                    
+                                                    CoreDataService.saveEntity(dict: newChangeAddress, entityName: .changeAddr) { saved in
+                                                        guard saved else {
+                                                            completion(("Failed saving new chamge address.", false))
+                                                            return
+                                                        }
+                                                        
+                                                        finish()
+                                                    }
+                                                }
+                                            }
+                                            
+                                        } else if wallet.receiveIndex > addr.index {
+                                            print("delete receive address: \(addr.address)")
+                                            CoreDataService.deleteEntity(id: addr.id, entityName: .receiveAddr) { deleted in
+                                                guard deleted else {
+                                                    completion(("Failed deleting used receive address.", false))
+                                                    return
+                                                }
+                                                
+                                                // add new receive address to keypool here
+                                                CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddr in
+                                                    guard let recAddr = recAddr else { return }
+                                                    
+                                                    var maxInd = 0.0
+                                                    for recAddr in recAddr {
+                                                        let rA = Address_Cache(recAddr)
+                                                        maxInd += rA.index
+                                                    }
+                                                    
+                                                    guard let newRecAddress = self.address(wallet: wallet,
+                                                                                           isChange: 0,
+                                                                                           index: maxIndex + 1) else {
+                                                        completion(("Failed deriving a new receive address.", false))
+                                                        return
+                                                    }
+                                                    
+                                                    CoreDataService.saveEntity(dict: newRecAddress, entityName: .receiveAddr) { saved in
+                                                        guard saved else {
+                                                            completion(("Failed saving new receive address.", false))
+                                                            return
+                                                        }
+                                                        
+                                                        finish()
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            finish()
+                                        }
+                                        
+                                        if i + 1 == filteredUtxos.count {
+                                            finish()
+                                        }
+                                    }
+                                    if i + 1 == filteredUtxos.count {
                                         finish()
                                     }
                                 }
@@ -238,13 +330,12 @@ class WalletTools {
                         } else {
                             // we have saved utxos and fetched utxos
                             // first check if it exists locally or not
-                            
                             for (f, fetchedUtxoDict) in fetchedUtxos.enumerated() {
                                 let fetchedUtxo = Utxo_Fetched(fetchedUtxoDict)
-                                                            
+                                
                                 var existsLocally = false
                                 
-                                for (i, existingUtxo) in existingUtxos.enumerated() {
+                                for (i, existingUtxo) in filteredUtxos.enumerated() {
                                     let existingUtxo = Utxo_Cache(existingUtxo)
                                     
                                     if existingUtxo.outpoint == fetchedUtxo.outpoint {
@@ -264,7 +355,7 @@ class WalletTools {
                                         }
                                     }
                                     
-                                    if i + 1 == existingUtxos.count {
+                                    if i + 1 == filteredUtxos.count {
                                         if !existsLocally {
                                             // save it
                                             print("Does not exist locally, save it.")
@@ -273,13 +364,11 @@ class WalletTools {
                                                     completion((message, false))
                                                     return
                                                 }
-                                                
                                                 if f + 1 == fetchedUtxos.count {
                                                     // loops have finished
                                                     finish()
                                                 }
                                             }
-                                            
                                         } else if f + 1 == fetchedUtxos.count {
                                             // loops have finished
                                             finish()
@@ -290,22 +379,19 @@ class WalletTools {
                         }
                     }
                 }
-                
-            /// If the current index matches the total number of addresses in our database then we know we are finished here.
+                /// If the current index matches the total number of addresses in our database then we know we are finished here.
             } else if self.currentIndex == maxIndex {
                 print("currentIndex == maxIndex")
                 self.currentIndex = 0
                 completion((nil, true))
-            
             } else {
                 /// If the current index is lower than the number of addresses in our database then we know we need to query the next address.
                 if self.currentIndex < maxIndex {
                     print("currentIndex < maxIndex")
                     self.currentIndex += 1
                     self.createUtxosFromAddresses(addresses: addresses, completion: completion)
-                    
-                /// If the current index matches the number of addresses in our database then we know we are finished here.
-                /// If any of the above were to fail we would never reach this point.
+                    /// If the current index matches the number of addresses in our database then we know we are finished here.
+                    /// If any of the above were to fail we would never reach this point.
                 } else {
                     self.currentIndex = 0
                     completion((nil, true))
@@ -474,7 +560,7 @@ class WalletTools {
     
     /// Fetches utxos we can use as inputs for a given amount we want to spend.
     private func utxosForInputs(btcAmountToSend: Double,
-                          completion: @escaping ((message: String?, utxos: [Utxo_Cache]?)) -> Void) {
+                                completion: @escaping ((message: String?, utxos: [Utxo_Cache]?)) -> Void) {
         print("getInputs")
         /// Fetches all of our saved utxos.
         CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
@@ -528,8 +614,8 @@ class WalletTools {
         print("addresses")
         // Decrypts the wallet's seed in order to get the root xprv.
         guard let decryptedSeed = Crypto.decrypt(wallet.mnemonic),
-                let words = decryptedSeed.utf8String,
-                let xpriv = masterKey(words: words, passphrase: "") else { return nil }
+              let words = decryptedSeed.utf8String,
+              let xpriv = masterKey(words: words, passphrase: "") else { return nil }
         
         // Derives the bip84 xpub from the wallets root xprv.
         guard let addrXpub = bip84AccountXpub(masterKey: xpriv, coinType: self.coinType, account: 0) else { return nil }
@@ -634,7 +720,7 @@ class WalletTools {
         
         // Converts the string master key to an HDKey object and derives the bip84 account hdkey from it.
         guard let hdMasterKey = HDKey(masterKey),
-            let accountKey = try? hdMasterKey.derive(path) else { return nil }
+              let accountKey = try? hdMasterKey.derive(path) else { return nil }
         
         // Returns the bip84 account xpub.
         return accountKey.xpub
@@ -657,12 +743,13 @@ class WalletTools {
     }
     
     // MARK: Core Data helpers
-    // These functions are utility functions to save/update/delete items from our database. We generally only want to know if they fail which should not happen.
+    // These functions are utility functions to save/update/delete items from our database.
+    // We generally only want to know if they fail which should not happen.
     
     /// Saves an address object.
     private func saveAddress(dict: [String:Any],
-                     entityName: ENTITY,
-                     completion: @escaping ((message: String?, created: Bool)) -> Void) {
+                             entityName: ENTITY,
+                             completion: @escaping ((message: String?, created: Bool)) -> Void) {
         print("saveAddress")
         CoreDataService.saveEntity(dict: dict, entityName: entityName) { saved in
             guard saved else {
@@ -687,7 +774,7 @@ class WalletTools {
     
     /// Saves a fetched utxo to our local data base.
     private func saveFetchedUtxos(fetchedUtxos: [[String:Any]],
-                                 address: Address_Cache,
+                                  address: Address_Cache,
                                   wallet: Wallet,
                                   completion: @escaping ((message: String?, success: Bool)) -> Void) {
         print("saveFetchedUtxos")
@@ -716,7 +803,10 @@ class WalletTools {
                 if self.isChangeAddress(address: address) {
                     if address.index == wallet.changeIndex {
                         print("update the wallet change index by one")
-                        CoreDataService.update(id: wallet.id, keyToUpdate: "changeIndex", newValue: wallet.changeIndex + 1.0, entity: .wallets) { updated in
+                        CoreDataService.update(id: wallet.id,
+                                               keyToUpdate: "changeIndex",
+                                               newValue: wallet.changeIndex + 1.0,
+                                               entity: .wallets) { updated in
                             guard updated else {
                                 completion(("Failed updating wallet change index.", false))
                                 return
@@ -726,7 +816,10 @@ class WalletTools {
                     }
                 } else if address.index == wallet.receiveIndex {
                     print("update the wallet receive index")
-                    CoreDataService.update(id: wallet.id, keyToUpdate: "receiveIndex", newValue: wallet.receiveIndex + 1.0, entity: .wallets) { updated in
+                    CoreDataService.update(id: wallet.id,
+                                           keyToUpdate: "receiveIndex",
+                                           newValue: wallet.receiveIndex + 1.0,
+                                           entity: .wallets) { updated in
                         guard updated else {
                             completion(("Failed updating wallet receive index.", false))
                             return
@@ -745,7 +838,6 @@ class WalletTools {
     // Updates our wallet receive index by one and adds the corresponding address to the receive keypool.
     private func updateWalletIndex(wallet: Wallet, isChange: Bool, completion: @escaping ((Bool)) -> Void) {
         print("updateWalletReceiveIndex")
-        
         /// The new index to be saved.
         var updatedIndex:Double
         var keyToUpdate:String
