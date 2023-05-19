@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A2C1BB82A13C18200D973A4 /* BIP21InvoiceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BB72A13C18200D973A4 /* BIP21InvoiceParser.swift */; };
 		0A2C1BBF2A15133B00D973A4 /* SendConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */; };
+		0A2C1BC32A17B8AB00D973A4 /* AddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */; };
+		0A2C1BC52A17BA6500D973A4 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC42A17BA6500D973A4 /* AddressView.swift */; };
 		0A3FD6E52A09719D00B6F8E3 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E32A09719D00B6F8E3 /* Server.swift */; };
 		0A3FD6E62A09719D00B6F8E3 /* Wallets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E42A09719D00B6F8E3 /* Wallets.swift */; };
 		0A3FD6E92A09796400B6F8E3 /* Utxos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E82A09796400B6F8E3 /* Utxos.swift */; };
@@ -31,7 +33,6 @@
 		0AE78E8F2A0935590024067D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E882A0935570024067D /* Extensions.swift */; };
 		0AE78E912A0935590024067D /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8A2A0935580024067D /* CoreDataService.swift */; };
 		0AE78E922A0935590024067D /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8B2A0935580024067D /* Crypto.swift */; };
-		0AE78E932A0935590024067D /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8C2A0935580024067D /* Utilities.swift */; };
 		0AE78E942A0935590024067D /* KeyChain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8D2A0935580024067D /* KeyChain.swift */; };
 		0AE78E952A0935590024067D /* TorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8E2A0935580024067D /* TorManager.swift */; };
 		0AE78E972A0936DD0024067D /* MempoolRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E962A0936DD0024067D /* MempoolRequest.swift */; };
@@ -60,6 +61,8 @@
 /* Begin PBXFileReference section */
 		0A2C1BB72A13C18200D973A4 /* BIP21InvoiceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP21InvoiceParser.swift; sourceTree = "<group>"; };
 		0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationViewController.swift; sourceTree = "<group>"; };
+		0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressView.xib; sourceTree = "<group>"; };
+		0A2C1BC42A17BA6500D973A4 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
 		0A3FD6E32A09719D00B6F8E3 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		0A3FD6E42A09719D00B6F8E3 /* Wallets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallets.swift; sourceTree = "<group>"; };
 		0A3FD6E82A09796400B6F8E3 /* Utxos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utxos.swift; sourceTree = "<group>"; };
@@ -83,7 +86,6 @@
 		0AE78E882A0935570024067D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0AE78E8A2A0935580024067D /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		0AE78E8B2A0935580024067D /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
-		0AE78E8C2A0935580024067D /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		0AE78E8D2A0935580024067D /* KeyChain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyChain.swift; sourceTree = "<group>"; };
 		0AE78E8E2A0935580024067D /* TorManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TorManager.swift; sourceTree = "<group>"; };
 		0AE78E962A0936DD0024067D /* MempoolRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MempoolRequest.swift; sourceTree = "<group>"; };
@@ -137,7 +139,6 @@
 				0AE78E8A2A0935580024067D /* CoreDataService.swift */,
 				0A2C1BB72A13C18200D973A4 /* BIP21InvoiceParser.swift */,
 				0AE78E882A0935570024067D /* Extensions.swift */,
-				0AE78E8C2A0935580024067D /* Utilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -220,6 +221,8 @@
 				0AE78E752A09349B0024067D /* Satsuma.xcdatamodeld */,
 				0A3FD6EA2A097A9300B6F8E3 /* View Controllers */,
 				0A2C1BBD2A13CAB600D973A4 /* Wallet Logic */,
+				0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */,
+				0A2C1BC42A17BA6500D973A4 /* AddressView.swift */,
 			);
 			path = Satsuma;
 			sourceTree = "<group>";
@@ -304,6 +307,7 @@
 			files = (
 				0AE78E7C2A09349D0024067D /* LaunchScreen.storyboard in Resources */,
 				0A828A622A0D3CF600447ACC /* stock_qr.jpg in Resources */,
+				0A2C1BC32A17B8AB00D973A4 /* AddressView.xib in Resources */,
 				0AE78E792A09349D0024067D /* Assets.xcassets in Resources */,
 				0AE78E742A09349B0024067D /* Main.storyboard in Resources */,
 			);
@@ -374,11 +378,11 @@
 				0AE78E922A0935590024067D /* Crypto.swift in Sources */,
 				0A828A642A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift in Sources */,
 				0AEE78362A093B3B00643090 /* Entities.swift in Sources */,
-				0AE78E932A0935590024067D /* Utilities.swift in Sources */,
 				0AE78E992A09392E0024067D /* HomeViewController.swift in Sources */,
 				0A3FD6EE2A0BEC5300B6F8E3 /* ReceiveViewController.swift in Sources */,
 				0AEE783A2A09402E00643090 /* SettingsViewController.swift in Sources */,
 				0AE78E942A0935590024067D /* KeyChain.swift in Sources */,
+				0A2C1BC52A17BA6500D973A4 /* AddressView.swift in Sources */,
 				0A3FD6EC2A0A96C300B6F8E3 /* Addresses.swift in Sources */,
 				0A2C1BB82A13C18200D973A4 /* BIP21InvoiceParser.swift in Sources */,
 				0AE78E6F2A09349B0024067D /* SceneDelegate.swift in Sources */,
@@ -546,7 +550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -577,7 +581,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
