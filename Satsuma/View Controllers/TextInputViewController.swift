@@ -20,6 +20,9 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        if let rootVC = navigationController?.viewControllers.first {
+            navigationController?.viewControllers = [rootVC, self]
+        }
         textFieldOutlet.delegate = self
         continueButtonOutlet.alpha = 0
         view.addSubview(continueButtonOutlet)
@@ -47,7 +50,7 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func pasteAction(_ sender: Any) {
         guard let content = UIPasteboard.general.string else {
-            showAlert(vc: self, title: "", message: "No text on the clipboard.")
+            self.showAlert(title: "", message: "No text on the clipboard.")
             return
         }
         
@@ -55,7 +58,7 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
             textFieldOutlet.text = content
             showContinueButton()
         } else {
-            showAlert(vc: self, title: "", message: "Not a valid bitcoin address or invoice.")
+            self.showAlert(title: "", message: "Not a valid bitcoin address or invoice.")
         }
     }
     
@@ -82,7 +85,7 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
         if parseTextInput(text: text) {
             showContinueButton()
         } else {
-            showAlert(vc: self, title: "", message: "Invalid address or invoice.")
+            self.showAlert(title: "", message: "Invalid address or invoice.")
         }
     }
     

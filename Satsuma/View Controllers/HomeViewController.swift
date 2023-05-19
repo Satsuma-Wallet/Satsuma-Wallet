@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class HomeViewController: UIViewController, UINavigationControllerDelegate {
     
@@ -29,6 +30,32 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         fetchBalance()
         //delete()
     }
+    
+    @IBAction func backupAction(_ sender: Any) {
+        let context = LAContext()
+            var error: NSError?
+
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                let reason = "Backup your wallet."
+
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                    [weak self] success, authenticationError in
+                    guard let self = self else { return }
+
+                    DispatchQueue.main.async {
+                        if success {
+                            print("Unlocked.")
+                        } else {
+                            self.showAlert(title: "Authentication failed", message: "You could not be verified; please try again.")
+                        }
+                    }
+                }
+            } else {
+                // no biometry
+                self.showAlert(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.")
+            }
+    }
+    
     
     func addNavBarSpinner() {
         DispatchQueue.main.async { [weak self] in
@@ -87,7 +114,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             
             guard success else {
                 self.removeLoader()
-                showAlert(vc: self, title: "Updating local data failed.", message: message ?? "Unknown.")
+                self.showAlert(title: "Updating local data failed.", message: message ?? "Unknown.")
                 return
             }
             
@@ -126,7 +153,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             guard let self = self else { return }
             guard let fxRate = fxRate else {
                 self.removeLoader()
-                showAlert(vc: self, title: "", message: "Unable to fetch the fiat exchange rate.")
+                self.showAlert(title: "", message: "Unable to fetch the fiat exchange rate.")
                 return
             }
             var textBalance = "$\((balance.btcAmountDouble * fxRate).rounded(toPlaces: 2).avoidNotation) USD"
@@ -156,7 +183,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             guard let self = self else { return }
             
             guard created else {
-                showAlert(vc: self, title: "Wallet creation failed.", message: message ?? "Unknown issue.")
+                self.showAlert(title: "Wallet creation failed.", message: message ?? "Unknown issue.")
                 return
             }
             
@@ -207,6 +234,6 @@ extension HomeViewController: OnionManagerDelegate {
     func torConnDifficulties() {
         print("tor connection difficulties")
         removeLoader()
-        showAlert(vc: self, title: "", message: "Tor connection issue...")
+        self.showAlert(title: "", message: "Tor connection issue...")
     }
 }
