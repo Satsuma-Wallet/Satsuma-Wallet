@@ -17,12 +17,17 @@ class SendConfirmationViewController: UIViewController {
     @IBOutlet weak var amountOutlet: UILabel!
     @IBOutlet weak var networkFeeOutlet: UILabel!
     @IBOutlet weak var totalAmountOutlet: UILabel!
+    @IBOutlet weak var addressView: AddressView!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print("destinationAmount: \(destinationAmount)")
 
+        addressView.alpha = 0
+        addressView.derivation.alpha = 0
+        addressView.balance.alpha = 0
+        addressView.address.text = destinationAddress
         // Do any additional setup after loading the view.
         addressOutlet.text = destinationAddress
         //print("self.rawTx: \(self.rawTx)")
@@ -34,15 +39,17 @@ class SendConfirmationViewController: UIViewController {
         addressOutlet.text = destinationAddress
         amountOutlet.text = "\(destAmount) BTC"
         totalAmountOutlet.text = "\(total) BTC"
+        addressView.address.text = destinationAddress
     }
     
     @IBAction func viewAddressAction(_ sender: Any) {
+        addressView.alpha = 1
     }
     
     @IBAction func sendAction(_ sender: Any) {
         MempoolRequest.sharedInstance.command(method: .broadcast(tx: self.rawTx)) { (response, errorDesc) in
             guard let txid = response as? String else {
-                showAlert(vc: self, title: "Broadcasting failed.", message: errorDesc ?? "Unknown.")
+                self.showAlert(title: "Broadcasting failed.", message: errorDesc ?? "Unknown.")
                 return
             }
             

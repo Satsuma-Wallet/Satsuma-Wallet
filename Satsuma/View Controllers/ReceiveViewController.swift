@@ -8,23 +8,38 @@
 import UIKit
 
 class ReceiveViewController: UIViewController {
-
+    
+    var address:Address_Cache!
+    @IBOutlet weak var addressView: AddressView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var addressLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        addressView.alpha = 0
+        addressView.sizeToFit()
+        
         fetchAddress { [weak self] (message, address) in
             guard let self = self else { return }
             
             guard let address = address else {
-                showAlert(vc: self, title: "There was an issue fetching your address.", message: message ?? "Unknown.")
+                self.showAlert(title: "There was an issue fetching your address.", message: message ?? "Unknown.")
                 return
             }
             self.loadViews(address: address)
         }
     }
+    
+    @IBAction func showAddressAction(_ sender: Any) {
+        print("showAddressAction")
+        addressView.address.text = address.address
+        addressView.derivation.text = address.derivation
+        addressView.balance.alpha = 0
+        addressView.alpha = 1
+        
+    }
+    
     
     @IBAction func backAction(_ sender: Any) {
         self.dismiss(animated: true)
@@ -42,7 +57,7 @@ class ReceiveViewController: UIViewController {
     @IBAction func copyAction(_ sender: Any) {
         guard let address = addressLabel.text else { return }
         UIPasteboard.general.string = address
-        showAlert(vc: self, title: "Copied to clipboard ✓", message: address)
+        self.showAlert(title: "Copied to clipboard ✓", message: address)
     }
     
     private func fetchAddress(completion: @escaping ((message: String?, address: String?)) -> Void) {
@@ -54,7 +69,8 @@ class ReceiveViewController: UIViewController {
             
             let wallet = Wallet(wallets[0])
             
-            CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddresses in
+            CoreDataService.retrieveEntity(entityName: .receiveAddr) { [weak self] recAddresses in
+                guard let self = self else { return }
                 guard let recAddresses = recAddresses, recAddresses.count > 0 else {
                     completion(("No receive addresses exist yet.", nil))
                     return
@@ -63,6 +79,7 @@ class ReceiveViewController: UIViewController {
                 for recAddress in recAddresses {
                     let address = Address_Cache(recAddress)
                     if address.index == wallet.receiveIndex {
+                        self.address = address
                         completion((nil, address.address))
                     }
                 }

@@ -15,16 +15,22 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     var rawTx = ""
     var fee = 0
     var buttonConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var amountInput: UITextField!
     @IBOutlet weak var fiatButtonOutlet: UIButton!
     @IBOutlet weak var balanceOutlet: UILabel!
     @IBOutlet weak var addressOutlet: UILabel!
     @IBOutlet weak var sendOutlet: UIButton!
+    @IBOutlet weak var addressView: AddressView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        addressView.alpha = 0
+        addressView.address.text = address
+        addressView.derivation.alpha = 0
+        addressView.balance.alpha = 0
         amountInput.delegate = self
         sendOutlet.alpha = 0
         view.addSubview(sendOutlet)
@@ -41,8 +47,6 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
         subscribeToShowKeyboardNotifications()
         addTapGesture()
         
-        amountInput.becomeFirstResponder()        
-        
         if amount > 0 {
             amountInput.text = "\(amount)"
         }
@@ -52,10 +56,28 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
         getBalance()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        amountInput.becomeFirstResponder()
+    }
+    
     @IBAction func useAllFundsAction(_ sender: Any) {
+        CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
+            guard let self = self else { return }
+            guard let utxos = utxos else { return }
+            
+            for (i, utxo) in utxos.enumerated() {
+                let u = Utxo_Cache(utxo)
+                self.amount += u.doubleValueSats.btcAmountDouble
+                if i + 1 == utxos.count {
+                    self.amount = self.amount - 0.00000500
+                    self.createTx()
+                }
+            }
+        }
     }
     
     @IBAction func seeFullAddressAction(_ sender: Any) {
+        addressView.alpha = 1
     }
     
     private func getBalance() {
@@ -98,7 +120,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             showSendButton()
         } else {
             sendOutlet.isEnabled = false
-            showAlert(vc: self, title: "", message: "Insufficient funds, try a lower amount.")
+            self.showAlert(title: "", message: "Insufficient funds, try a lower amount.")
         }
     }
     
@@ -157,7 +179,10 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     
     @objc func buttonAction() {
         amountInput.resignFirstResponder()
-        print("build tx now.")
+        createTx()
+    }
+    
+    private func createTx() {
         CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
             guard let wallets = wallets else { return }
             
@@ -170,7 +195,6 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                 
                 for (i, changeAddress) in changeAddresses.enumerated() {
                     let changeAddr = Address_Cache(changeAddress)
-                    print("changeAddr: \(changeAddr.address)")
                     if changeAddr.index == wallet.changeIndex {
                         changeAddressToUse = changeAddr
                     }
@@ -180,10 +204,8 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                         
                         WalletTools.shared.createTx(destinationAddress: self.address, changeAddress: changeAddressToUse, btcAmountToSend: self.amount) { [weak self] (message, rawTx) in
                             guard let self = self else { return }
-                            print("message: \(message)")
-                            print("rawTx: \(rawTx)")
                             guard let rawTx = rawTx else {
-                                print("message: \(message)")
+                                self.showAlert(title: "", message: message ?? "Uknown.")
                                 return
                             }
                             self.rawTx = rawTx.rawTx
@@ -199,7 +221,6 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func textFieldDidChange() {
-        print("textFieldDidChange")
         guard let text = amountInput.text else {
             sendOutlet.isEnabled = false
             return
