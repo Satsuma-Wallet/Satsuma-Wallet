@@ -27,8 +27,24 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         navigationController?.delegate = self
         satsumaLabel.title = "Satsuma"
         navigationItem.setLeftBarButton(satsumaLabel, animated: true)
-        fetchBalance()
-        //delete()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
+            guard let wallets = wallets else { return }
+            
+            if wallets.count > 0 {
+                WalletTools.shared.addXprv { [weak self] updated in
+                    guard let self = self else { return }
+                    guard updated else {
+                        return
+                    }
+                    self.fetchBalance()
+                }
+            } else {
+                self.promptForPassphrase()
+            }
+        }
     }
     
     @IBAction func backupAction(_ sender: Any) {
@@ -54,6 +70,41 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 // no biometry
                 self.showAlert(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.")
             }
+    }
+    
+    private func promptForPassphrase() {
+        CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
+            guard let wallets = wallets else { return }
+            
+            if wallets.count == 0 {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    let alert = UIAlertController(title: "Add a BIP39 passphrase?", message: "You can optionally add a passphrase (25th word) when creating your wallet.", preferredStyle: .alert)
+                    
+                    alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                        DispatchQueue.main.async { [weak self] in
+                            guard let self = self else { return }
+                            
+                            self.performSegue(withIdentifier: "segueToPassphraseInput", sender: self)
+                        }
+                    }))
+                    
+                    alert.addAction(UIAlertAction(title: "No", style: .default, handler: { [weak self] action in
+                        guard let self = self else { return }
+                        WalletTools.shared.create(passphrase: "") { (message, created) in
+                            guard created else {
+                                self.showAlert(title: "Wallet creation failed.", message: message ?? "Unknown")
+                                return
+                            }
+                                                        
+                            self.fetchBalance()
+                        }
+                    }))
+                    alert.popoverPresentationController?.sourceView = self.view
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
     }
     
     
@@ -88,11 +139,6 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
             guard let self = self else { return }
             
-            guard let wallets = wallets, wallets.count > 0 else {
-                self.createWallet()
-                return
-            }
-                        
             let torEnabled = UserDefaults.standard.bool(forKey: "torEnabled")
             
             if !torEnabled {
@@ -176,19 +222,6 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             self.fiatBalanceOutlet.text = balance
             self.removeLoader()
         }
-    }
-    
-    private func createWallet() {
-        WalletTools.shared.create(completion: { [weak self] (message, created) in
-            guard let self = self else { return }
-            
-            guard created else {
-                self.showAlert(title: "Wallet creation failed.", message: message ?? "Unknown issue.")
-                return
-            }
-            
-            self.fetchBalance()
-        })
     }
     
     private func delete() {

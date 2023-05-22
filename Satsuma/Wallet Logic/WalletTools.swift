@@ -21,7 +21,7 @@ class WalletTools {
     private init() {}
     // MARK: Wallet creation
     
-    func create(completion: @escaping ((message: String?, created: Bool)) -> Void) {
+    func create(passphrase: String, completion: @escaping ((message: String?, created: Bool)) -> Void) {
         print("create")
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -35,11 +35,33 @@ class WalletTools {
                 return
             }
             
+            guard let mk = masterKey(words: mnemonic, passphrase: passphrase) else {
+                completion(("Master key derivation failed.", false))
+                return
+            }
+            
+            guard let bip84Xprv = bip84Xprv(masterKey: mk) else {
+                completion(("Failed deriving bip84 xprv.", false))
+                return
+            }
+            
+            guard let encryptedBip84Xprv = Crypto.encrypt(bip84Xprv.utf8) else {
+                completion(("Failed encrypting bip84 xprv.", false))
+                return
+            }
+            
+            guard let bip84Xpub = HDKey(bip84Xprv)?.xpub else {
+                completion(("Failed derving bip84 xpub.", false))
+                return
+            }
+            
             let dict:[String:Any] = [
                 "mnemonic": encryptedMnemonic,
                 "id": UUID(),
                 "receiveIndex": 0.0,
-                "changeIndex": 0.0
+                "changeIndex": 0.0,
+                "bip84Xprv": encryptedBip84Xprv,
+                "bip84Xpub": bip84Xpub
             ]
             
             CoreDataService.saveEntity(dict: dict, entityName: .wallets) { walletSaved in
@@ -48,12 +70,8 @@ class WalletTools {
                     return
                 }
                 
-                guard let recAddresses = self.addresses(wallet: Wallet(dict),
-                                                        coinType: self.coinType,
-                                                        change: 0),
-                      let changeAddresses = self.addresses(wallet: Wallet(dict),
-                                                           coinType: self.coinType,
-                                                           change: 1) else {
+                guard let recAddresses = self.addresses(wallet: Wallet(dict), change: 0),
+                      let changeAddresses = self.addresses(wallet: Wallet(dict), change: 1) else {
                     completion(("Address derivation failed.", false))
                     return
                 }
@@ -86,14 +104,15 @@ class WalletTools {
         guard status == errSecSuccess else { return nil }
         
         /// Get the triple sha256 hash of the entropy.
-        var data = Crypto.sha256hash(Crypto.sha256hash(Crypto.sha256hash(Data(randomBytes))))
+        let data = Crypto.sha256hash(Crypto.sha256hash(Crypto.sha256hash(Data(randomBytes))))
         
         /// Remove half so we end up with 16 bytes of entropy, which translates to a 12 word seed phrase.
-        data = data.subdata(in: Range(0...15))
+        //data = data.subdata(in: Range(0...15))
         
         /// Pass our 16 bytes of entropy to Libwally to create a 12 word BIP39 mnemonic.
         let entropy = BIP39Entropy(data)
         guard let mnemonic = BIP39Mnemonic(entropy) else { return nil }
+        print("mnemonic: \(mnemonic)")
         return mnemonic.description
     }
     
@@ -101,23 +120,14 @@ class WalletTools {
     func updateCoreData(completion: @escaping ((message: String?, success: Bool)) -> Void) {
         print("updateDoreData")
         /// Fetch our wallet.
-        CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
-            guard let wallets = wallets, wallets.count > 0 else {
-                completion(("No wallet exists.", false))
+        /// Fetch any existing utxos from Core Data.
+        CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
+            guard let utxos = utxos else {
+                completion(("Utxo entity in Core Data does not exist.", false))
                 return
             }
             
-            let wallet = Wallet(wallets[0])
-            
-            /// Fetch any existing utxos from Core Data.
-            CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
-                guard let utxos = utxos else {
-                    completion(("Utxo entity in Core Data does not exist.", false))
-                    return
-                }
-                
-                self.updateUtxoDatabase(utxos: utxos, completion: completion)
-            }
+            self.updateUtxoDatabase(utxos: utxos, completion: completion)
         }
     }
     
@@ -144,6 +154,73 @@ class WalletTools {
                 /// Fetch utxos from our addresses and compare to any existing utxos to update our data base.
                 self.createUtxosFromAddresses(addresses: recAddresses + changeAddresses,
                                               completion: completion)
+            }
+        }
+    }
+    
+    // For backwards compatibility, can delete before V1 release.
+    public func addXprv(completion: @escaping ((Bool)) -> Void) {
+        CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
+            guard let self = self else { return }
+            
+            guard let wallets = wallets, wallets.count > 0 else {
+                // Automatically create a fresh wallet.
+                completion(true)
+                return
+            }
+            
+            let wallet = Wallet(wallets[0])
+            
+            if wallet.bip84Xprv == nil {
+                guard let encryptedMnemonic = wallet.mnemonic, let decryptedMnemonic = Crypto.decrypt(encryptedMnemonic) else { return }
+                
+                guard let mnemonic = decryptedMnemonic.utf8String else {
+                    completion((false))
+                    return
+                }
+                
+                guard let mk = masterKey(words: mnemonic, passphrase: "") else {
+                    completion((false))
+                    return
+                }
+                
+                guard let bip84Xprv = bip84Xprv(masterKey: mk)?.utf8 else {
+                    completion((false))
+                    return
+                }
+                
+                guard let encryptedBip84Xprv = Crypto.encrypt(bip84Xprv) else {
+                    completion((false))
+                    return
+                }
+                
+                guard let xprvString = bip84Xprv.utf8String else {
+                    completion((false))
+                    return
+                }
+                
+                guard let bip84Xpub = HDKey(xprvString)?.xpub else {
+                    completion((false))
+                    return
+                }
+                
+                CoreDataService.update(id: wallet.id, keyToUpdate: "bip84Xprv", newValue: encryptedBip84Xprv, entity: .wallets) { updated in
+                    guard updated else {
+                        completion((false))
+                        return
+                    }
+                    
+                    CoreDataService.update(id: wallet.id, keyToUpdate: "bip84Xpub", newValue: bip84Xpub, entity: .wallets) { updated in
+                        guard updated else {
+                            completion((false))
+                            return
+                        }
+                        
+                        completion((updated))
+                    }
+                }
+            } else {
+                completion((true))
             }
         }
     }
@@ -175,9 +252,11 @@ class WalletTools {
             
             /// Wallet receive address index.
             let walletReceiveIndex = Int(wallet.receiveIndex)
+            // MARK: TODO - Check if receive index is approaching the max receive address index, if it is we need to increase it.
             
             /// Wallet change address index.
             let walletChangeIndex = Int(wallet.changeIndex)
+            // MARK: TODO - Check if change index is approaching the max change address index, if it is we need to increase it.
             
             /// If the address in question has an index less then or equal to the wallet index we check it for utxos from mempool/esplora.
             let shouldFetchReceive = !self.isChangeAddress(address: addr) && Int(addr.index) <= walletReceiveIndex
@@ -243,7 +322,7 @@ class WalletTools {
                                             completion(("Failed deleting consumed utxo.", false))
                                             return
                                         }
-                                        if self.isChangeAddress(address: addr) && wallet.changeIndex > addr.index {
+                                        if self.isChangeAddress(address: addr) && wallet.changeIndex > addr.index {// can probably remove this check
                                             print("delete change address: \(addr.address)")
                                             CoreDataService.deleteEntity(id: addr.id, entityName: .changeAddr) { deleted in
                                                 guard deleted else {
@@ -278,7 +357,7 @@ class WalletTools {
                                                 }
                                             }
                                             
-                                        } else if wallet.receiveIndex > addr.index {
+                                        } else if wallet.receiveIndex > addr.index {// can probably remove this check
                                             print("delete receive address: \(addr.address)")
                                             CoreDataService.deleteEntity(id: addr.id, entityName: .receiveAddr) { deleted in
                                                 guard deleted else {
@@ -531,7 +610,9 @@ class WalletTools {
         var tx = tx
         /// Loop through our derivation paths for each input to get the private keys required to sign the transaction.
         for (d, derivationPath) in inputDerivs.enumerated() {
-            WalletTools.shared.privateKey(path: derivationPath) { (message, privateKey) in
+            let derivArray = derivationPath.split(separator: "/")
+            
+            WalletTools.shared.privateKey(path: "\(derivArray[4])/\(derivArray[5])") { (message, privateKey) in
                 guard let privateKey = privateKey else { return }
                 /// We have the private key, append it to our array of private keys.
                 privKeys.append(privateKey)
@@ -610,15 +691,9 @@ class WalletTools {
     }
     
     /// Returns an array of address objects which are then saved to Core Data during wallet creation.
-    private func addresses(wallet: Wallet, coinType: Int, change: Int) -> [[String:Any]]? {
+    private func addresses(wallet: Wallet, change: Int) -> [[String:Any]]? {
         print("addresses")
-        // Decrypts the wallet's seed in order to get the root xprv.
-        guard let decryptedSeed = Crypto.decrypt(wallet.mnemonic),
-              let words = decryptedSeed.utf8String,
-              let xpriv = masterKey(words: words, passphrase: "") else { return nil }
-        
-        // Derives the bip84 xpub from the wallets root xprv.
-        guard let addrXpub = bip84AccountXpub(masterKey: xpriv, coinType: self.coinType, account: 0) else { return nil }
+        guard let bip84xpub = wallet.bip84Xpub else { return nil }
         
         var addresses:[[String:Any]] = []
         // We set the wallets max index dynamically, so we know which range of addresses to derive, and whether they are change or receive addresses.
@@ -634,7 +709,7 @@ class WalletTools {
         let maxIndex = walletIndex + 19
         
         for i in walletIndex...maxIndex {
-            guard let (address, pubkey) = addressPubkey(xpub: addrXpub, path: "/\(change)/\(i)") as? (String, Data) else { return nil }
+            guard let (address, pubkey) = addressPubkey(xpub: bip84xpub, path: "/\(change)/\(i)") as? (String, Data) else { return nil }
             
             // add pubkey too
             addresses.append([
@@ -652,16 +727,10 @@ class WalletTools {
     // Returns an individual address object to add to our keypool in case we max out. Perhaps we should just fill another 20?
     private func address(wallet: Wallet, isChange: Int, index: Int) -> [String:Any]? {
         print("address")
-        // Decrypts the wallet's seed in order to get the root xprv.
-        guard let decryptedSeed = Crypto.decrypt(wallet.mnemonic),
-              let words = decryptedSeed.utf8String,
-              let xpriv = masterKey(words: words, passphrase: "") else { return nil }
-        
-        // Derives the bip84 xpub from the wallets root xprv.
-        guard let addrXpub = bip84AccountXpub(masterKey: xpriv, coinType: self.coinType, account: 0) else { return nil }
-        
         // Fetches the address and pubkey from the bip84 xpub and our specified derivation.
-        guard let (address, pubkey) = addressPubkey(xpub: addrXpub, path: "/\(isChange)/\(index)") as? (String, Data) else { return nil }
+        guard let bip84xpub = wallet.bip84Xpub else { return nil }
+        
+        guard let (address, pubkey) = addressPubkey(xpub: bip84xpub, path: "/\(isChange)/\(index)") as? (String, Data) else { return nil }
         
         // Returns the address object to be saved into Core Data.
         return [
@@ -685,6 +754,19 @@ class WalletTools {
         return xpriv
     }
     
+    private func bip84Xprv(masterKey: String) -> String? {
+        print("bip84AccountXprv")
+        // The derivation path for the derived xpub. cointype == 0 is mainnet, cointype == 1 is testnet.
+        let path = "m/84h/\(coinType)h/0h"
+        
+        // Converts the string master key to an HDKey object and derives the bip84 account hdkey from it.
+        guard let hdMasterKey = HDKey(masterKey),
+              let accountKey = try? hdMasterKey.derive(path) else { return nil }
+        
+        // Returns the bip84 account xprv.
+        return accountKey.xpriv
+    }
+    
     /// Returns a derived individual private key to be used when signing inputs during transaction creation.
     private func privateKey(path: String, completion: @escaping ((message: String?, privateKey: HDKey?)) -> Void) {
         print("privateKey")
@@ -695,17 +777,24 @@ class WalletTools {
             // We are only using one wallet, this makes it easy to update the app to work with multiple wallets in the future.
             let wallet = Wallet(wallets[0])
             
-            // Decrypts our encrypted mnemonic.
-            guard let decryptedWords = Crypto.decrypt(wallet.mnemonic), let words = decryptedWords.utf8String else { return }
+            guard let bip84xprv = wallet.bip84Xprv else { return }
             
-            // Fetches the root xprv.
-            guard let masterKey = self.masterKey(words: words, passphrase: "") else { return }
+            guard let decryptedBip84Xprv = Crypto.decrypt(bip84xprv), let bip84Xprv = decryptedBip84Xprv.utf8String else {
+                completion(("Failed decrypting the bip84 xprv", nil))
+                return
+            }
             
             // Converts the master key from a string to HDKey object.
-            guard let hdMasterKey = HDKey(masterKey) else { return }
+            guard let hdKey = HDKey(bip84Xprv) else {
+                completion(("Failed converting base58 xprv to hdkey.", nil))
+                return
+            }
             
-            // Derive the private key we need to sign with from our root hdkey (xprv).
-            guard let hdDerivedkey = try? hdMasterKey.derive(path) else { return }
+            // Derive the private key we need to sign with from our bip84 hdkey (xprv).
+            guard let hdDerivedkey = try? hdKey.derive(path) else {
+                completion(("Failed deriving our hd key from string xprv.", nil))
+                return
+            }
             
             // Return the derived private key.
             completion((nil, hdDerivedkey))
@@ -713,10 +802,10 @@ class WalletTools {
     }
     
     /// Returns a bip84 xpub from a master key (root xprv). coinType represents whether it is mainnet or testnet. Account should always be 0.
-    private func bip84AccountXpub(masterKey: String, coinType: Int, account: Int) -> String? {
+    private func bip84AccountXpub(masterKey: String) -> String? {
         print("bip84AccountXpub")
         // The derivation path for the derived xpub. cointype == 0 is mainnet, cointype == 1 is testnet.
-        let path = "m/84h/\(coinType)h/\(account)h"
+        let path = "m/84h/\(self.coinType)h/0h"
         
         // Converts the string master key to an HDKey object and derives the bip84 account hdkey from it.
         guard let hdMasterKey = HDKey(masterKey),

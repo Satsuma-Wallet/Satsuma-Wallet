@@ -626,6 +626,88 @@
             </objects>
             <point key="canvasLocation" x="-3391.6030534351144" y="3698.5915492957747"/>
         </scene>
+        <!--Passphrase Input View Controller-->
+        <scene sceneID="4Ba-hV-6Hm">
+            <objects>
+                <viewController id="nP4-Ta-icn" customClass="PassphraseInputViewController" customModule="Satsuma" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fhb-5H-WmL">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="fem-uj-eK2">
+                                <rect key="frame" x="16" y="113" width="361" height="264.66666666666669"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Passphrase (25th word)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8p9-JJ-6Ex">
+                                        <rect key="frame" x="0.0" y="0.0" width="361" height="20.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="21W-ny-Tf0">
+                                        <rect key="frame" x="0.0" y="30.333333333333343" width="361" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Confirm the passphrase" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="slM-br-Evm">
+                                        <rect key="frame" x="0.0" y="74.333333333333343" width="361" height="20.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="kdt-eo-3sE">
+                                        <rect key="frame" x="0.0" y="104.66666666666666" width="361" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b9q-Io-hCR">
+                                        <rect key="frame" x="0.0" y="148.66666666666669" width="361" height="34.333333333333343"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="filled" title="CONFIRM"/>
+                                        <connections>
+                                            <action selector="confirmAction:" destination="nP4-Ta-icn" eventType="touchUpInside" id="YfD-v4-et3"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="lUB-w3-Adk">
+                                        <rect key="frame" x="0.0" y="193" width="361" height="71.666666666666686"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="SzE-FI-5Xf">
+                                                <rect key="frame" x="0.0" y="1" width="40" height="70.333333333333343"/>
+                                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="40" id="J4C-ue-M0T"/>
+                                                </constraints>
+                                                <imageReference key="image" image="info.circle" catalog="system" symbolScale="medium"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVd-fb-wgS">
+                                                <rect key="frame" x="40" y="0.0" width="321" height="71.666666666666671"/>
+                                                <string key="text">Satsuma uses your passphrase to derive the BIP84 account xprv of your wallet which is then encrypted and saved to your device. The passphrase is not stored on the device. You will need this passphrase and seed words to recover funds. Ensure it is saved securely.</string>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="bhU-tx-4cx"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="bhU-tx-4cx" firstAttribute="trailing" secondItem="fem-uj-eK2" secondAttribute="trailing" constant="16" id="IBy-ll-slM"/>
+                            <constraint firstItem="fem-uj-eK2" firstAttribute="leading" secondItem="bhU-tx-4cx" secondAttribute="leading" constant="16" id="Ybp-aV-lL2"/>
+                            <constraint firstItem="fem-uj-eK2" firstAttribute="top" secondItem="bhU-tx-4cx" secondAttribute="top" constant="10" id="aV1-8D-IDQ"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="BVV-ol-0aA"/>
+                    <connections>
+                        <outlet property="confirmInput" destination="kdt-eo-3sE" id="aKY-ig-Aoi"/>
+                        <outlet property="passphraseInput" destination="21W-ny-Tf0" id="gSb-zu-xlB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fdQ-mx-qui" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4518.320610687023" y="771.83098591549299"/>
+        </scene>
         <!--Wallet-->
         <scene sceneID="t8B-8k-4OX">
             <objects>
@@ -740,6 +822,7 @@
                     <connections>
                         <outlet property="btcAmountLabel" destination="IYM-MW-qZD" id="4oC-Dh-WH3"/>
                         <outlet property="fiatBalanceOutlet" destination="YFE-ND-a9c" id="qS3-Jb-dgw"/>
+                        <segue destination="nP4-Ta-icn" kind="show" identifier="segueToPassphraseInput" id="ewT-WB-TjX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="0wg-ZH-K4a" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -787,6 +870,7 @@
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="eye.fill" catalog="system" width="128" height="80"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
+        <image name="info.circle" catalog="system" width="128" height="123"/>
         <image name="lock.fill" catalog="system" width="125" height="128"/>
         <image name="qrcode.viewfinder" catalog="system" width="128" height="115"/>
         <image name="wallet.pass" catalog="system" width="115" height="128"/>

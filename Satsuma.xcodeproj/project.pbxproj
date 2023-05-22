@@ -11,6 +11,7 @@
 		0A2C1BBF2A15133B00D973A4 /* SendConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */; };
 		0A2C1BC32A17B8AB00D973A4 /* AddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */; };
 		0A2C1BC52A17BA6500D973A4 /* AddressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC42A17BA6500D973A4 /* AddressView.swift */; };
+		0A2C1BC72A1BC56100D973A4 /* PassphraseInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */; };
 		0A3FD6E52A09719D00B6F8E3 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E32A09719D00B6F8E3 /* Server.swift */; };
 		0A3FD6E62A09719D00B6F8E3 /* Wallets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E42A09719D00B6F8E3 /* Wallets.swift */; };
 		0A3FD6E92A09796400B6F8E3 /* Utxos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3FD6E82A09796400B6F8E3 /* Utxos.swift */; };
@@ -63,6 +64,7 @@
 		0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationViewController.swift; sourceTree = "<group>"; };
 		0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressView.xib; sourceTree = "<group>"; };
 		0A2C1BC42A17BA6500D973A4 /* AddressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressView.swift; sourceTree = "<group>"; };
+		0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassphraseInputViewController.swift; sourceTree = "<group>"; };
 		0A3FD6E32A09719D00B6F8E3 /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		0A3FD6E42A09719D00B6F8E3 /* Wallets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Wallets.swift; sourceTree = "<group>"; };
 		0A3FD6E82A09796400B6F8E3 /* Utxos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utxos.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 				0A828A692A0D61BC00447ACC /* TextInputViewController.swift */,
 				0A828A6B2A0D721800447ACC /* AmountInputViewController.swift */,
 				0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */,
+				0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				0AEE78402A09559000643090 /* WalletTools.swift in Sources */,
 				0A3FD6F02A0BF14900B6F8E3 /* QRGenerator.swift in Sources */,
 				0A3FD6E62A09719D00B6F8E3 /* Wallets.swift in Sources */,
+				0A2C1BC72A1BC56100D973A4 /* PassphraseInputViewController.swift in Sources */,
 				0A3FD6F22A0C055200B6F8E3 /* FiatConverter.swift in Sources */,
 				0AE78E912A0935590024067D /* CoreDataService.swift in Sources */,
 				0AE78E922A0935590024067D /* Crypto.swift in Sources */,
