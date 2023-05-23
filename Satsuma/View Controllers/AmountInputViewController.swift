@@ -61,17 +61,17 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func useAllFundsAction(_ sender: Any) {
-        CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
+        WalletTools.shared.sweepWallet(destinationAddress: address) { [weak self] (message, rawTx) in
             guard let self = self else { return }
-            guard let utxos = utxos else { return }
-            
-            for (i, utxo) in utxos.enumerated() {
-                let u = Utxo_Cache(utxo)
-                self.amount += u.doubleValueSats.btcAmountDouble
-                if i + 1 == utxos.count {
-                    self.amount = self.amount - 0.00000500
-                    self.createTx()
-                }
+            guard let rawTx = rawTx else {
+                self.showAlert(title: "", message: message ?? "Uknown.")
+                return
+            }
+            self.rawTx = rawTx.rawTx
+            self.fee = rawTx.fee
+            self.amount = rawTx.amount
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "segueToSend", sender: self)
             }
         }
     }
@@ -233,8 +233,6 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                                 }
                             }
                         }
-                        
-                        
                     }
                 }
             }

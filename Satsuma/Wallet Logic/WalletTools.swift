@@ -487,6 +487,72 @@ class WalletTools {
     // MARK: TRANSACTION CREATION - WIP ⚠️
     // MARK: TODO - Make fee dynamic as per mempool API
     
+    func sweepWallet(destinationAddress: String, completion: @escaping ((message: String?, (rawTx: String, fee: Int, amount: Double)?)) -> Void) {
+        MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
+            guard let response = response as? [String:Any] else {
+                completion(("Failed fetching recommended fees: \(errorDesc ?? "Unknown.")", nil))
+                return
+            }
+            
+            let recommendedFee = RecommendedFee(response)
+            var feeTarget = 0
+            let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+            if priority == "high" {
+                feeTarget = recommendedFee.fastestFee
+            } else {
+                feeTarget = recommendedFee.economyFee
+            }
+            
+            CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
+                guard let self = self else { return }
+                guard let utxos = utxos else {
+                    completion(("Failed fetching utxos.", nil))
+                    return
+                }
+                
+                var utxosToConsume:[Utxo_Cache] = []
+                
+                for (i, utxo) in utxos.enumerated() {
+                    let u = Utxo_Cache(utxo)
+                    
+                    utxosToConsume.append(u)
+                    
+                    if i + 1 == utxos.count {
+                        
+                        guard let (inputDerivs, inputs, totalInputAmount) = self.inputs(utxos: utxosToConsume) else {
+                            completion(("Failed fetching inputs from utxos,", nil))
+                            return
+                        }
+                        
+                        let estimatedTxSizeWu = (inputs.count * 272) + 124 + 42
+                        let estimatedVBytes = estimatedTxSizeWu / 4
+                        let estimtatedFee = UInt64(estimatedVBytes * feeTarget)
+                        print("estimtatedFee: \(estimtatedFee)")
+                        print("totalInputAmount: \(totalInputAmount)")
+                        
+                        guard totalInputAmount > estimtatedFee else {
+                            completion(("Fee exceeds total available funds.", nil))
+                            return
+                        }
+                        
+                        let amountToSend = totalInputAmount - UInt64(estimtatedFee)
+                        
+                        guard let output = self.output(address: destinationAddress, amount: Satoshi(amountToSend)) else {
+                            completion(("Failed fetching output.", nil))
+                            return
+                        }
+                        
+                        let tx = Transaction(inputs, [output])
+                        
+                        self.signTransaction(inputDerivs: inputDerivs, tx: tx) { (message, rawTx) in
+                            completion((message, (rawTx!.rawTx, rawTx!.fee, Double(amountToSend))))
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
     /// Entry point for creating a transaction.
     func createTx(destinationAddress: String,
                   changeAddress: Address_Cache,
@@ -568,6 +634,10 @@ class WalletTools {
                     /// Now we have our inputs and outputs we can create the transaction.
                     let tx = Transaction(inputs, outputs)
                     self.signTransaction(inputDerivs: inputDerivs, tx: tx, completion: completion)
+                } else if totalInputAmount < UInt64(estimtatedFee) {
+                    completion(("Fee exceeds available funds.", nil))
+                } else {
+                    completion(("Insufficient funds.", nil))
                 }
             }
         }
@@ -720,16 +790,6 @@ class WalletTools {
                 } else if i + 1 == utxos.count {
                     completion(("Insufficient funds.", nil))
                 }
-                
-//                if i + 1 == utxos.count {
-//                    /// Input amount now exceeds the amount to send, we can return our utxos to be used as inputs.
-//                    if totalUtxoAmount >= amountPlusFee {
-//                        print("we have enough inputs now.")
-//                        completion((nil, utxosToConsume))
-//                    } else {
-//                        completion(("Insufficient funds.", nil))
-//                    }
-//                }
             }
         }
     }
