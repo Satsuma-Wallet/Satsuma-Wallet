@@ -141,6 +141,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func fetchBalance() {
+        showBalanceFromCache()
         addNavBarSpinner()
         CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
             guard let self = self else { return }
@@ -201,6 +202,28 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                     self.getFxRate(balance: balance)
                 }
             }
+        }
+    }
+    
+    private func showBalanceFromCache() {
+        CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
+            guard let utxos = utxos else { return }
+            
+            var balance = 0.0
+            self.utxosConfirmed = true
+            
+            for utxo in utxos {
+                let utxo = Utxo_Cache(utxo)
+                if !utxo.confirmed {
+                    self.utxosConfirmed = false
+                }
+                balance += utxo.doubleValueSats
+            }
+            var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
+            if balance == 0 {
+                textBalance = "0.00000000 BTC"
+            }
+            self.showBtcBalance(balance: textBalance)
         }
     }
     
