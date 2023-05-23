@@ -137,7 +137,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     
     @objc func refreshData(_ sender: Any) {
         addNavBarSpinner()
-        getBalanceNow()
+        fetchBalance()
     }
     
     private func fetchBalance() {
@@ -146,13 +146,14 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             guard let self = self else { return }
             
             let torEnabled = UserDefaults.standard.bool(forKey: "torEnabled")
-            
             if !torEnabled {
                 getBalanceNow()
             } else {
                 switch TorClient.sharedInstance.state {
                 case .none, .stopped:
                     TorClient.sharedInstance.start(delegate: self)
+                case .connected:
+                    getBalanceNow()
                 default:
                     break
                 }
@@ -192,7 +193,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                         }
                         balance += utxo.doubleValueSats
                     }
-                    var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation
+                    var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
                     if balance == 0 {
                         textBalance = "0.00000000 BTC"
                     }
