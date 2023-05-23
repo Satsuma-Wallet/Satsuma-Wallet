@@ -61,12 +61,15 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     }
     
     @IBAction func useAllFundsAction(_ sender: Any) {
+        amountInput.resignFirstResponder()
+        self.addSpinnerView(description: "fetching recommended fee...")
         WalletTools.shared.sweepWallet(destinationAddress: address) { [weak self] (message, rawTx) in
             guard let self = self else { return }
             guard let rawTx = rawTx else {
                 self.showAlert(title: "", message: message ?? "Uknown.")
                 return
             }
+            self.removeSpinnerView()
             self.rawTx = rawTx.rawTx
             self.fee = rawTx.fee
             self.amount = rawTx.amount

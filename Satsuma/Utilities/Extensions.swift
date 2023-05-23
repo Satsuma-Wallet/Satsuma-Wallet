@@ -18,6 +18,61 @@ public extension UIViewController {
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    static let blurView = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffect.Style.dark))
+    static let label = UILabel()
+    static let activityIndicator = UIActivityIndicatorView()
+    
+    func addSpinnerView(description: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            UIViewController.blurView.frame = CGRect(x: 0, y: -20, width: self.view.frame.width, height: self.view.frame.height + 20)
+            self.view.addSubview(UIViewController.blurView)
+            
+            UIViewController.activityIndicator.frame = CGRect(x: UIViewController.blurView.center.x - 25,
+                                             y: (UIViewController.blurView.center.y - 25) - 20,
+                                             width: 50,
+                                             height: 50)
+            
+            UIViewController.activityIndicator.hidesWhenStopped = true
+            UIViewController.activityIndicator.style = .large
+            UIViewController.activityIndicator.alpha = 0
+            UIViewController.blurView.contentView.addSubview(UIViewController.activityIndicator)
+            UIViewController.activityIndicator.startAnimating()
+            
+            UIViewController.label.frame = CGRect(x: (UIViewController.blurView.frame.maxX - 250) / 2,
+                                 y: UIViewController.activityIndicator.frame.maxY,
+                                 width: 250,
+                                 height: 60)
+            
+            UIViewController.label.text = description.lowercased()
+            UIViewController.label.textColor = UIColor.white
+            UIViewController.label.font = UIFont.systemFont(ofSize: 12)
+            UIViewController.label.textAlignment = .center
+            UIViewController.label.alpha = 0
+            UIViewController.label.numberOfLines = 0
+            UIViewController.blurView.contentView.addSubview(UIViewController.label)
+            
+            UIView.animate(withDuration: 0.5) {
+                UIViewController.blurView.alpha = 1
+                UIViewController.activityIndicator.alpha = 1
+                UIViewController.label.alpha = 1
+            }
+        }
+    }
+    
+    func removeSpinnerView() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.5, animations: {
+                UIViewController.blurView.alpha = 0
+            }) { _ in
+                UIViewController.blurView.removeFromSuperview()
+                UIViewController.label.removeFromSuperview()
+                UIViewController.activityIndicator.stopAnimating()
+                UIViewController.activityIndicator.removeFromSuperview()
+            }
+        }
+    }
 }
 
 public extension Data {
