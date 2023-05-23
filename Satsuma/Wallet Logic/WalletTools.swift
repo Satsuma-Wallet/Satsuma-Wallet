@@ -577,7 +577,7 @@ class WalletTools {
                         let tx = Transaction(inputs, [output])
                         
                         self.signTransaction(inputDerivs: inputDerivs, tx: tx) { (message, rawTx) in
-                            completion((message, (rawTx!.rawTx, rawTx!.fee, Double(amountToSend))))
+                            completion((message, (rawTx!.rawTx, rawTx!.fee, Double(amountToSend).btcAmountDouble)))
                         }
                     }
                 }
