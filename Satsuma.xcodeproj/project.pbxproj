@@ -30,8 +30,6 @@
 		0AE78E772A09349B0024067D /* Satsuma.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E752A09349B0024067D /* Satsuma.xcdatamodeld */; };
 		0AE78E792A09349D0024067D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E782A09349D0024067D /* Assets.xcassets */; };
 		0AE78E7C2A09349D0024067D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E7A2A09349D0024067D /* LaunchScreen.storyboard */; };
-		0AE78E852A0935170024067D /* Tor.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE78E832A0935070024067D /* Tor.xcframework */; };
-		0AE78E862A0935170024067D /* Tor.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE78E832A0935070024067D /* Tor.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0AE78E8F2A0935590024067D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E882A0935570024067D /* Extensions.swift */; };
 		0AE78E912A0935590024067D /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8A2A0935580024067D /* CoreDataService.swift */; };
 		0AE78E922A0935590024067D /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8B2A0935580024067D /* Crypto.swift */; };
@@ -43,7 +41,7 @@
 		0AEE78382A093BAC00643090 /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE78372A093BAC00643090 /* Commands.swift */; };
 		0AEE783A2A09402E00643090 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE78392A09402E00643090 /* SettingsViewController.swift */; };
 		0AEE78402A09559000643090 /* WalletTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE783F2A09559000643090 /* WalletTools.swift */; };
-		F652723CD8B78D504F0C1430 /* libPods-Satsuma.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CCDC6D58B52639C7FDEE77E9 /* libPods-Satsuma.a */; };
+		1FA19C9929CD42A74F0917BC /* Pods_Satsuma.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C28628D5D2B2766519F159A1 /* Pods_Satsuma.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,7 +51,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0AE78E862A0935170024067D /* Tor.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,7 +83,6 @@
 		0AE78E782A09349D0024067D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0AE78E7B2A09349D0024067D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0AE78E7D2A09349D0024067D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0AE78E832A0935070024067D /* Tor.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; path = Tor.xcframework; sourceTree = "<group>"; };
 		0AE78E882A0935570024067D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0AE78E8A2A0935580024067D /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
 		0AE78E8B2A0935580024067D /* Crypto.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crypto.swift; sourceTree = "<group>"; };
@@ -99,7 +95,7 @@
 		0AEE78392A09402E00643090 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		0AEE783F2A09559000643090 /* WalletTools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTools.swift; sourceTree = "<group>"; };
 		C24AC09DC570F3028986CAB7 /* Pods-Satsuma.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Satsuma.debug.xcconfig"; path = "Target Support Files/Pods-Satsuma/Pods-Satsuma.debug.xcconfig"; sourceTree = "<group>"; };
-		CCDC6D58B52639C7FDEE77E9 /* libPods-Satsuma.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Satsuma.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C28628D5D2B2766519F159A1 /* Pods_Satsuma.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Satsuma.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D865C5449635256DE4F04AFA /* Pods-Satsuma.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Satsuma.release.xcconfig"; path = "Target Support Files/Pods-Satsuma/Pods-Satsuma.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -108,8 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AE78E852A0935170024067D /* Tor.xcframework in Frameworks */,
-				F652723CD8B78D504F0C1430 /* libPods-Satsuma.a in Frameworks */,
+				1FA19C9929CD42A74F0917BC /* Pods_Satsuma.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,7 +125,6 @@
 			children = (
 				0A3FD6F12A0C055200B6F8E3 /* FiatConverter.swift */,
 				0AE78E8E2A0935580024067D /* TorManager.swift */,
-				0AE78E832A0935070024067D /* Tor.xcframework */,
 				0AE78E962A0936DD0024067D /* MempoolRequest.swift */,
 				0AEE78372A093BAC00643090 /* Commands.swift */,
 			);
@@ -245,7 +239,7 @@
 		D9445C58B719AF0602B32691 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CCDC6D58B52639C7FDEE77E9 /* libPods-Satsuma.a */,
+				C28628D5D2B2766519F159A1 /* Pods_Satsuma.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

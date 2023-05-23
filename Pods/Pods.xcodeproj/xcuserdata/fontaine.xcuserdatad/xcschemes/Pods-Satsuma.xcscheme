@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AC8BFF58CB8DE7D4A2E3B2EDF4A0C2C1"
-               BuildableName = "libPods-Satsuma.a"
+               BuildableName = "Pods_Satsuma.framework"
                BlueprintName = "Pods-Satsuma"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-Satsuma/Pods-Satsuma-frameworks.sh
+${BUILT_PRODUCTS_DIR}/Tor/Tor.framework
 ${PODS_XCFRAMEWORKS_BUILD_DIR}/LibWally/LibWally.framework/LibWally

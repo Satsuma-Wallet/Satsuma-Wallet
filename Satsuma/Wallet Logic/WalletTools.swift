@@ -11,6 +11,7 @@ import Foundation
 import LibWally
 
 // A single place for all backend wallet related code, anything that uses LibWally.
+
 class WalletTools {
     
     static let shared = WalletTools()
@@ -77,14 +78,18 @@ class WalletTools {
                 }
                 
                 for (i, recAddress) in recAddresses.enumerated() {
+                    
                     self.saveAddress(dict: recAddress,
                                      entityName: .receiveAddr,
                                      completion: completion)
+                    
                     if i + 1 == recAddresses.count {
                         for (x, changeAddress) in changeAddresses.enumerated() {
+                            
                             self.saveAddress(dict: changeAddress,
                                              entityName: .changeAddr,
                                              completion: completion)
+                            
                             if x + 1 == changeAddresses.count {
                                 completion((nil, true))
                             }
@@ -106,13 +111,9 @@ class WalletTools {
         /// Get the triple sha256 hash of the entropy.
         let data = Crypto.sha256hash(Crypto.sha256hash(Crypto.sha256hash(Data(randomBytes))))
         
-        /// Remove half so we end up with 16 bytes of entropy, which translates to a 12 word seed phrase.
-        //data = data.subdata(in: Range(0...15))
-        
-        /// Pass our 16 bytes of entropy to Libwally to create a 12 word BIP39 mnemonic.
+        /// Pass our 32 bytes of entropy to Libwally to create a 24 word BIP39 mnemonic.
         let entropy = BIP39Entropy(data)
         guard let mnemonic = BIP39Mnemonic(entropy) else { return nil }
-        print("mnemonic: \(mnemonic)")
         return mnemonic.description
     }
     
@@ -142,6 +143,7 @@ class WalletTools {
             let wallet = Wallet(wallets[0])
             
             func checkChangeAddresses() {
+                print("checkChangeAddresses")
                 CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
                     guard let changeAddresses = changeAddresses else {
                         completion(false)
@@ -150,7 +152,7 @@ class WalletTools {
                     
                     let lastChangeAddr = Address_Cache(changeAddresses[changeAddresses.count - 1])
                     
-                    if wallet.changeIndex == lastChangeAddr.index {
+                    if (lastChangeAddr.index - wallet.changeIndex) <= 5 {
                         // need to refill the receive keypool
                         guard let newChangeAddresses = self.addresses(wallet: wallet, change: 1) else {
                             completion(false)
@@ -184,8 +186,10 @@ class WalletTools {
                 }
                 
                 let lastRecAddr = Address_Cache(recAddresses[recAddresses.count - 1])
+                print("wallet.receiveIndex: \(wallet.receiveIndex)")
+                print("lastRecAddr.index: \(lastRecAddr.index)")
                 
-                if wallet.receiveIndex == lastRecAddr.index {
+                if (lastRecAddr.index - wallet.receiveIndex) <= 5  {
                     // need to refill the receive keypool
                     guard let newAddresses = self.addresses(wallet: wallet, change: 0) else {
                         completion(false)
@@ -408,86 +412,28 @@ class WalletTools {
                                             completion(("Failed deleting consumed utxo.", false))
                                             return
                                         }
-                                        if self.isChangeAddress(address: addr) && wallet.changeIndex > addr.index {// can probably remove this check
+                                        if self.isChangeAddress(address: addr) {
                                             print("delete change address: \(addr.address)")
                                             CoreDataService.deleteEntity(id: addr.id, entityName: .changeAddr) { deleted in
                                                 guard deleted else {
                                                     completion(("Failed deleting used change address.", false))
                                                     return
                                                 }
-                                                // add new change address to keypool here
-                                                CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddr in
-                                                    guard let changeAddr = changeAddr else { return }
-                                                    
-                                                    var maxInd = 0.0
-                                                    for changeAddr in changeAddr {
-                                                        let cA = Address_Cache(changeAddr)
-                                                        maxInd += cA.index
-                                                    }
-                                                    
-                                                    guard let newChangeAddress = self.address(wallet: wallet,
-                                                                                              isChange: 1,
-                                                                                              index: maxIndex + 1) else {
-                                                        completion(("Failed deriving a new change address.", false))
-                                                        return
-                                                    }
-                                                    
-                                                    CoreDataService.saveEntity(dict: newChangeAddress, entityName: .changeAddr) { saved in
-                                                        guard saved else {
-                                                            completion(("Failed saving new chamge address.", false))
-                                                            return
-                                                        }
-                                                        
-                                                        finish()
-                                                    }
-                                                }
                                             }
                                             
-                                        } else if wallet.receiveIndex > addr.index {// can probably remove this check
+                                        } else {
                                             print("delete receive address: \(addr.address)")
                                             CoreDataService.deleteEntity(id: addr.id, entityName: .receiveAddr) { deleted in
                                                 guard deleted else {
                                                     completion(("Failed deleting used receive address.", false))
                                                     return
                                                 }
-                                                
-                                                // add new receive address to keypool here
-                                                CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddr in
-                                                    guard let recAddr = recAddr else { return }
-                                                    
-                                                    var maxInd = 0.0
-                                                    for recAddr in recAddr {
-                                                        let rA = Address_Cache(recAddr)
-                                                        maxInd += rA.index
-                                                    }
-                                                    
-                                                    guard let newRecAddress = self.address(wallet: wallet,
-                                                                                           isChange: 0,
-                                                                                           index: maxIndex + 1) else {
-                                                        completion(("Failed deriving a new receive address.", false))
-                                                        return
-                                                    }
-                                                    
-                                                    CoreDataService.saveEntity(dict: newRecAddress, entityName: .receiveAddr) { saved in
-                                                        guard saved else {
-                                                            completion(("Failed saving new receive address.", false))
-                                                            return
-                                                        }
-                                                        
-                                                        finish()
-                                                    }
-                                                }
                                             }
-                                        } else {
-                                            finish()
                                         }
                                         
                                         if i + 1 == filteredUtxos.count {
                                             finish()
                                         }
-                                    }
-                                    if i + 1 == filteredUtxos.count {
-                                        finish()
                                     }
                                 }
                             }

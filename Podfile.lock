@@ -1,8 +1,18 @@
 PODS:
   - LibWally (0.0.1)
+  - Tor (407.13.1):
+    - Tor/CTor (= 407.13.1)
+  - Tor/Core (407.13.1)
+  - Tor/CTor (407.13.1):
+    - Tor/Core
 
 DEPENDENCIES:
   - LibWally (from `https://github.com/Sjors/LibWally-Swift.git`, tag `v0.0.9`)
+  - Tor (~> 407.13)
+
+SPEC REPOS:
+  trunk:
+    - Tor
 
 EXTERNAL SOURCES:
   LibWally:
@@ -18,7 +28,8 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   LibWally: ce1e98813b64aa26b4cc3a92d3c7f57db97b2fb2
+  Tor: 1664d036a03ea9bd6851b76ce09550872c54ca98
 
-PODFILE CHECKSUM: 0402da0035625a6215094d0ff8ff8f753e88bb6e
+PODFILE CHECKSUM: 15d19dea2df9a60c076e83af93f43e722d260114
 
 COCOAPODS: 1.11.3

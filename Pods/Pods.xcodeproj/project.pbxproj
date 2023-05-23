@@ -20,143 +20,318 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		10FE38DF8FCCC4588BB0C977CE390AE0 /* Pods-Satsuma-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1326C6516D7E9CA6A6B5985AF1E99E73 /* Pods-Satsuma-umbrella.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		88806D205B6E10ED8E83EEC1D9532527 /* Pods-Satsuma-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA22D10C0885A2104A3491DCAEDCA355 /* Pods-Satsuma-dummy.m */; };
+		0E137FB61EECE2D1785637D6726DFE8D /* TORThread.m in Sources */ = {isa = PBXBuildFile; fileRef = 674347C7B0B09236C56119263851F40D /* TORThread.m */; };
+		1AC17F862905B5460DDE302FDFD1FA25 /* Pods-Satsuma-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F5D3DC1BFF02E0D78E0F0CD5766DE3D /* Pods-Satsuma-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2611F177696E2A66F975380A6A454CF3 /* TORNode.h in Headers */ = {isa = PBXBuildFile; fileRef = F05857F67F3DC46712D865D82061E482 /* TORNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		26AE58409AEA2184A13D7F4708EA1F4A /* TORControlCommand.h in Headers */ = {isa = PBXBuildFile; fileRef = 72C44CDFC7D0DABA60D32A6D1D129AC3 /* TORControlCommand.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2E130C16B421087BB848950F31D2CF04 /* TORCircuit.h in Headers */ = {isa = PBXBuildFile; fileRef = E555FF0EF971302590A14B7ED8AC40BB /* TORCircuit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		335DEA30448AB10FBCB222B8277B1913 /* TORX25519KeyPair.m in Sources */ = {isa = PBXBuildFile; fileRef = E44C61FDE8D1C490BF2100C7AD9D5829 /* TORX25519KeyPair.m */; };
+		381B7BF30DBFAAC1DAE2B1880D164436 /* NSBundle+GeoIP.m in Sources */ = {isa = PBXBuildFile; fileRef = A7BF74E6297A772E3BAA52DFAFC9A5B1 /* NSBundle+GeoIP.m */; };
+		3A0596A742E2C53B27ECDBD23E7C068B /* TORController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DF1D08FEF5F71AF1864ACA8AA3C425A /* TORController.m */; };
+		436C1E979BE0B9A303FFC399A5A5D285 /* NSBundle+GeoIP.h in Headers */ = {isa = PBXBuildFile; fileRef = DD2F6DABC3ADDF26863BE3D3760DFD39 /* NSBundle+GeoIP.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		45053561ADABECB5EA30D9C4EBA41A60 /* TORConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 251B3FB086615045C87A6D34133576CE /* TORConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		45BC107449BDC788A2627D9BAC856A19 /* TORCircuit.m in Sources */ = {isa = PBXBuildFile; fileRef = F58D1E122C281B14849694EF2EE0619F /* TORCircuit.m */; };
+		494DD925F853173BE2FF6FAD9D221ED1 /* TORAuthKey.h in Headers */ = {isa = PBXBuildFile; fileRef = 0B98739816DB2E1C546B8AF9B2C30CC1 /* TORAuthKey.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4A68C116C6E58F3D946088DA1154C5D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		5AB51DA4FEBA799A220B1452D854D6B8 /* TORThread.h in Headers */ = {isa = PBXBuildFile; fileRef = E216C69A4108B2A684F88838A34370D8 /* TORThread.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5EF69D098AC20C9427FE3371AB1FE328 /* TOROnionAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 676E99A586786CB16ABB4A1EE7B15733 /* TOROnionAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		63D9D6459EA8D96040080AB4C8AF57E3 /* TORLogging.h in Headers */ = {isa = PBXBuildFile; fileRef = 6728F11DA9417E29C1C8731DAF30CEB9 /* TORLogging.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		727166B6AB9E523B9A82DE99652776DB /* Pods-Satsuma-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 654DC8A10E87FE5E6A9A2DC78854FC21 /* Pods-Satsuma-dummy.m */; };
+		7716277E37BB3692F5F6A271210EE66E /* TORLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = D0AD4E84E1402E4DF8646F255B78E0DE /* TORLogging.m */; };
+		7E63089C6B01F434375F565B8F3F6C4C /* TORControlReplyCode.h in Headers */ = {isa = PBXBuildFile; fileRef = AE1086933D4D9EB0EB61CF98533CA5FE /* TORControlReplyCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		882F719501F7AC5F1EA547D21AC53306 /* NSCharacterSet+PredefinedSets.h in Headers */ = {isa = PBXBuildFile; fileRef = 27852ACD040DB2E8BA285D107062EB3D /* NSCharacterSet+PredefinedSets.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		96B8EF98B558C8269762339D213D02AA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		9BA03406DD5644B87F3248E6686B40CF /* TOROnionAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 38A49FC2D28BD1D88A95537E2CCA9546 /* TOROnionAuth.m */; };
+		A041118A9C829A5C8C4A0AF329147FAB /* TORConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D4E76175A817BC50D0DE253D388904E /* TORConfiguration.m */; };
+		C3AB25BEE855F2BD5C2464F2CBC6487B /* TORAuthKey.m in Sources */ = {isa = PBXBuildFile; fileRef = C5505C91AECF7ED648968E65B145A5BE /* TORAuthKey.m */; };
+		CBBCBE28EFD2CD840859921D60DD6710 /* Tor-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 079FA4B4A5246D91BC2083DF9C3F51BD /* Tor-dummy.m */; };
+		CD0222471D80141ECA2D6CEDBA1C1ACC /* Tor-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4744C3BCB61260DAA5137A4667CB6D40 /* Tor-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC790F7FC76922B0E49592B9092A205B /* TORNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D8067C8D4E220B8355302D105E4E164D /* TORNode.m */; };
+		E1DC10B35695A90D54149E3F5014948C /* TORController.h in Headers */ = {isa = PBXBuildFile; fileRef = 640C07199F5FC85764159F1BF07BB179 /* TORController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E53A32AC0C5A6AAFEC3741D1A60BE2A9 /* NSCharacterSet+PredefinedSets.m in Sources */ = {isa = PBXBuildFile; fileRef = 76698D1CCAF0371F8B481AAED923B656 /* NSCharacterSet+PredefinedSets.m */; };
+		FE461BCC39DBA6E6DA81C6FEC6AC208F /* TORX25519KeyPair.h in Headers */ = {isa = PBXBuildFile; fileRef = 84C5467C8D8625E39ACF6D8D836768F8 /* TORX25519KeyPair.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		1A2F31CF443356B2F3531FF5D39C793E /* PBXContainerItemProxy */ = {
+		987AAC5EC7CFB42CECBF525885A766A4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 6A932D74C5328BC7B7450EC085F74F84;
 			remoteInfo = LibWally;
 		};
+		F8D7B81AA22FCF9877466F21905B482F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AFA4383E7CE3B1B637884AC967B81A0E;
+			remoteInfo = Tor;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		11235A172DFE877E629FFD8C5374EE7D /* LibWally.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LibWally.debug.xcconfig; sourceTree = "<group>"; };
-		1326C6516D7E9CA6A6B5985AF1E99E73 /* Pods-Satsuma-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Satsuma-umbrella.h"; sourceTree = "<group>"; };
-		38B232053D6E7328FB07320F6AEB70D3 /* Pods-Satsuma-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Satsuma-frameworks.sh"; sourceTree = "<group>"; };
-		3C84AA33574D29666F3A701F1D4C43AE /* Pods-Satsuma.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Satsuma.modulemap"; sourceTree = "<group>"; };
-		434D652968EC28C5E86670FC5294B950 /* Pods-Satsuma */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "Pods-Satsuma"; path = "libPods-Satsuma.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		77DA49238464F7DCC5A8790B8CC5B94B /* LibWally-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "LibWally-xcframeworks.sh"; sourceTree = "<group>"; };
-		9639D202015E461C5BBCCA153DAEB1BF /* Pods-Satsuma-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Satsuma-acknowledgements.plist"; sourceTree = "<group>"; };
+		079FA4B4A5246D91BC2083DF9C3F51BD /* Tor-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Tor-dummy.m"; sourceTree = "<group>"; };
+		0B98739816DB2E1C546B8AF9B2C30CC1 /* TORAuthKey.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORAuthKey.h; path = Tor/Classes/Core/TORAuthKey.h; sourceTree = "<group>"; };
+		1F9696DBDB1389C21FBF8683C32C1920 /* Tor.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Tor.modulemap; sourceTree = "<group>"; };
+		251B3FB086615045C87A6D34133576CE /* TORConfiguration.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORConfiguration.h; path = Tor/Classes/Core/TORConfiguration.h; sourceTree = "<group>"; };
+		27852ACD040DB2E8BA285D107062EB3D /* NSCharacterSet+PredefinedSets.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSCharacterSet+PredefinedSets.h"; path = "Tor/Classes/Core/NSCharacterSet+PredefinedSets.h"; sourceTree = "<group>"; };
+		2C8145C9052CFBBAC5967FEE5E563651 /* Pods-Satsuma.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Satsuma.debug.xcconfig"; sourceTree = "<group>"; };
+		385436B553F9B951FD1F5D1801DC858A /* Pods-Satsuma.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Satsuma.modulemap"; sourceTree = "<group>"; };
+		38A49FC2D28BD1D88A95537E2CCA9546 /* TOROnionAuth.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TOROnionAuth.m; path = Tor/Classes/Core/TOROnionAuth.m; sourceTree = "<group>"; };
+		3DF1D08FEF5F71AF1864ACA8AA3C425A /* TORController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORController.m; path = Tor/Classes/Core/TORController.m; sourceTree = "<group>"; };
+		434D652968EC28C5E86670FC5294B950 /* Pods-Satsuma */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Satsuma"; path = Pods_Satsuma.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4744C3BCB61260DAA5137A4667CB6D40 /* Tor-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Tor-umbrella.h"; sourceTree = "<group>"; };
+		49895B58BA990CA9F8B61B8F5275E92B /* Pods-Satsuma.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Satsuma.release.xcconfig"; sourceTree = "<group>"; };
+		4D4E76175A817BC50D0DE253D388904E /* TORConfiguration.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORConfiguration.m; path = Tor/Classes/Core/TORConfiguration.m; sourceTree = "<group>"; };
+		5B1750A3381889B2B2CE0F3A3824AB7D /* Tor-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Tor-Info.plist"; sourceTree = "<group>"; };
+		6142C57E2A09403D2C608AC490107BF3 /* Tor-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Tor-prefix.pch"; sourceTree = "<group>"; };
+		63AC694AE3E7342DC7FF8ECB93FB01AD /* LibWally-xcframeworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "LibWally-xcframeworks.sh"; sourceTree = "<group>"; };
+		640C07199F5FC85764159F1BF07BB179 /* TORController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORController.h; path = Tor/Classes/Core/TORController.h; sourceTree = "<group>"; };
+		654DC8A10E87FE5E6A9A2DC78854FC21 /* Pods-Satsuma-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Satsuma-dummy.m"; sourceTree = "<group>"; };
+		6728F11DA9417E29C1C8731DAF30CEB9 /* TORLogging.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORLogging.h; path = Tor/Classes/CTor/TORLogging.h; sourceTree = "<group>"; };
+		674347C7B0B09236C56119263851F40D /* TORThread.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORThread.m; path = Tor/Classes/CTor/TORThread.m; sourceTree = "<group>"; };
+		676E99A586786CB16ABB4A1EE7B15733 /* TOROnionAuth.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TOROnionAuth.h; path = Tor/Classes/Core/TOROnionAuth.h; sourceTree = "<group>"; };
+		69EEE4E77F35F986EDC00FD865A383BF /* Tor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Tor.release.xcconfig; sourceTree = "<group>"; };
+		72C44CDFC7D0DABA60D32A6D1D129AC3 /* TORControlCommand.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORControlCommand.h; path = Tor/Classes/Core/TORControlCommand.h; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		73365C64EE11C5009354A07897312EC1 /* Pods-Satsuma-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Satsuma-acknowledgements.plist"; sourceTree = "<group>"; };
+		76698D1CCAF0371F8B481AAED923B656 /* NSCharacterSet+PredefinedSets.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSCharacterSet+PredefinedSets.m"; path = "Tor/Classes/Core/NSCharacterSet+PredefinedSets.m"; sourceTree = "<group>"; };
+		7CDCBC17165AE67CD295407E5C71361C /* Pods-Satsuma-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Satsuma-Info.plist"; sourceTree = "<group>"; };
+		84C5467C8D8625E39ACF6D8D836768F8 /* TORX25519KeyPair.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORX25519KeyPair.h; path = Tor/Classes/CTor/TORX25519KeyPair.h; sourceTree = "<group>"; };
+		89D08827C38D7B2945458A7F9CF9B9FE /* Tor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Tor.debug.xcconfig; sourceTree = "<group>"; };
+		8DC405003B8C8D94F3AE91CE1EB2C5A6 /* LibWally.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LibWally.debug.xcconfig; sourceTree = "<group>"; };
+		8F5D3DC1BFF02E0D78E0F0CD5766DE3D /* Pods-Satsuma-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Satsuma-umbrella.h"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A77E37FC509958CFAD7273170B8572D6 /* LibWally.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LibWally.release.xcconfig; sourceTree = "<group>"; };
-		BEDBE325BD4DDF67BD3FA8EE5A029E86 /* Pods-Satsuma-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Satsuma-acknowledgements.markdown"; sourceTree = "<group>"; };
-		CA6270AF77ABDCD05693D7CAA97BAC25 /* Pods-Satsuma.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Satsuma.release.xcconfig"; sourceTree = "<group>"; };
-		DA22D10C0885A2104A3491DCAEDCA355 /* Pods-Satsuma-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Satsuma-dummy.m"; sourceTree = "<group>"; };
-		E33A029304FD8353A569D16F6256BE7E /* Pods-Satsuma.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Satsuma.debug.xcconfig"; sourceTree = "<group>"; };
-		E3E251203728E4FD9C61CA8AED0BD5E9 /* LibWally.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = LibWally.xcframework; path = build/LibWally.xcframework; sourceTree = "<group>"; };
+		A7BF74E6297A772E3BAA52DFAFC9A5B1 /* NSBundle+GeoIP.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSBundle+GeoIP.m"; path = "Tor/Classes/Core/NSBundle+GeoIP.m"; sourceTree = "<group>"; };
+		ADA9ABFC8E11DBA59D385A40C3B2BEF4 /* Tor */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Tor; path = Tor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE1086933D4D9EB0EB61CF98533CA5FE /* TORControlReplyCode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORControlReplyCode.h; path = Tor/Classes/Core/TORControlReplyCode.h; sourceTree = "<group>"; };
+		B8F8ABFB5AC17B010D59ACAD4B3716B9 /* LibWally.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = LibWally.xcframework; path = build/LibWally.xcframework; sourceTree = "<group>"; };
+		BFDEBEAB010F2D1C2BBB5A6C85022F9B /* Pods-Satsuma-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Satsuma-acknowledgements.markdown"; sourceTree = "<group>"; };
+		C5505C91AECF7ED648968E65B145A5BE /* TORAuthKey.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORAuthKey.m; path = Tor/Classes/Core/TORAuthKey.m; sourceTree = "<group>"; };
+		D0AD4E84E1402E4DF8646F255B78E0DE /* TORLogging.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORLogging.m; path = Tor/Classes/CTor/TORLogging.m; sourceTree = "<group>"; };
+		D8067C8D4E220B8355302D105E4E164D /* TORNode.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORNode.m; path = Tor/Classes/Core/TORNode.m; sourceTree = "<group>"; };
+		D9945518DC6149616060A2E2D05088E2 /* Pods-Satsuma-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Satsuma-frameworks.sh"; sourceTree = "<group>"; };
+		DD2F6DABC3ADDF26863BE3D3760DFD39 /* NSBundle+GeoIP.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSBundle+GeoIP.h"; path = "Tor/Classes/Core/NSBundle+GeoIP.h"; sourceTree = "<group>"; };
+		E216C69A4108B2A684F88838A34370D8 /* TORThread.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORThread.h; path = Tor/Classes/CTor/TORThread.h; sourceTree = "<group>"; };
+		E44C61FDE8D1C490BF2100C7AD9D5829 /* TORX25519KeyPair.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORX25519KeyPair.m; path = Tor/Classes/CTor/TORX25519KeyPair.m; sourceTree = "<group>"; };
+		E4C1C9356DF1D5D93D17C57D4593A826 /* LibWally.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LibWally.release.xcconfig; sourceTree = "<group>"; };
+		E555FF0EF971302590A14B7ED8AC40BB /* TORCircuit.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORCircuit.h; path = Tor/Classes/Core/TORCircuit.h; sourceTree = "<group>"; };
+		F05857F67F3DC46712D865D82061E482 /* TORNode.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = TORNode.h; path = Tor/Classes/Core/TORNode.h; sourceTree = "<group>"; };
+		F58D1E122C281B14849694EF2EE0619F /* TORCircuit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = TORCircuit.m; path = Tor/Classes/Core/TORCircuit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		8378935453C8A2784AD7CF703E1DC780 /* Frameworks */ = {
+		59BE96C7E347CA6FFFE922F92E9AABBE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96B8EF98B558C8269762339D213D02AA /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		73ED757EE792DF9ADA08FEA69FDAC16E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4A68C116C6E58F3D946088DA1154C5D7 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		06210B13C7963609F3951F2E899E49C5 /* Frameworks */ = {
+		0690F7F3C057595639698D18EFD23F47 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E3E251203728E4FD9C61CA8AED0BD5E9 /* LibWally.xcframework */,
+				6E563035012D737EF608C0F43109E0E1 /* LibWally */,
+				54AFD8E9CC1FD7CFEDF4EA70B5A0F168 /* Tor */,
 			);
-			name = Frameworks;
+			name = Pods;
 			sourceTree = "<group>";
 		};
-		15D9BBDB140794FFC45F449D666312C9 /* Pods-Satsuma */ = {
+		070A50F7A1470308FDB385A198D7DAAD /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				3C84AA33574D29666F3A701F1D4C43AE /* Pods-Satsuma.modulemap */,
-				BEDBE325BD4DDF67BD3FA8EE5A029E86 /* Pods-Satsuma-acknowledgements.markdown */,
-				9639D202015E461C5BBCCA153DAEB1BF /* Pods-Satsuma-acknowledgements.plist */,
-				DA22D10C0885A2104A3491DCAEDCA355 /* Pods-Satsuma-dummy.m */,
-				38B232053D6E7328FB07320F6AEB70D3 /* Pods-Satsuma-frameworks.sh */,
-				1326C6516D7E9CA6A6B5985AF1E99E73 /* Pods-Satsuma-umbrella.h */,
-				E33A029304FD8353A569D16F6256BE7E /* Pods-Satsuma.debug.xcconfig */,
-				CA6270AF77ABDCD05693D7CAA97BAC25 /* Pods-Satsuma.release.xcconfig */,
+				381CCEDF4600EED5B77118CEA25A8EF6 /* Pods-Satsuma */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		12A37BF2A56BDBBDA1C8FB98C0B10727 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				63AC694AE3E7342DC7FF8ECB93FB01AD /* LibWally-xcframeworks.sh */,
+				8DC405003B8C8D94F3AE91CE1EB2C5A6 /* LibWally.debug.xcconfig */,
+				E4C1C9356DF1D5D93D17C57D4593A826 /* LibWally.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/LibWally";
+			sourceTree = "<group>";
+		};
+		29164F436B7F38F938A0E2AB43076D7B /* CTor */ = {
+			isa = PBXGroup;
+			children = (
+				6728F11DA9417E29C1C8731DAF30CEB9 /* TORLogging.h */,
+				D0AD4E84E1402E4DF8646F255B78E0DE /* TORLogging.m */,
+				E216C69A4108B2A684F88838A34370D8 /* TORThread.h */,
+				674347C7B0B09236C56119263851F40D /* TORThread.m */,
+				84C5467C8D8625E39ACF6D8D836768F8 /* TORX25519KeyPair.h */,
+				E44C61FDE8D1C490BF2100C7AD9D5829 /* TORX25519KeyPair.m */,
+			);
+			name = CTor;
+			sourceTree = "<group>";
+		};
+		381CCEDF4600EED5B77118CEA25A8EF6 /* Pods-Satsuma */ = {
+			isa = PBXGroup;
+			children = (
+				385436B553F9B951FD1F5D1801DC858A /* Pods-Satsuma.modulemap */,
+				BFDEBEAB010F2D1C2BBB5A6C85022F9B /* Pods-Satsuma-acknowledgements.markdown */,
+				73365C64EE11C5009354A07897312EC1 /* Pods-Satsuma-acknowledgements.plist */,
+				654DC8A10E87FE5E6A9A2DC78854FC21 /* Pods-Satsuma-dummy.m */,
+				D9945518DC6149616060A2E2D05088E2 /* Pods-Satsuma-frameworks.sh */,
+				7CDCBC17165AE67CD295407E5C71361C /* Pods-Satsuma-Info.plist */,
+				8F5D3DC1BFF02E0D78E0F0CD5766DE3D /* Pods-Satsuma-umbrella.h */,
+				2C8145C9052CFBBAC5967FEE5E563651 /* Pods-Satsuma.debug.xcconfig */,
+				49895B58BA990CA9F8B61B8F5275E92B /* Pods-Satsuma.release.xcconfig */,
 			);
 			name = "Pods-Satsuma";
 			path = "Target Support Files/Pods-Satsuma";
 			sourceTree = "<group>";
 		};
-		2633F5F9A4F48C8640FD3169E5D8AD92 /* Pods */ = {
+		3D8E3162CCE9E332D4214A3F4D3134F7 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				6285A68AFDAA047E84214E8D7BC79DA7 /* LibWally */,
+				1F9696DBDB1389C21FBF8683C32C1920 /* Tor.modulemap */,
+				079FA4B4A5246D91BC2083DF9C3F51BD /* Tor-dummy.m */,
+				5B1750A3381889B2B2CE0F3A3824AB7D /* Tor-Info.plist */,
+				6142C57E2A09403D2C608AC490107BF3 /* Tor-prefix.pch */,
+				4744C3BCB61260DAA5137A4667CB6D40 /* Tor-umbrella.h */,
+				89D08827C38D7B2945458A7F9CF9B9FE /* Tor.debug.xcconfig */,
+				69EEE4E77F35F986EDC00FD865A383BF /* Tor.release.xcconfig */,
 			);
-			name = Pods;
+			name = "Support Files";
+			path = "../Target Support Files/Tor";
 			sourceTree = "<group>";
 		};
-		6285A68AFDAA047E84214E8D7BC79DA7 /* LibWally */ = {
+		4C6918F859F5DD360E9206CC58AC5487 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				06210B13C7963609F3951F2E899E49C5 /* Frameworks */,
-				EA9587EB1489A414605F778542218E34 /* Support Files */,
+				B8F8ABFB5AC17B010D59ACAD4B3716B9 /* LibWally.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		54AFD8E9CC1FD7CFEDF4EA70B5A0F168 /* Tor */ = {
+			isa = PBXGroup;
+			children = (
+				A13EE198EE176FCCD64176F9D536BAF4 /* Core */,
+				29164F436B7F38F938A0E2AB43076D7B /* CTor */,
+				3D8E3162CCE9E332D4214A3F4D3134F7 /* Support Files */,
+			);
+			name = Tor;
+			path = Tor;
+			sourceTree = "<group>";
+		};
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		6E563035012D737EF608C0F43109E0E1 /* LibWally */ = {
+			isa = PBXGroup;
+			children = (
+				4C6918F859F5DD360E9206CC58AC5487 /* Frameworks */,
+				12A37BF2A56BDBBDA1C8FB98C0B10727 /* Support Files */,
 			);
 			name = LibWally;
 			path = LibWally;
 			sourceTree = "<group>";
 		};
-		783592167FD57B65E824DE328829F05F /* Targets Support Files */ = {
+		8BA77B8EB0B49CF4184E3D309CDFE41D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				15D9BBDB140794FFC45F449D666312C9 /* Pods-Satsuma */,
+				434D652968EC28C5E86670FC5294B950 /* Pods-Satsuma */,
+				ADA9ABFC8E11DBA59D385A40C3B2BEF4 /* Tor */,
 			);
-			name = "Targets Support Files";
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A13EE198EE176FCCD64176F9D536BAF4 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				DD2F6DABC3ADDF26863BE3D3760DFD39 /* NSBundle+GeoIP.h */,
+				A7BF74E6297A772E3BAA52DFAFC9A5B1 /* NSBundle+GeoIP.m */,
+				27852ACD040DB2E8BA285D107062EB3D /* NSCharacterSet+PredefinedSets.h */,
+				76698D1CCAF0371F8B481AAED923B656 /* NSCharacterSet+PredefinedSets.m */,
+				0B98739816DB2E1C546B8AF9B2C30CC1 /* TORAuthKey.h */,
+				C5505C91AECF7ED648968E65B145A5BE /* TORAuthKey.m */,
+				E555FF0EF971302590A14B7ED8AC40BB /* TORCircuit.h */,
+				F58D1E122C281B14849694EF2EE0619F /* TORCircuit.m */,
+				251B3FB086615045C87A6D34133576CE /* TORConfiguration.h */,
+				4D4E76175A817BC50D0DE253D388904E /* TORConfiguration.m */,
+				72C44CDFC7D0DABA60D32A6D1D129AC3 /* TORControlCommand.h */,
+				640C07199F5FC85764159F1BF07BB179 /* TORController.h */,
+				3DF1D08FEF5F71AF1864ACA8AA3C425A /* TORController.m */,
+				AE1086933D4D9EB0EB61CF98533CA5FE /* TORControlReplyCode.h */,
+				F05857F67F3DC46712D865D82061E482 /* TORNode.h */,
+				D8067C8D4E220B8355302D105E4E164D /* TORNode.m */,
+				676E99A586786CB16ABB4A1EE7B15733 /* TOROnionAuth.h */,
+				38A49FC2D28BD1D88A95537E2CCA9546 /* TOROnionAuth.m */,
+			);
+			name = Core;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				D89477F20FB1DE18A04690586D7808C4 /* Frameworks */,
-				2633F5F9A4F48C8640FD3169E5D8AD92 /* Pods */,
-				F60E3F22E0DC2EC39902886C4B96A706 /* Products */,
-				783592167FD57B65E824DE328829F05F /* Targets Support Files */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				0690F7F3C057595639698D18EFD23F47 /* Pods */,
+				8BA77B8EB0B49CF4184E3D309CDFE41D /* Products */,
+				070A50F7A1470308FDB385A198D7DAAD /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		D89477F20FB1DE18A04690586D7808C4 /* Frameworks */ = {
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EA9587EB1489A414605F778542218E34 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				77DA49238464F7DCC5A8790B8CC5B94B /* LibWally-xcframeworks.sh */,
-				11235A172DFE877E629FFD8C5374EE7D /* LibWally.debug.xcconfig */,
-				A77E37FC509958CFAD7273170B8572D6 /* LibWally.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/LibWally";
-			sourceTree = "<group>";
-		};
-		F60E3F22E0DC2EC39902886C4B96A706 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				434D652968EC28C5E86670FC5294B950 /* Pods-Satsuma */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		E0DCB70AF1245F8A5F3CE1146E8D40AF /* Headers */ = {
+		48FCD5355777345EBC22680D9CFF26F1 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10FE38DF8FCCC4588BB0C977CE390AE0 /* Pods-Satsuma-umbrella.h in Headers */,
+				436C1E979BE0B9A303FFC399A5A5D285 /* NSBundle+GeoIP.h in Headers */,
+				882F719501F7AC5F1EA547D21AC53306 /* NSCharacterSet+PredefinedSets.h in Headers */,
+				CD0222471D80141ECA2D6CEDBA1C1ACC /* Tor-umbrella.h in Headers */,
+				494DD925F853173BE2FF6FAD9D221ED1 /* TORAuthKey.h in Headers */,
+				2E130C16B421087BB848950F31D2CF04 /* TORCircuit.h in Headers */,
+				45053561ADABECB5EA30D9C4EBA41A60 /* TORConfiguration.h in Headers */,
+				26AE58409AEA2184A13D7F4708EA1F4A /* TORControlCommand.h in Headers */,
+				E1DC10B35695A90D54149E3F5014948C /* TORController.h in Headers */,
+				7E63089C6B01F434375F565B8F3F6C4C /* TORControlReplyCode.h in Headers */,
+				63D9D6459EA8D96040080AB4C8AF57E3 /* TORLogging.h in Headers */,
+				2611F177696E2A66F975380A6A454CF3 /* TORNode.h in Headers */,
+				5EF69D098AC20C9427FE3371AB1FE328 /* TOROnionAuth.h in Headers */,
+				5AB51DA4FEBA799A220B1452D854D6B8 /* TORThread.h in Headers */,
+				FE461BCC39DBA6E6DA81C6FEC6AC208F /* TORX25519KeyPair.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A41D6BA04ABDF4F4B2F35A1409FBC0CE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AC17F862905B5460DDE302FDFD1FA25 /* Pods-Satsuma-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -165,21 +340,45 @@
 /* Begin PBXNativeTarget section */
 		AC8BFF58CB8DE7D4A2E3B2EDF4A0C2C1 /* Pods-Satsuma */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A0DB1DECCC7409A62304C9AC78E958D7 /* Build configuration list for PBXNativeTarget "Pods-Satsuma" */;
+			buildConfigurationList = 82C3A10A99071C65734C6C1EB0604200 /* Build configuration list for PBXNativeTarget "Pods-Satsuma" */;
 			buildPhases = (
-				E0DCB70AF1245F8A5F3CE1146E8D40AF /* Headers */,
-				84AE234C1D560F8C9A9F2EBB08DC319B /* Sources */,
-				8378935453C8A2784AD7CF703E1DC780 /* Frameworks */,
+				A41D6BA04ABDF4F4B2F35A1409FBC0CE /* Headers */,
+				D6C604D2ABF1140ABF63C0A9889B2CE1 /* Sources */,
+				73ED757EE792DF9ADA08FEA69FDAC16E /* Frameworks */,
+				D6EAC3ACC047337A3850E1A164E4A1C1 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				607AB67827C2D50BC1BD98E36CF1BCEF /* PBXTargetDependency */,
+				35AFFEF2610D9DA661CA431AC0FF13E9 /* PBXTargetDependency */,
+				B8002CB8B8961900A913A622126B941E /* PBXTargetDependency */,
 			);
 			name = "Pods-Satsuma";
-			productName = "Pods-Satsuma";
+			productName = Pods_Satsuma;
 			productReference = 434D652968EC28C5E86670FC5294B950 /* Pods-Satsuma */;
-			productType = "com.apple.product-type.library.static";
+			productType = "com.apple.product-type.framework";
+		};
+		AFA4383E7CE3B1B637884AC967B81A0E /* Tor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 447C5F67EF9D466F114FD0FBAFE0E6CC /* Build configuration list for PBXNativeTarget "Tor" */;
+			buildPhases = (
+				48FCD5355777345EBC22680D9CFF26F1 /* Headers */,
+				F07DE6704FB4B627E429EF9E9C73C4A4 /* [CP-User] Build XZ */,
+				A396C00411D3200C7880FE9275611553 /* [CP-User] Build OpenSSL */,
+				9C0C53D2DB55B8F699140E7A36D1E6B1 /* [CP-User] Build libevent */,
+				E6F145DAF81BCDB22DB2C7A297E24163 /* [CP-User] Build Tor */,
+				4685487245ACAD0BE9426A6714F06F1D /* Sources */,
+				59BE96C7E347CA6FFFE922F92E9AABBE /* Frameworks */,
+				FC2E86A8043D1F47F4AAA17760C498CE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tor;
+			productName = Tor;
+			productReference = ADA9ABFC8E11DBA59D385A40C3B2BEF4 /* Tor */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -199,17 +398,87 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = F60E3F22E0DC2EC39902886C4B96A706 /* Products */;
+			productRefGroup = 8BA77B8EB0B49CF4184E3D309CDFE41D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				6A932D74C5328BC7B7450EC085F74F84 /* LibWally */,
 				AC8BFF58CB8DE7D4A2E3B2EDF4A0C2C1 /* Pods-Satsuma */,
+				AFA4383E7CE3B1B637884AC967B81A0E /* Tor */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		D6EAC3ACC047337A3850E1A164E4A1C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FC2E86A8043D1F47F4AAA17760C498CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXShellScriptBuildPhase section */
+		9C0C53D2DB55B8F699140E7A36D1E6B1 /* [CP-User] Build libevent */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Build libevent";
+			outputPaths = (
+				"libevent-always-execute-this-but-supress-warning",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${PODS_TARGET_SRCROOT}/Tor/libevent\"\n../libevent.sh\n";
+		};
+		A396C00411D3200C7880FE9275611553 /* [CP-User] Build OpenSSL */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Build OpenSSL";
+			outputPaths = (
+				"openssl-always-execute-this-but-supress-warning",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${PODS_TARGET_SRCROOT}/Tor/openssl\"\n../openssl.sh\n";
+		};
+		E6F145DAF81BCDB22DB2C7A297E24163 /* [CP-User] Build Tor */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Build Tor";
+			outputPaths = (
+				"tor-always-execute-this-but-supress-warning",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${PODS_TARGET_SRCROOT}/Tor/tor\"\n../tor.sh\n";
+		};
+		F07DE6704FB4B627E429EF9E9C73C4A4 /* [CP-User] Build XZ */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] Build XZ";
+			outputPaths = (
+				"xz-always-execute-this-but-supress-warning",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cd \"${PODS_TARGET_SRCROOT}/Tor/xz\"\n../xz.sh\n";
+		};
 		FD6AC96150A527EC6BC13333747CCCA5 /* [CP] Copy XCFrameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -230,51 +499,89 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		84AE234C1D560F8C9A9F2EBB08DC319B /* Sources */ = {
+		4685487245ACAD0BE9426A6714F06F1D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				88806D205B6E10ED8E83EEC1D9532527 /* Pods-Satsuma-dummy.m in Sources */,
+				381B7BF30DBFAAC1DAE2B1880D164436 /* NSBundle+GeoIP.m in Sources */,
+				E53A32AC0C5A6AAFEC3741D1A60BE2A9 /* NSCharacterSet+PredefinedSets.m in Sources */,
+				CBBCBE28EFD2CD840859921D60DD6710 /* Tor-dummy.m in Sources */,
+				C3AB25BEE855F2BD5C2464F2CBC6487B /* TORAuthKey.m in Sources */,
+				45BC107449BDC788A2627D9BAC856A19 /* TORCircuit.m in Sources */,
+				A041118A9C829A5C8C4A0AF329147FAB /* TORConfiguration.m in Sources */,
+				3A0596A742E2C53B27ECDBD23E7C068B /* TORController.m in Sources */,
+				7716277E37BB3692F5F6A271210EE66E /* TORLogging.m in Sources */,
+				DC790F7FC76922B0E49592B9092A205B /* TORNode.m in Sources */,
+				9BA03406DD5644B87F3248E6686B40CF /* TOROnionAuth.m in Sources */,
+				0E137FB61EECE2D1785637D6726DFE8D /* TORThread.m in Sources */,
+				335DEA30448AB10FBCB222B8277B1913 /* TORX25519KeyPair.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D6C604D2ABF1140ABF63C0A9889B2CE1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				727166B6AB9E523B9A82DE99652776DB /* Pods-Satsuma-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		607AB67827C2D50BC1BD98E36CF1BCEF /* PBXTargetDependency */ = {
+		35AFFEF2610D9DA661CA431AC0FF13E9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = LibWally;
 			target = 6A932D74C5328BC7B7450EC085F74F84 /* LibWally */;
-			targetProxy = 1A2F31CF443356B2F3531FF5D39C793E /* PBXContainerItemProxy */;
+			targetProxy = 987AAC5EC7CFB42CECBF525885A766A4 /* PBXContainerItemProxy */;
+		};
+		B8002CB8B8961900A913A622126B941E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Tor;
+			target = AFA4383E7CE3B1B637884AC967B81A0E /* Tor */;
+			targetProxy = F8D7B81AA22FCF9877466F21905B482F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		2D99811E78DB0BB955AA3A638A080AC7 /* Debug */ = {
+		55C1492E9042883312EA94A2691DFC34 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E33A029304FD8353A569D16F6256BE7E /* Pods-Satsuma.debug.xcconfig */;
+			baseConfigurationReference = 89D08827C38D7B2945458A7F9CF9B9FE /* Tor.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Satsuma/Pods-Satsuma.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Tor/Tor-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Tor/Tor-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Tor/Tor.modulemap";
+				PRODUCT_MODULE_NAME = Tor;
+				PRODUCT_NAME = Tor;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
 		};
 		646EFFEF69F8E6D7A5DAB2CC7DFEFA19 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 11235A172DFE877E629FFD8C5374EE7D /* LibWally.debug.xcconfig */;
+			baseConfigurationReference = 8DC405003B8C8D94F3AE91CE1EB2C5A6 /* LibWally.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -355,9 +662,47 @@
 			};
 			name = Debug;
 		};
+		8E957DB6F614BDD8A8B6219919DAA29D /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 49895B58BA990CA9F8B61B8F5275E92B /* Pods-Satsuma.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Satsuma/Pods-Satsuma-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Satsuma/Pods-Satsuma.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		8EFA3483FB99B019D76260C1F2B31040 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A77E37FC509958CFAD7273170B8572D6 /* LibWally.release.xcconfig */;
+			baseConfigurationReference = E4C1C9356DF1D5D93D17C57D4593A826 /* LibWally.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -435,32 +780,91 @@
 			};
 			name = Release;
 		};
-		B1D46531A64A83BA423A6D1A60B1378E /* Release */ = {
+		A5DDCB9D45FDC8C7CA606F99B74C4678 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CA6270AF77ABDCD05693D7CAA97BAC25 /* Pods-Satsuma.release.xcconfig */;
+			baseConfigurationReference = 69EEE4E77F35F986EDC00FD865A383BF /* Tor.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Tor/Tor-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Tor/Tor-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MODULEMAP_FILE = "Target Support Files/Tor/Tor.modulemap";
+				PRODUCT_MODULE_NAME = Tor;
+				PRODUCT_NAME = Tor;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		FFA0648965DF050B99058D8B42D09624 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C8145C9052CFBBAC5967FEE5E563651 /* Pods-Satsuma.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Satsuma/Pods-Satsuma-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACH_O_TYPE = staticlib;
 				MODULEMAP_FILE = "Target Support Files/Pods-Satsuma/Pods-Satsuma.modulemap";
 				OTHER_LDFLAGS = "";
 				OTHER_LIBTOOLFLAGS = "";
 				PODS_ROOT = "$(SRCROOT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
-			name = Release;
+			name = Debug;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		447C5F67EF9D466F114FD0FBAFE0E6CC /* Build configuration list for PBXNativeTarget "Tor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				55C1492E9042883312EA94A2691DFC34 /* Debug */,
+				A5DDCB9D45FDC8C7CA606F99B74C4678 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -470,11 +874,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A0DB1DECCC7409A62304C9AC78E958D7 /* Build configuration list for PBXNativeTarget "Pods-Satsuma" */ = {
+		82C3A10A99071C65734C6C1EB0604200 /* Build configuration list for PBXNativeTarget "Pods-Satsuma" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				2D99811E78DB0BB955AA3A638A080AC7 /* Debug */,
-				B1D46531A64A83BA423A6D1A60B1378E /* Release */,
+				FFA0648965DF050B99058D8B42D09624 /* Debug */,
+				8E957DB6F614BDD8A8B6219919DAA29D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

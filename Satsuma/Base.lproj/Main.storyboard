@@ -792,7 +792,7 @@
                                                     </attributedString>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="gY0-qv-aTZ" kind="show" id="K37-oU-Cck"/>
+                                                    <segue destination="gY0-qv-aTZ" kind="show" identifier="segueToReceive" id="K37-oU-Cck"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cN8-sf-5Zx">
@@ -807,7 +807,7 @@
                                                     </attributedString>
                                                 </buttonConfiguration>
                                                 <connections>
-                                                    <segue destination="Pe2-9Y-6y1" kind="show" id="67N-pE-FC6"/>
+                                                    <segue destination="Pe2-9Y-6y1" kind="show" identifier="segueToSend" id="67N-pE-FC6"/>
                                                 </connections>
                                             </button>
                                         </subviews>

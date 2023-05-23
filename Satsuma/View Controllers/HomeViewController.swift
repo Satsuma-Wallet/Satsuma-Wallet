@@ -18,6 +18,8 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     var dataRefresher = UIBarButtonItem()
     var satsumaLabel = UIBarButtonItem()
     var utxosConfirmed = true
+    var navigatedToSend = false
+    var initialLoad = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +41,11 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                     guard updated else {
                         return
                     }
-                    self.fetchBalance()
+                    if navigatedToSend || initialLoad {
+                        self.fetchBalance()
+                        navigatedToSend = false
+                        initialLoad = false
+                    }
                 }
             } else {
                 self.promptForPassphrase()
@@ -159,6 +165,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             guard let self = self else { return }
             
             guard done else {
+                self.removeLoader()
                 self.showAlert(title: "", message: "Refill keypool failed.")
                 return
             }
@@ -174,6 +181,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 
                 CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
                     guard let utxos = utxos else { return }
+                    
                     var balance = 0.0
                     self.utxosConfirmed = true
                     
@@ -249,15 +257,21 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     }
     
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        switch segue.identifier {
+        case "segueToSend":
+            navigatedToSend = true
+        default:
+            break
+        }
     }
-    */
+    
 
 }
 
