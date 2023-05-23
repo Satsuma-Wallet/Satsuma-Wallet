@@ -64,6 +64,38 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="feeCell" id="KOe-rn-PFY">
+                                        <rect key="frame" x="0.0" y="93.666667938232422" width="361" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="KOe-rn-PFY" id="9jI-dh-uy3">
+                                            <rect key="frame" x="0.0" y="0.0" width="361" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fee priority" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P01-pd-6re">
+                                                    <rect key="frame" x="20" y="11.333333333333336" width="86" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="86" id="p8k-dy-m7s"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <segmentedControl opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Avw-G4-SBk">
+                                                    <rect key="frame" x="246" y="6.3333333333333321" width="95" height="31.999999999999996"/>
+                                                    <segments>
+                                                        <segment title="High"/>
+                                                        <segment title="Low"/>
+                                                    </segments>
+                                                </segmentedControl>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="P01-pd-6re" firstAttribute="leading" secondItem="9jI-dh-uy3" secondAttribute="leadingMargin" id="c9V-hf-wMf"/>
+                                                <constraint firstItem="P01-pd-6re" firstAttribute="centerY" secondItem="9jI-dh-uy3" secondAttribute="centerY" id="fkR-kd-xj8"/>
+                                                <constraint firstAttribute="trailing" secondItem="Avw-G4-SBk" secondAttribute="trailing" constant="20" symbolic="YES" id="nl1-HB-Tk9"/>
+                                                <constraint firstItem="Avw-G4-SBk" firstAttribute="centerY" secondItem="P01-pd-6re" secondAttribute="centerY" id="wLd-Ny-U07"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>

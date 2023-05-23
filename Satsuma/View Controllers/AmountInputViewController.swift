@@ -94,7 +94,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.balanceOutlet.text = "Balance: \(balance) BTC"
+                self.balanceOutlet.text = "Balance: \(balance.avoidNotation) BTC"
             }
             
             if amount > 0, amount < self.balance {
@@ -202,18 +202,39 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                     if i + 1 == changeAddresses.count {
                         guard let changeAddressToUse = changeAddressToUse else { return }
                         
-                        WalletTools.shared.createTx(destinationAddress: self.address, changeAddress: changeAddressToUse, btcAmountToSend: self.amount) { [weak self] (message, rawTx) in
-                            guard let self = self else { return }
-                            guard let rawTx = rawTx else {
-                                self.showAlert(title: "", message: message ?? "Uknown.")
+                        MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
+                            guard let response = response as? [String:Any] else {
+                                self.showAlert(title: "Failed fetching fee target.", message: errorDesc ?? "Unknown.")
                                 return
                             }
-                            self.rawTx = rawTx.rawTx
-                            self.fee = rawTx.fee
-                            DispatchQueue.main.async {
-                                self.performSegue(withIdentifier: "segueToSend", sender: self)
+                            
+                            let recommendedFee = RecommendedFee(response)
+                            var feeTarget = 0
+                            let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+                            if priority == "high" {
+                                feeTarget = recommendedFee.fastestFee
+                            } else {
+                                feeTarget = recommendedFee.economyFee
+                            }
+                            
+                            WalletTools.shared.createTx(destinationAddress: self.address,
+                                                        changeAddress: changeAddressToUse,
+                                                        btcAmountToSend: self.amount,
+                                                        feeTarget: feeTarget) { [weak self] (message, rawTx) in
+                                guard let self = self else { return }
+                                guard let rawTx = rawTx else {
+                                    self.showAlert(title: "", message: message ?? "Uknown.")
+                                    return
+                                }
+                                self.rawTx = rawTx.rawTx
+                                self.fee = rawTx.fee
+                                DispatchQueue.main.async {
+                                    self.performSegue(withIdentifier: "segueToSend", sender: self)
+                                }
                             }
                         }
+                        
+                        
                     }
                 }
             }

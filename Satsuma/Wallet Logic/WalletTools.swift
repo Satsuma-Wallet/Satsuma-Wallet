@@ -491,12 +491,13 @@ class WalletTools {
     func createTx(destinationAddress: String,
                   changeAddress: Address_Cache,
                   btcAmountToSend: Double,
+                  feeTarget: Int,
                   completion: @escaping ((message: String?, (rawTx: String, fee: Int)?)) -> Void) {
         
         print("createTx")
         
         /// First, get our utxos to be consumed.
-        utxosForInputs(btcAmountToSend: btcAmountToSend) { (message, utxos) in
+        utxosForInputs(btcAmountToSend: btcAmountToSend, feeTarget: feeTarget) { (message, utxos) in
             guard let utxos = utxos else {
                 completion((message, nil))
                 return
@@ -509,6 +510,8 @@ class WalletTools {
                 completion(("Creating inputs failed.", nil))
                 return
             }
+            
+            print("inputs count: \(inputs.count)")
             
             /// Create our outputs.
             var outputs:[TxOutput] = []
@@ -526,23 +529,46 @@ class WalletTools {
             // MARK: TODO - Need to add mining fee estimation here to avoid making a change output if it is exactly over by the mining fee?
             print("totalInputAmount: \(totalInputAmount)")
             print("amountSats: \(amountSats)")
-            if totalInputAmount > amountSats {
-                print("need an additional output for change.")
-                /// Calculate change amount.
-                /// Get our change amount. 500 is the hardcoded mining fee for testing.
-                // MARK: TODO - Do not hardcode the mining fee.
-                let changeAmount = (totalInputAmount - amountSats) - 500
-                
-                /// Create our change output.
-                guard let changeOutput = self.output(address: changeAddress.address, amount: Satoshi(changeAmount)) else {
+            
+            MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
+                guard let response = response as? [String:Any] else {
+                    completion(("Failed fee estimation: \(errorDesc ?? "Unknown.")", nil))
                     return
                 }
-                /// Append to our existing output.
-                outputs.append(changeOutput)
                 
-                /// Now we have our inputs and outputs we can create the transaction.
-                let tx = Transaction(inputs, outputs)
-                self.signTransaction(inputDerivs: inputDerivs, tx: tx, completion: completion)
+                let recommendedFee = RecommendedFee(response)
+                var feeTarget = 0
+                let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+                
+                if priority == "high" {
+                    feeTarget = recommendedFee.fastestFee
+                } else {
+                    feeTarget = recommendedFee.economyFee
+                }
+                
+                let estimatedTxSizeWu = (inputs.count * 272) + 248 + 42// gets estimated WU
+                let estimatedVBytes = estimatedTxSizeWu / 4
+                let estimtatedFee = estimatedVBytes * feeTarget
+                print("estimatedFee in sats: \(estimtatedFee)")
+                
+                if totalInputAmount + UInt64(estimtatedFee) >= amountSats {
+                    print("need an additional output for change.")
+                    /// Calculate change amount.
+                    let changeAmount = (totalInputAmount - amountSats) - UInt64(estimtatedFee)
+                    
+                    /// Create our change output.
+                    guard let changeOutput = self.output(address: changeAddress.address, amount: Satoshi(changeAmount)) else {
+                        return
+                    }
+                    /// Append to our existing output.
+                    outputs.append(changeOutput)
+                    
+                    print("outputs.count: \(outputs.count)")
+                    
+                    /// Now we have our inputs and outputs we can create the transaction.
+                    let tx = Transaction(inputs, outputs)
+                    self.signTransaction(inputDerivs: inputDerivs, tx: tx, completion: completion)
+                }
             }
         }
     }
@@ -624,7 +650,7 @@ class WalletTools {
                         completion(("Signing raw transaction failed.", nil))
                         return
                     }
-                    
+                                        
                     completion((nil, signedTx))
                 }
             }
@@ -636,11 +662,15 @@ class WalletTools {
         print("signedTx")
         let fee = Int(tx.fee!)
         guard tx.sign(privKeys) else { return nil }
+        print("signed tx size: \(tx.vbytes!)")
+        print("signed tx fee rate: \(tx.feeRate!)")
+        print("signed tx fee: \(fee)")
         return (rawTx: tx.description!, fee: fee)
     }
     
     /// Fetches utxos we can use as inputs for a given amount we want to spend.
     private func utxosForInputs(btcAmountToSend: Double,
+                                feeTarget: Int,
                                 completion: @escaping ((message: String?, utxos: [Utxo_Cache]?)) -> Void) {
         print("getInputs")
         /// Fetches all of our saved utxos.
@@ -652,6 +682,10 @@ class WalletTools {
             
             var utxosToConsume:[Utxo_Cache] = []
             var totalUtxoAmount = 0.0
+            var inputWU = 272
+            let estimatedWUForOutputs = 248 + 42
+            
+            var amountPlusFee = btcAmountToSend
             
             for (i, utxo) in utxos.enumerated() {
                 let utxo = Utxo_Cache(utxo)
@@ -661,26 +695,41 @@ class WalletTools {
                 // MARK: TODO - Ensure mining fee will also be covered.
                 print("totalUtxoAmount: \(totalUtxoAmount)")
                 print("btcAmountToSend: \(btcAmountToSend)")
-                
-                let amountPlusFee = btcAmountToSend + 0.000005
-                
-                if totalUtxoAmount < amountPlusFee, utxo.doubleValueSats.btcAmountDouble < amountPlusFee, utxo.confirmed {
+                                    
+                if totalUtxoAmount < btcAmountToSend, utxo.doubleValueSats.btcAmountDouble > amountPlusFee, utxo.confirmed {
                     totalUtxoAmount += utxo.doubleValueSats.btcAmountDouble
+                    inputWU += inputWU
                     utxosToConsume.append(utxo)
-                } else if totalUtxoAmount < amountPlusFee, utxo.doubleValueSats.btcAmountDouble > amountPlusFee, utxo.confirmed {
+                    
+                } else if totalUtxoAmount < btcAmountToSend, utxo.doubleValueSats.btcAmountDouble < amountPlusFee, utxo.confirmed {
                     totalUtxoAmount += utxo.doubleValueSats.btcAmountDouble
+                    inputWU += inputWU
                     utxosToConsume.append(utxo)
                 }
                 
-                if i + 1 == utxos.count {
-                    /// Input amount now exceeds the amount to send, we can return our utxos to be used as inputs.
-                    if totalUtxoAmount >= amountPlusFee {
-                        print("we have enough inputs now. need to make sure we have enough for the fee too.")
+                let estimatedTxSizeWu = inputWU + estimatedWUForOutputs
+                let estimatedVBytes = estimatedTxSizeWu / 4
+                let estimtatedFee = estimatedVBytes * feeTarget
+                amountPlusFee += Double(estimtatedFee).btcAmountDouble
+                
+                if totalUtxoAmount >= amountPlusFee {
+                    if i + 1 == utxos.count {
+                        print("we have enough inputs now.")
                         completion((nil, utxosToConsume))
-                    } else {
-                        completion(("Insufficient funds.", nil))
                     }
+                } else if i + 1 == utxos.count {
+                    completion(("Insufficient funds.", nil))
                 }
+                
+//                if i + 1 == utxos.count {
+//                    /// Input amount now exceeds the amount to send, we can return our utxos to be used as inputs.
+//                    if totalUtxoAmount >= amountPlusFee {
+//                        print("we have enough inputs now.")
+//                        completion((nil, utxosToConsume))
+//                    } else {
+//                        completion(("Insufficient funds.", nil))
+//                    }
+//                }
             }
         }
     }

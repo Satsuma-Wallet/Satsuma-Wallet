@@ -211,7 +211,6 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             } else {
                 showFiatBalance(balance: textBalance + "\n(pending confirmation)")
             }
-            
         }
     }
     

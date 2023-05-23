@@ -37,6 +37,7 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     
     private enum Section: Int {
         case network
+        case fee
     }
     
 //    private func headerName(for section: Section) -> String {
@@ -62,12 +63,32 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         return torCell
     }
     
+    private func feeCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let feeCell = settingsTable.dequeueReusableCell(withIdentifier: "feeCell", for: indexPath)
+        let feeSegmentedControl = feeCell.viewWithTag(1) as! UISegmentedControl
+        let feePriority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+        if feePriority == "high" {
+            feeSegmentedControl.selectedSegmentIndex = 0
+        } else {
+            feeSegmentedControl.selectedSegmentIndex = 1
+        }
+        feeSegmentedControl.addTarget(self, action: #selector(selectFee(_:)), for: .valueChanged)
+        return feeCell
+    }
+    
     @objc func toggleTor(_ sender: UISwitch) {
         UserDefaults.standard.setValue(sender.isOn, forKey: "torEnabled")
-        if sender.isOn {
-            //TorClient.sharedInstance.start(delegate: nil)
-        } else {
+        if !sender.isOn {
             TorClient.sharedInstance.resign()
+        }
+    }
+    
+    @objc func selectFee(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            UserDefaults.standard.set("high", forKey: "feePriority")
+        default:
+            UserDefaults.standard.set("low", forKey: "feePriority")
         }
     }
 }
@@ -79,6 +100,9 @@ extension SettingsViewController: UITableViewDelegate {
             
         case .network:
             return torCell(indexPath)
+            
+        case .fee:
+            return feeCell(indexPath)
         
         default:
             return blankCell()
@@ -112,20 +136,20 @@ extension SettingsViewController: UITableViewDelegate {
         return 54
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section) {
-        case .network:
-            print("tor row selected")
-        default:
-            break
-        }
-    }
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        switch Section(rawValue: indexPath.section) {
+//        case .network:
+//            print("tor row selected")
+//        default:
+//            break
+//        }
+//    }
     
 }
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

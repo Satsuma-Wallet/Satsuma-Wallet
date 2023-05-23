@@ -56,22 +56,41 @@ class MempoolRequest {
                 completion((nil, "Tor client session data is nil"))
                 return
             }
-                                    
-            guard let jsonResult = try? JSONSerialization.jsonObject(with: urlContent, options: .mutableLeaves) as? NSArray else {
-                if let text = urlContent.utf8String {
-                    completion((text, nil))
-                    return
-                } else {
-                    completion((nil, "Error serializing."))
-                    return
-                }
+            
+            if let jsonResult = try? JSONSerialization.jsonObject(with: urlContent, options: .mutableLeaves) as? NSArray {
+                #if DEBUG
+                print("jsonResult: \(jsonResult)")
+                #endif
+                completion((jsonResult, nil))
+                
+            } else if let jsonResult = try? JSONSerialization.jsonObject(with: urlContent, options: .mutableLeaves) as? [String:Any] {
+                #if DEBUG
+                print("jsonResult: \(jsonResult)")
+                #endif
+                completion((jsonResult, nil))
+                
+            } else if let text = urlContent.utf8String {
+                #if DEBUG
+                print("text result: \(text)")
+                #endif
+                completion((text, nil))
+                
+            } else {
+                completion((nil, "Error serializing response."))
             }
+                                    
+//            guard let jsonResult = try? JSONSerialization.jsonObject(with: urlContent, options: .mutableLeaves) as? NSArray else {
+//                if let text = urlContent.utf8String {
+//                    completion((text, nil))
+//                    return
+//                } else {
+//                    completion((nil, "Error serializing."))
+//                    return
+//                }
+//            }
             
-            #if DEBUG
-            print("jsonResult: \(jsonResult)")
-            #endif
             
-            completion((jsonResult, nil))
+            
         }
         task.resume()
     }
