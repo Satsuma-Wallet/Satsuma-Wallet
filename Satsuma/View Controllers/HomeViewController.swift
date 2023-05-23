@@ -155,33 +155,42 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func getBalanceNow() {
-        WalletTools.shared.updateCoreData { [weak self] (message, success) in
+        WalletTools.shared.refillKeypool { [weak self] done in
             guard let self = self else { return }
             
-            guard success else {
-                self.removeLoader()
-                self.showAlert(title: "Updating local data failed.", message: message ?? "Unknown.")
+            guard done else {
+                self.showAlert(title: "", message: "Refill keypool failed.")
                 return
             }
             
-            CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
-                guard let utxos = utxos else { return }
-                var balance = 0.0
-                self.utxosConfirmed = true
+            WalletTools.shared.updateCoreData { [weak self] (message, success) in
+                guard let self = self else { return }
                 
-                for utxo in utxos {
-                    let utxo = Utxo_Cache(utxo)
-                    if !utxo.confirmed {
-                        self.utxosConfirmed = false
+                guard success else {
+                    self.removeLoader()
+                    self.showAlert(title: "Updating local data failed.", message: message ?? "Unknown.")
+                    return
+                }
+                
+                CoreDataService.retrieveEntity(entityName: .utxos) { utxos in
+                    guard let utxos = utxos else { return }
+                    var balance = 0.0
+                    self.utxosConfirmed = true
+                    
+                    for utxo in utxos {
+                        let utxo = Utxo_Cache(utxo)
+                        if !utxo.confirmed {
+                            self.utxosConfirmed = false
+                        }
+                        balance += utxo.doubleValueSats
                     }
-                    balance += utxo.doubleValueSats
+                    var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation
+                    if balance == 0 {
+                        textBalance = "0.00000000 BTC"
+                    }
+                    self.showBtcBalance(balance: textBalance)
+                    self.getFxRate(balance: balance)
                 }
-                var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation
-                if balance == 0 {
-                    textBalance = "0.00000000 BTC"
-                }
-                self.showBtcBalance(balance: textBalance)
-                self.getFxRate(balance: balance)
             }
         }
     }

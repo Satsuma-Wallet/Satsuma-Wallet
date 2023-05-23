@@ -131,29 +131,115 @@ class WalletTools {
         }
     }
     
-    private func updateUtxoDatabase(utxos: [[String:Any]],
-                                    completion: @escaping ((message: String?, success: Bool)) -> Void) {
-        print("updateUtxoDatabase")
-        /// Fetch all of our receive addresses.
-        CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddresses in
-            guard let recAddresses = recAddresses else {
-                completion(("No receive address Core Data entity.", false))
+    func refillKeypool(completion: @escaping ((Bool)) -> Void) {
+        print("refillKeypool")
+        CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
+            guard let wallets = wallets, wallets.count > 0 else {
+                completion(true)
                 return
             }
             
-            /// Fetch all of our change addresses.
-            CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
-                guard let changeAddresses = changeAddresses else {
-                    completion(("No change address Core Data entity.", false))
+            let wallet = Wallet(wallets[0])
+            
+            func checkChangeAddresses() {
+                CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
+                    guard let changeAddresses = changeAddresses else {
+                        completion(false)
+                        return
+                    }
+                    
+                    let lastChangeAddr = Address_Cache(changeAddresses[changeAddresses.count - 1])
+                    
+                    if wallet.changeIndex == lastChangeAddr.index {
+                        // need to refill the receive keypool
+                        guard let newChangeAddresses = self.addresses(wallet: wallet, change: 1) else {
+                            completion(false)
+                            return
+                        }
+                        
+                        for (i, newChangeAddress) in newChangeAddresses.enumerated() {
+                            
+                            self.saveAddress(dict: newChangeAddress, entityName: .changeAddr) { (message, saved) in
+                                guard saved else {
+                                    completion(false)
+                                    return
+                                }
+                                
+                                if i + 1 == newChangeAddresses.count {
+                                    completion(true)
+                                }
+                            }
+                        }
+                    } else {
+                        completion(true)
+                    }
+                }
+            }
+            
+            /// Fetch all of our receive addresses.
+            CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddresses in
+                guard let recAddresses = recAddresses else {
+                    completion(false)
                     return
                 }
                 
-                /// Ensure we start from the first address.
-                self.currentIndex = 0
+                let lastRecAddr = Address_Cache(recAddresses[recAddresses.count - 1])
                 
-                /// Fetch utxos from our addresses and compare to any existing utxos to update our data base.
-                self.createUtxosFromAddresses(addresses: recAddresses + changeAddresses,
-                                              completion: completion)
+                if wallet.receiveIndex == lastRecAddr.index {
+                    // need to refill the receive keypool
+                    guard let newAddresses = self.addresses(wallet: wallet, change: 0) else {
+                        completion(false)
+                        return
+                    }
+                    
+                    for (i, newRecAddress) in newAddresses.enumerated() {
+                        
+                        self.saveAddress(dict: newRecAddress, entityName: .receiveAddr) { (message, saved) in
+                            guard saved else {
+                                completion(false)
+                                return
+                            }
+                            
+                            if i + 1 == newAddresses.count {
+                                checkChangeAddresses()
+                            }
+                        }
+                    }
+                } else {
+                    checkChangeAddresses()
+                }
+            }
+        }
+    }
+    
+    private func updateUtxoDatabase(utxos: [[String:Any]],
+                                    completion: @escaping ((message: String?, success: Bool)) -> Void) {
+        print("updateUtxoDatabase")
+        CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
+            guard let wallets = wallets else { return }
+            
+            let wallet = Wallet(wallets[0])
+            
+            /// Fetch all of our receive addresses.
+            CoreDataService.retrieveEntity(entityName: .receiveAddr) { recAddresses in
+                guard let recAddresses = recAddresses else {
+                    completion(("No receive address Core Data entity.", false))
+                    return
+                }
+                
+                CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
+                    guard let changeAddresses = changeAddresses else {
+                        completion(("No change address Core Data entity.", false))
+                        return
+                    }
+                    
+                    /// Ensure we start from the first address.
+                    self.currentIndex = 0
+                    
+                    /// Fetch utxos from our addresses and compare to any existing utxos to update our data base.
+                    self.createUtxosFromAddresses(addresses: recAddresses + changeAddresses,
+                                                  completion: completion)
+                }
             }
         }
     }
@@ -225,7 +311,7 @@ class WalletTools {
         }
     }
     
-    /// Here we loop through our keypool to find any new utxos or detect consumed utxos.
+    /// Here we loop through our keypool to find any new utxos or detect consumed utxos/addresses.
     private func createUtxosFromAddresses(addresses: [[String:Any]],
                                           completion: @escaping ((message: String?, success: Bool)) -> Void) {
         print("createUtxosFromAddresses")
@@ -253,7 +339,7 @@ class WalletTools {
             /// Wallet receive address index.
             let walletReceiveIndex = Int(wallet.receiveIndex)
             // MARK: TODO - Check if receive index is approaching the max receive address index, if it is we need to increase it.
-            
+                        
             /// Wallet change address index.
             let walletChangeIndex = Int(wallet.changeIndex)
             // MARK: TODO - Check if change index is approaching the max change address index, if it is we need to increase it.
