@@ -794,16 +794,7 @@ class WalletTools {
                 /// Checks if we need to keep adding utxos to be used as inputs based on the amount of the inputs and the amount to spend.
                 /// Only allows confirmed utxos to be added as inputs.
                 
-                // MARK: TODO - Ensure mining fee will also be covered.
-                print("totalUtxoAmount: \(totalUtxoAmount)")
-                print("btcAmountToSend: \(btcAmountToSend)")
-                                    
-                if totalUtxoAmount < btcAmountToSend, utxo.doubleValueSats.btcAmountDouble > amountPlusFee, utxo.confirmed {
-                    totalUtxoAmount += utxo.doubleValueSats.btcAmountDouble
-                    inputWU += inputWU
-                    utxosToConsume.append(utxo)
-                    
-                } else if totalUtxoAmount < btcAmountToSend, utxo.doubleValueSats.btcAmountDouble < amountPlusFee, utxo.confirmed {
+                if totalUtxoAmount < amountPlusFee, utxo.confirmed {
                     totalUtxoAmount += utxo.doubleValueSats.btcAmountDouble
                     inputWU += inputWU
                     utxosToConsume.append(utxo)
@@ -814,13 +805,12 @@ class WalletTools {
                 let estimtatedFee = estimatedVBytes * feeTarget
                 amountPlusFee += Double(estimtatedFee).btcAmountDouble
                 
-                if totalUtxoAmount >= amountPlusFee {
-                    if i + 1 == utxos.count {
-                        print("we have enough inputs now.")
+                if i + 1 == utxos.count {
+                    if totalUtxoAmount >= amountPlusFee {
                         completion((nil, utxosToConsume))
+                    } else {
+                        completion(("Insufficient funds.", nil))
                     }
-                } else if i + 1 == utxos.count {
-                    completion(("Insufficient funds.", nil))
                 }
             }
         }
