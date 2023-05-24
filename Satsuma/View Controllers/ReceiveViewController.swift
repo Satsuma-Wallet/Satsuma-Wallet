@@ -32,7 +32,6 @@ class ReceiveViewController: UIViewController {
     }
     
     @IBAction func showAddressAction(_ sender: Any) {
-        print("showAddressAction")
         addressView.address.text = address.address
         addressView.derivation.text = address.derivation
         addressView.balance.alpha = 0
@@ -40,18 +39,20 @@ class ReceiveViewController: UIViewController {
         
     }
     
-    
     @IBAction func backAction(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
     @IBAction func shareAction(_ sender: Any) {
-        let text = addressLabel.text!
-        let textToShare:[String] = [text]
-        let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
-        activityViewController.excludedActivityTypes = [ UIActivity.ActivityType.airDrop, UIActivity.ActivityType.postToFacebook ]
-        self.present(activityViewController, animated: true, completion: nil)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            let text = self.address.address
+            let textToShare:[String] = [text]
+            let activityViewController = UIActivityViewController(activityItems: textToShare, applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view // so that iPads won't crash
+            self.present(activityViewController, animated: true, completion: nil)
+        }
     }
     
     @IBAction func copyAction(_ sender: Any) {
