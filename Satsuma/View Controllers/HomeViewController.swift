@@ -24,7 +24,13 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.object(forKey: "torEnabled") == nil {
-            UserDefaults.standard.setValue(true, forKey: "torEnabled")
+            UserDefaults.standard.setValue(false, forKey: "torEnabled")
+        }
+        if UserDefaults.standard.object(forKey: "feePriority") == nil {
+            UserDefaults.standard.setValue("standard", forKey: "feePriority")
+        }
+        if UserDefaults.standard.object(forKey: "fiat") == nil {
+            UserDefaults.standard.setValue("USD", forKey: "fiat")
         }
         navigationController?.delegate = self
         satsumaLabel.title = "Satsuma"
@@ -243,9 +249,15 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 self.showAlert(title: "", message: "Unable to fetch the fiat exchange rate.")
                 return
             }
-            var textBalance = "$\((balance.btcAmountDouble * fxRate).rounded(toPlaces: 2).avoidNotation) USD"
+            let fiatTicker = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+            var symbol = getSymbol(forCurrencyCode: fiatTicker) ?? ""
+            if fiatTicker == symbol {
+                symbol = ""
+            }
+            
+            var textBalance = "\(symbol)\((balance.btcAmountDouble * fxRate).rounded(toPlaces: 2).avoidNotation) \(fiatTicker)"
             if balance == 0 {
-                textBalance = "0.00 USD"
+                textBalance = "\(symbol)0.00 \(fiatTicker)"
             }
             if utxosConfirmed {
                 showFiatBalance(balance: textBalance)
@@ -253,6 +265,15 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 showFiatBalance(balance: textBalance + "\n(pending confirmation)")
             }
         }
+    }
+    
+    func getSymbol(forCurrencyCode code: String) -> String? {
+        let locale = NSLocale(localeIdentifier: code)
+        if locale.displayName(forKey: .currencySymbol, value: code) == code {
+            let newlocale = NSLocale(localeIdentifier: code.dropLast() + "_en")
+            return newlocale.displayName(forKey: .currencySymbol, value: code)
+        }
+        return locale.displayName(forKey: .currencySymbol, value: code)
     }
     
     private func showFiatBalance(balance: String) {

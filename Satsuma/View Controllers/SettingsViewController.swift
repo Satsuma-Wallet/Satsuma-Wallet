@@ -9,8 +9,16 @@ import UIKit
 
 class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     
-    @IBOutlet weak var settingsTable: UITableView!
+    var highFeeRate = 0
+    var lowFeeRate = 0
+    var standardFeeRate = 0
+    var minimumFeeRate = 0
+    let spinner = UIActivityIndicatorView(style: .medium)
+    //var toolBar = UIToolbar()
+    //var picker  = UIPickerView()
+    var fiatValues:[Fiat_Value] = []
     
+    @IBOutlet weak var settingsTable: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,30 +30,39 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         navigationItem.title = "Settings"
     }
     
-    
-    
+    override func viewDidAppear(_ animated: Bool) {
+        spinner.startAnimating()
+        MempoolRequest.sharedInstance.command(method: .fee) { [weak self] (response, errorDesc) in
+            guard let self = self else { return }
+            
+            guard let response = response as? [String:Any] else { return }
+            
+            let recommendedFees = RecommendedFee(response)
+            self.highFeeRate = recommendedFees.fastest
+            self.standardFeeRate = recommendedFees.hour
+            self.lowFeeRate = recommendedFees.economy
+            self.minimumFeeRate = recommendedFees.minimum
+            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.spinner.stopAnimating()
+                self.settingsTable.reloadData()
+            }
+        }
+        
+        FiatConverter.sharedInstance.getCurrencies { fiatValues in
+            guard let fiatValues = fiatValues else { return }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+            self.fiatValues = fiatValues
+        }
     }
-    */
     
     private enum Section: Int {
         case network
         case fee
+        case fiat
     }
-    
-//    private func headerName(for section: Section) -> String {
-//        switch section {
-//        case .network:
-//            return "Tor"
-//        }
-//    }
     
     func blankCell() -> UITableViewCell {
         let cell = UITableViewCell()
@@ -57,22 +74,57 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     private func torCell(_ indexPath: IndexPath) -> UITableViewCell {
         let torCell = settingsTable.dequeueReusableCell(withIdentifier: "torCell", for: indexPath)
         let torToggle = torCell.viewWithTag(1) as! UISwitch
-        let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? true
+        let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? false
         torToggle.setOn(torEnabled, animated: false)
         torToggle.addTarget(self, action: #selector(toggleTor(_:)), for: .valueChanged)
+        torCell.selectionStyle = .none
         return torCell
+    }
+    
+    private func fiatCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let fiatCell = settingsTable.dequeueReusableCell(withIdentifier: "fiatCell", for: indexPath)
+        let fiatLabel = fiatCell.viewWithTag(1) as! UILabel
+        fiatLabel.text = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+        fiatCell.selectionStyle = .none
+        return fiatCell
     }
     
     private func feeCell(_ indexPath: IndexPath) -> UITableViewCell {
         let feeCell = settingsTable.dequeueReusableCell(withIdentifier: "feeCell", for: indexPath)
-        let feeSegmentedControl = feeCell.viewWithTag(1) as! UISegmentedControl
-        let feePriority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
-        if feePriority == "high" {
-            feeSegmentedControl.selectedSegmentIndex = 0
-        } else {
-            feeSegmentedControl.selectedSegmentIndex = 1
+        let feeLabel = feeCell.viewWithTag(1) as! UILabel
+        let feePriority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "standard"
+                
+        switch feePriority {
+        case "high":
+            feeLabel.text = "High priority"
+            if highFeeRate > 0 {
+                feeLabel.text = "High priority ~\(highFeeRate) s/vB"
+            }
+            
+        case "standard":
+            feeLabel.text = "Standard priority"
+            if standardFeeRate > 0 {
+                feeLabel.text = "Standard priority ~\(standardFeeRate) s/vB"
+            }
+            
+        case "low":
+            feeLabel.text = "Low priority"
+            if lowFeeRate > 0 {
+                feeLabel.text = "Low priority ~\(lowFeeRate) s/vB"
+            }
+            
+        case "minimum":
+            feeLabel.text = "Minimum priority"
+            if minimumFeeRate > 0 {
+                feeLabel.text = "Minimum priority ~\(minimumFeeRate) s/vB"
+            }
+            
+        default:
+            break
         }
-        feeSegmentedControl.addTarget(self, action: #selector(selectFee(_:)), for: .valueChanged)
+        
+        feeCell.selectionStyle = .none
+        
         return feeCell
     }
     
@@ -83,12 +135,33 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    @objc func selectFee(_ sender: UISegmentedControl) {
-        switch sender.selectedSegmentIndex {
-        case 0:
-            UserDefaults.standard.set("high", forKey: "feePriority")
+//    @objc func onDoneButtonTapped() {
+//        toolBar.removeFromSuperview()
+//        picker.removeFromSuperview()
+//        settingsTable.alpha = 1
+//        settingsTable.isUserInteractionEnabled = true
+//    }
+    
+    //
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+        switch segue.identifier {
+        case "segueToFiatSetting":
+            guard let vc = segue.destination as? FiatSettingTableViewController else { fallthrough }
+            
+            vc.fiatValues = fiatValues
+            
+        case "segueToFeeSetting":
+            guard let vc = segue.destination as? FeeSettingTableViewController else { fallthrough }
+            
+            vc.highFeeRate = highFeeRate
+            vc.lowFeeRate = lowFeeRate
+            vc.standardFeeRate = standardFeeRate
+            vc.minimumFeeRate = minimumFeeRate
+            
         default:
-            UserDefaults.standard.set("low", forKey: "feePriority")
+            break
         }
     }
 }
@@ -103,56 +176,131 @@ extension SettingsViewController: UITableViewDelegate {
             
         case .fee:
             return feeCell(indexPath)
+            
+        case .fiat:
+            return fiatCell(indexPath)
         
         default:
             return blankCell()
         }
     }
     
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header = UIView()
-//        header.backgroundColor = UIColor.clear
-//        header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 50)
-//
-//        let textLabel = UILabel()
-//        textLabel.textAlignment = .left
-//        textLabel.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-//        textLabel.textColor = .white
-//        textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 50)
-//
-//        if let section = Section(rawValue: section) {
-//            textLabel.text = headerName(for: section)
-//        }
-//
-//        header.addSubview(textLabel)
-//        return header
-//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView()
+        header.backgroundColor = UIColor.clear
+        header.frame = CGRect(x: 0, y: 0, width: view.frame.size.width - 32, height: 50)
+
+        let textLabel = UILabel()
+        textLabel.textAlignment = .left
+        textLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 50)
+
+        if let section = Section(rawValue: section) {
+            textLabel.text = headerName(for: section)
+        }
+        
+        if section == 1 {
+            spinner.frame = CGRect(x: tableView.frame.maxX - 65, y: 0, width: 44, height: 44)
+            header.addSubview(spinner)
+        }
+
+        header.addSubview(textLabel)
+        return header
+    }
     
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 50
-//    }
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 54
     }
     
+    private func headerName(for section: Section) -> String {
+        switch section {
+        case .network:
+            return "Network"
+        case .fee:
+            return "Transaction fee"
+        case .fiat:
+            return "Fiat currency"
+        }
+    }
+    
 //    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        switch Section(rawValue: indexPath.section) {
-//        case .network:
-//            print("tor row selected")
+//        switch indexPath.section {
+//        case 1:
+//            switch indexPath.row {
+//            case 0:
+//                UserDefaults.standard.set("high", forKey: "feePriority")
+//            case 1:
+//                UserDefaults.standard.set("standard", forKey: "feePriority")
+//            case 2:
+//                UserDefaults.standard.set("low", forKey: "feePriority")
+//            case 3:
+//                UserDefaults.standard.set("minimum", forKey: "feePriority")
+//            default:
+//                break
+//            }
+//            settingsTable.reloadData()
+////        case 2:
+////            self.settingsTable.alpha = 0.2
+////            settingsTable.isUserInteractionEnabled = false
+////            picker = UIPickerView.init()
+////            picker.delegate = self
+////            picker.dataSource = self
+////            picker.backgroundColor = view.backgroundColor
+////            picker.autoresizingMask = .flexibleWidth
+////            picker.contentMode = .center
+////            picker.frame = CGRect.init(x: 0, y: self.view.frame.height - 350, width: UIScreen.main.bounds.size.width, height: 300)
+////            self.view.addSubview(picker)
+////
+////            toolBar = UIToolbar.init(frame: CGRect.init(x: 0, y: self.view.frame.height - 350, width: UIScreen.main.bounds.size.width, height: 50))
+////            //toolBar.barStyle = .black
+////            //toolBar.ba
+////            toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(onDoneButtonTapped))]
+////            self.view.addSubview(toolBar)
 //        default:
 //            break
 //        }
 //    }
     
+//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+//        switch indexPath.section {
+//        case 1:
+//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+//        default:
+//            break
+//        }
+//    }
 }
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
 }
+
+//extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+//        return 1
+//    }
+//
+//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+//        fiatValues.count
+//    }
+//
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return fiatValues[row].symbol
+//    }
+//
+//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+//        UserDefaults.standard.set(fiatValues[row].symbol, forKey: "fiat")
+//        settingsTable.reloadData()
+//        print(fiatValues[row].symbol)
+//    }
+//}
