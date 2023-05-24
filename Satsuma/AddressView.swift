@@ -31,6 +31,7 @@ class AddressView: UIView {
         contentView.frame = bounds
         contentView.layer.cornerRadius = 18
         contentView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+        contentView.sizeToFit()
     }
     
     @IBAction func closeAction(_ sender: Any) {
