@@ -217,10 +217,24 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                             let recommendedFee = RecommendedFee(response)
                             var feeTarget = 0
                             let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+                            
+                            switch priority {
+                            case "high":
+                                feeTarget = recommendedFee.fastest
+                            case "standard":
+                                feeTarget = recommendedFee.hour
+                            case "low":
+                                feeTarget = recommendedFee.economy
+                            case "minimum":
+                                feeTarget = recommendedFee.minimum
+                            default:
+                                break
+                            }
+                            
                             if priority == "high" {
-                                feeTarget = recommendedFee.fastestFee
+                                
                             } else {
-                                feeTarget = recommendedFee.economyFee
+                                feeTarget = recommendedFee.economy
                             }
                             
                             WalletTools.shared.createTx(destinationAddress: self.address,

@@ -529,10 +529,17 @@ class WalletTools {
             let recommendedFee = RecommendedFee(response)
             var feeTarget = 0
             let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
-            if priority == "high" {
-                feeTarget = recommendedFee.fastestFee
-            } else {
-                feeTarget = recommendedFee.economyFee
+            switch priority {
+            case "high":
+                feeTarget = recommendedFee.fastest
+            case "standard":
+                feeTarget = recommendedFee.hour
+            case "low":
+                feeTarget = recommendedFee.economy
+            case "minimum":
+                feeTarget = recommendedFee.minimum
+            default:
+                break
             }
             
             CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
@@ -638,10 +645,17 @@ class WalletTools {
                 var feeTarget = 0
                 let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
                 
-                if priority == "high" {
-                    feeTarget = recommendedFee.fastestFee
-                } else {
-                    feeTarget = recommendedFee.economyFee
+                switch priority {
+                case "high":
+                    feeTarget = recommendedFee.fastest
+                case "standard":
+                    feeTarget = recommendedFee.hour
+                case "low":
+                    feeTarget = recommendedFee.economy
+                case "minimum":
+                    feeTarget = recommendedFee.minimum
+                default:
+                    break
                 }
                 
                 let estimatedTxSizeWu = (inputs.count * 272) + 248 + 42// gets estimated WU
