@@ -24,12 +24,16 @@
 		0A828A642A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A828A632A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift */; };
 		0A828A6A2A0D61BC00447ACC /* TextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A828A692A0D61BC00447ACC /* TextInputViewController.swift */; };
 		0A828A6C2A0D721800447ACC /* AmountInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A828A6B2A0D721800447ACC /* AmountInputViewController.swift */; };
+		0AD6F1D12A1E69FF00618E94 /* Fiat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D02A1E69FF00618E94 /* Fiat.swift */; };
+		0AD6F1D32A1E938200618E94 /* FiatSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */; };
+		0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */; };
+		0AD6F1D72A1EA2E900618E94 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D62A1EA2E900618E94 /* 1024.png */; };
+		0AD6F1D92A1EA55B00618E94 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D82A1EA55B00618E94 /* Launch Screen.storyboard */; };
 		0AE78E6D2A09349B0024067D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E6C2A09349B0024067D /* AppDelegate.swift */; };
 		0AE78E6F2A09349B0024067D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E6E2A09349B0024067D /* SceneDelegate.swift */; };
 		0AE78E742A09349B0024067D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E722A09349B0024067D /* Main.storyboard */; };
 		0AE78E772A09349B0024067D /* Satsuma.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E752A09349B0024067D /* Satsuma.xcdatamodeld */; };
 		0AE78E792A09349D0024067D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E782A09349D0024067D /* Assets.xcassets */; };
-		0AE78E7C2A09349D0024067D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E7A2A09349D0024067D /* LaunchScreen.storyboard */; };
 		0AE78E8F2A0935590024067D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E882A0935570024067D /* Extensions.swift */; };
 		0AE78E912A0935590024067D /* CoreDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8A2A0935580024067D /* CoreDataService.swift */; };
 		0AE78E922A0935590024067D /* Crypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E8B2A0935580024067D /* Crypto.swift */; };
@@ -75,13 +79,17 @@
 		0A828A632A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanOrPasteInvoiceViewController.swift; sourceTree = "<group>"; };
 		0A828A692A0D61BC00447ACC /* TextInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextInputViewController.swift; sourceTree = "<group>"; };
 		0A828A6B2A0D721800447ACC /* AmountInputViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmountInputViewController.swift; sourceTree = "<group>"; };
+		0AD6F1D02A1E69FF00618E94 /* Fiat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fiat.swift; sourceTree = "<group>"; };
+		0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatSettingTableViewController.swift; sourceTree = "<group>"; };
+		0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSettingTableViewController.swift; sourceTree = "<group>"; };
+		0AD6F1D62A1EA2E900618E94 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = 1024.png; path = "Satsuma/Assets.xcassets/AppIcon 1.appiconset/1024.png"; sourceTree = SOURCE_ROOT; };
+		0AD6F1D82A1EA55B00618E94 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		0AE78E692A09349B0024067D /* Satsuma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Satsuma.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AE78E6C2A09349B0024067D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AE78E6E2A09349B0024067D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		0AE78E732A09349B0024067D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0AE78E762A09349B0024067D /* Satsuma.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Satsuma.xcdatamodel; sourceTree = "<group>"; };
 		0AE78E782A09349D0024067D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0AE78E7B2A09349D0024067D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0AE78E7D2A09349D0024067D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AE78E882A0935570024067D /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		0AE78E8A2A0935580024067D /* CoreDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataService.swift; sourceTree = "<group>"; };
@@ -114,6 +122,7 @@
 		0A2C1BB92A13C9B300D973A4 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				0AD6F1D62A1EA2E900618E94 /* 1024.png */,
 				0A3FD6EF2A0BF14900B6F8E3 /* QRGenerator.swift */,
 				0A828A612A0D3CF600447ACC /* stock_qr.jpg */,
 			);
@@ -167,6 +176,7 @@
 				0A3FD6E82A09796400B6F8E3 /* Utxos.swift */,
 				0A3FD6EB2A0A96C300B6F8E3 /* Addresses.swift */,
 				0A2C1BC82A1BF46100D973A4 /* RecommendedFee.swift */,
+				0AD6F1D02A1E69FF00618E94 /* Fiat.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -182,6 +192,8 @@
 				0A828A6B2A0D721800447ACC /* AmountInputViewController.swift */,
 				0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */,
 				0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */,
+				0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */,
+				0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -216,13 +228,13 @@
 				0AE78E722A09349B0024067D /* Main.storyboard */,
 				0A2C1BB92A13C9B300D973A4 /* Images */,
 				0AE78E782A09349D0024067D /* Assets.xcassets */,
-				0AE78E7A2A09349D0024067D /* LaunchScreen.storyboard */,
 				0AE78E7D2A09349D0024067D /* Info.plist */,
 				0AE78E752A09349B0024067D /* Satsuma.xcdatamodeld */,
 				0A3FD6EA2A097A9300B6F8E3 /* View Controllers */,
 				0A2C1BBD2A13CAB600D973A4 /* Wallet Logic */,
 				0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */,
 				0A2C1BC42A17BA6500D973A4 /* AddressView.swift */,
+				0AD6F1D82A1EA55B00618E94 /* Launch Screen.storyboard */,
 			);
 			path = Satsuma;
 			sourceTree = "<group>";
@@ -305,7 +317,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AE78E7C2A09349D0024067D /* LaunchScreen.storyboard in Resources */,
+				0AD6F1D92A1EA55B00618E94 /* Launch Screen.storyboard in Resources */,
+				0AD6F1D72A1EA2E900618E94 /* 1024.png in Resources */,
 				0A828A622A0D3CF600447ACC /* stock_qr.jpg in Resources */,
 				0A2C1BC32A17B8AB00D973A4 /* AddressView.xib in Resources */,
 				0AE78E792A09349D0024067D /* Assets.xcassets in Resources */,
@@ -373,10 +386,13 @@
 				0AEE78402A09559000643090 /* WalletTools.swift in Sources */,
 				0A3FD6F02A0BF14900B6F8E3 /* QRGenerator.swift in Sources */,
 				0A2C1BC92A1BF46100D973A4 /* RecommendedFee.swift in Sources */,
+				0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */,
+				0AD6F1D12A1E69FF00618E94 /* Fiat.swift in Sources */,
 				0A3FD6E62A09719D00B6F8E3 /* Wallets.swift in Sources */,
 				0A2C1BC72A1BC56100D973A4 /* PassphraseInputViewController.swift in Sources */,
 				0A3FD6F22A0C055200B6F8E3 /* FiatConverter.swift in Sources */,
 				0AE78E912A0935590024067D /* CoreDataService.swift in Sources */,
+				0AD6F1D32A1E938200618E94 /* FiatSettingTableViewController.swift in Sources */,
 				0AE78E922A0935590024067D /* Crypto.swift in Sources */,
 				0A828A642A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift in Sources */,
 				0AEE78362A093B3B00643090 /* Entities.swift in Sources */,
@@ -403,14 +419,6 @@
 				0AE78E732A09349B0024067D /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		0AE78E7A2A09349D0024067D /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0AE78E7B2A09349D0024067D /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -536,23 +544,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Satsuma;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To scan bitcoin QR codes.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To unlock the app.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -567,23 +577,25 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Satsuma;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To scan bitcoin QR codes.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To unlock the app.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchStoryboardName = "Launch Screen.storyboard";
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
