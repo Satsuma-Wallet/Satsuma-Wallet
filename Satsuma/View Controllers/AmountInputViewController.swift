@@ -186,6 +186,8 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     }
     
     private func createTx() {
+        amountInput.resignFirstResponder()
+        self.addSpinnerView(description: "fetching recommended fee...")
         CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
             guard let wallets = wallets else { return }
             
@@ -207,6 +209,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                         
                         MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
                             guard let response = response as? [String:Any] else {
+                                self.removeSpinnerView()
                                 self.showAlert(title: "Failed fetching fee target.", message: errorDesc ?? "Unknown.")
                                 return
                             }
@@ -226,9 +229,11 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                                                         feeTarget: feeTarget) { [weak self] (message, rawTx) in
                                 guard let self = self else { return }
                                 guard let rawTx = rawTx else {
+                                    self.removeSpinnerView()
                                     self.showAlert(title: "", message: message ?? "Uknown.")
                                     return
                                 }
+                                self.removeSpinnerView()
                                 self.rawTx = rawTx.rawTx
                                 self.fee = rawTx.fee
                                 DispatchQueue.main.async {

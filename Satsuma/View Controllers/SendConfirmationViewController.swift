@@ -47,14 +47,17 @@ class SendConfirmationViewController: UIViewController {
     }
     
     @IBAction func sendAction(_ sender: Any) {
+        self.addSpinnerView(description: "sending...")
         MempoolRequest.sharedInstance.command(method: .broadcast(tx: self.rawTx)) { (response, errorDesc) in
             guard let txid = response as? String else {
+                self.removeSpinnerView()
                 self.showAlert(title: "Broadcasting failed.", message: errorDesc ?? "Unknown.")
                 return
             }
             
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                self.removeSpinnerView()
                 let alert = UIAlertController(title: "Transaction sent ✓", message: "", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
                     self.navigationController?.popToRootViewController(animated: true)
