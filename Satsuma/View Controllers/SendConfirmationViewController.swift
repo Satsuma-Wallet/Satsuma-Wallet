@@ -18,6 +18,9 @@ class SendConfirmationViewController: UIViewController {
     @IBOutlet weak var networkFeeOutlet: UILabel!
     @IBOutlet weak var totalAmountOutlet: UILabel!
     @IBOutlet weak var addressView: AddressView!
+    @IBOutlet weak var fiatAmountOutlet: UILabel!
+    @IBOutlet weak var fiatNetworkFeeOutlet: UILabel!
+    @IBOutlet weak var fiatTotalOutlet: UILabel!
     
     
     override func viewDidLoad() {
@@ -40,6 +43,21 @@ class SendConfirmationViewController: UIViewController {
         amountOutlet.text = "\(destAmount) BTC"
         totalAmountOutlet.text = "\(total) BTC"
         addressView.address.text = destinationAddress
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let fiat = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+        FiatConverter.sharedInstance.getFxRate(currency: fiat) { fxRate in
+            guard let fxRate = fxRate else { return }
+            
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                self.fiatAmountOutlet.text = destinationAmount.fiatBalance(fxRate: fxRate)
+                self.fiatNetworkFeeOutlet.text = Double(fee).btcAmountDouble.fiatBalance(fxRate: fxRate)
+                self.fiatTotalOutlet.text = (Double(fee).btcAmountDouble + destinationAmount).fiatBalance(fxRate: fxRate)
+            }
+        }
     }
     
     @IBAction func viewAddressAction(_ sender: Any) {
