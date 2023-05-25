@@ -154,6 +154,7 @@ class WalletTools {
                     
                     if (lastChangeAddr.index - wallet.changeIndex) <= 5 {
                         // need to refill the receive keypool
+                        print("need to refill the change keypool")
                         guard let newChangeAddresses = self.addresses(wallet: wallet, change: 1) else {
                             completion(false)
                             return
@@ -161,7 +162,7 @@ class WalletTools {
                         
                         for (i, newChangeAddress) in newChangeAddresses.enumerated() {
                             
-                            self.saveAddress(dict: newChangeAddress, entityName: .changeAddr) { (message, saved) in
+                            CoreDataService.saveEntity(dict: newChangeAddress, entityName: .changeAddr) { saved in
                                 guard saved else {
                                     completion(false)
                                     return
@@ -190,7 +191,7 @@ class WalletTools {
                 print("lastRecAddr.index: \(lastRecAddr.index)")
                 
                 if (lastRecAddr.index - wallet.receiveIndex) <= 5  {
-                    // need to refill the receive keypool
+                    print("need to refill the receive keypool")
                     guard let newAddresses = self.addresses(wallet: wallet, change: 0) else {
                         completion(false)
                         return
@@ -198,7 +199,7 @@ class WalletTools {
                     
                     for (i, newRecAddress) in newAddresses.enumerated() {
                         
-                        self.saveAddress(dict: newRecAddress, entityName: .receiveAddr) { (message, saved) in
+                        CoreDataService.saveEntity(dict: newRecAddress, entityName: .receiveAddr) { saved in
                             guard saved else {
                                 completion(false)
                                 return
@@ -342,10 +343,12 @@ class WalletTools {
             
             /// Wallet receive address index.
             let walletReceiveIndex = Int(wallet.receiveIndex)
+            print("walletReceiveIndex: \(walletReceiveIndex)")
             // MARK: TODO - Check if receive index is approaching the max receive address index, if it is we need to increase it.
                         
             /// Wallet change address index.
             let walletChangeIndex = Int(wallet.changeIndex)
+            print("walletChangeIndex: \(walletChangeIndex)")
             // MARK: TODO - Check if change index is approaching the max change address index, if it is we need to increase it.
             
             /// If the address in question has an index less then or equal to the wallet index we check it for utxos from mempool/esplora.
@@ -526,21 +529,7 @@ class WalletTools {
                 return
             }
             
-            let recommendedFee = RecommendedFee(response)
-            var feeTarget = 0
-            let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
-            switch priority {
-            case "high":
-                feeTarget = recommendedFee.fastest
-            case "standard":
-                feeTarget = recommendedFee.hour
-            case "low":
-                feeTarget = recommendedFee.economy
-            case "minimum":
-                feeTarget = recommendedFee.minimum
-            default:
-                break
-            }
+            let feeTarget = RecommendedFee(response).target
             
             CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
                 guard let self = self else { return }
@@ -641,22 +630,7 @@ class WalletTools {
                     return
                 }
                 
-                let recommendedFee = RecommendedFee(response)
-                var feeTarget = 0
-                let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
-                
-                switch priority {
-                case "high":
-                    feeTarget = recommendedFee.fastest
-                case "standard":
-                    feeTarget = recommendedFee.hour
-                case "low":
-                    feeTarget = recommendedFee.economy
-                case "minimum":
-                    feeTarget = recommendedFee.minimum
-                default:
-                    break
-                }
+                let feeTarget = RecommendedFee(response).target
                 
                 let estimatedTxSizeWu = (inputs.count * 272) + 248 + 42// gets estimated WU
                 let estimatedVBytes = estimatedTxSizeWu / 4
