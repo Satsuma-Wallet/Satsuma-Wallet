@@ -10,11 +10,16 @@ import UIKit
 class AmountInputViewController: UIViewController, UITextFieldDelegate {
     
     var address = ""
-    var amount = 0.0
-    var balance = 0.0
+    var btcAmountToSend = 0.0
+    var fiatBalance = 0.0
+    var btcBalance = 0.0
+    var satsBalance = 0.0
+    var fxRate = 0.0
     var rawTx = ""
     var fee = 0
     var buttonConstraint: NSLayoutConstraint!
+    var denomination = UserDefaults.standard.object(forKey: "denomination") as? String ?? "BTC"
+    var fiat = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
     
     @IBOutlet weak var amountInput: UITextField!
     @IBOutlet weak var fiatButtonOutlet: UIButton!
@@ -22,6 +27,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var addressOutlet: UILabel!
     @IBOutlet weak var sendOutlet: UIButton!
     @IBOutlet weak var addressView: AddressView!
+    @IBOutlet weak var denominationOutlet: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,17 +53,31 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
         subscribeToShowKeyboardNotifications()
         addTapGesture()
         
-        if amount > 0 {
-            amountInput.text = "\(amount)"
+        if btcAmountToSend > 0 {
+            amountInput.text = "\(btcAmountToSend)"
         }
         if address != "" {
             addressOutlet.text = address
         }
-        getBalance()
+        
+        denominationOutlet.setTitle(denomination, for: .normal)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         amountInput.becomeFirstResponder()
+        denomination = UserDefaults.standard.object(forKey: "denomination") as? String ?? "BTC"
+        fiat = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+        
+        fiatBalance = 0.0
+        btcBalance = 0.0
+        satsBalance = 0.0
+        fxRate = 0.0
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.denominationOutlet.setTitle(denomination, for: .normal)
+            self.getBalance()
+        }
     }
     
     @IBAction func useAllFundsAction(_ sender: Any) {
@@ -72,7 +92,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             self.removeSpinnerView()
             self.rawTx = rawTx.rawTx
             self.fee = rawTx.fee
-            self.amount = rawTx.amount
+            self.btcAmountToSend = rawTx.amount
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "segueToSend", sender: self)
             }
@@ -91,18 +111,46 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             for utxo in utxos {
                 let utxo = Utxo_Cache(utxo)
                 if utxo.confirmed {
-                    self.balance += utxo.doubleValueSats.btcAmountDouble
+                    self.satsBalance += utxo.doubleValueSats
+                    self.btcBalance += utxo.doubleValueSats.btcAmountDouble
                 }
             }
             
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.balanceOutlet.text = "Balance: \(balance.avoidNotation) BTC"
+            var balanceText = ""
+            
+            switch denomination {
+            case "BTC":
+                balanceText = satsBalance.btcBalance
+                self.showBalance(balance: balanceText)
+            case "SAT":
+                balanceText = satsBalance.avoidNotation
+                self.showBalance(balance: balanceText)
+            default:
+                FiatConverter.sharedInstance.getFxRate(currency: fiat) { [weak self] fxRate in
+                    guard let self = self else { return }
+                    
+                    guard let fxRate = fxRate else {
+                        self.showAlert(title: "", message: "Unable to fetch the exchange rate.")
+                        return
+                    }
+                    
+                    self.fxRate = fxRate
+                    self.fiatBalance = btcBalance * fxRate
+                    balanceText = self.btcBalance.fiatBalance(fxRate: fxRate)
+                    self.showBalance(balance: balanceText)
+                }
             }
             
-            if amount > 0, amount < self.balance {
+            if btcAmountToSend > 0, btcAmountToSend < self.btcBalance {
                 self.showSendButton()
             }
+        }
+    }
+    
+    private func showBalance(balance: String) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.balanceOutlet.text = "Balance: \(balance)"
         }
     }
     
@@ -118,13 +166,36 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        if text.doubleValue > 0, text.doubleValue < balance {
-            amount = text.doubleValue
-            showSendButton()
-        } else {
-            sendOutlet.isEnabled = false
-            self.showAlert(title: "", message: "Insufficient funds, try a lower amount.")
+        
+        switch denomination {
+        case "BTC":
+            if text.doubleValue > 0, text.doubleValue < btcBalance {
+                btcAmountToSend = text.doubleValue
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+                self.showAlert(title: "", message: "Insufficient funds, try a lower amount.")
+            }
+        case "SAT":
+            if text.doubleValue > 0, text.doubleValue < satsBalance {
+                btcAmountToSend = text.doubleValue.btcAmountDouble
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+                self.showAlert(title: "", message: "Insufficient funds, try a lower amount.")
+            }
+        default:
+            print("convert input number to btc amount")
+            if text.doubleValue > 0, text.doubleValue < fiatBalance {
+                btcAmountToSend = text.doubleValue / self.fxRate
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+                self.showAlert(title: "", message: "Insufficient funds, try a lower amount.")
+            }
         }
+        
+        
     }
     
     func subscribeToShowKeyboardNotifications() {
@@ -193,7 +264,9 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             
             let wallet = Wallet(wallets[0])
             
-            CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
+            CoreDataService.retrieveEntity(entityName: .changeAddr) { [weak self] changeAddresses in
+                guard let self = self else { return }
+                
                 guard let changeAddresses = changeAddresses else { return }
                 
                 var changeAddressToUse:Address_Cache?
@@ -205,7 +278,11 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                     }
                     
                     if i + 1 == changeAddresses.count {
-                        guard let changeAddressToUse = changeAddressToUse else { return }
+                        guard let changeAddressToUse = changeAddressToUse else {
+                            self.removeSpinnerView()
+                            self.showAlert(title: "", message: "No available change address at index \(wallet.changeIndex).")
+                            return
+                        }
                         
                         MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
                             guard let response = response as? [String:Any] else {
@@ -214,32 +291,11 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
                                 return
                             }
                             
-                            let recommendedFee = RecommendedFee(response)
-                            var feeTarget = 0
-                            let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
-                            
-                            switch priority {
-                            case "high":
-                                feeTarget = recommendedFee.fastest
-                            case "standard":
-                                feeTarget = recommendedFee.hour
-                            case "low":
-                                feeTarget = recommendedFee.economy
-                            case "minimum":
-                                feeTarget = recommendedFee.minimum
-                            default:
-                                break
-                            }
-                            
-                            if priority == "high" {
-                                
-                            } else {
-                                feeTarget = recommendedFee.economy
-                            }
+                            let feeTarget = RecommendedFee(response).target
                             
                             WalletTools.shared.createTx(destinationAddress: self.address,
                                                         changeAddress: changeAddressToUse,
-                                                        btcAmountToSend: self.amount,
+                                                        btcAmountToSend: self.btcAmountToSend,
                                                         feeTarget: feeTarget) { [weak self] (message, rawTx) in
                                 guard let self = self else { return }
                                 guard let rawTx = rawTx else {
@@ -267,10 +323,25 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             return
         }
         
-        if text.doubleValue > 0, text.doubleValue < self.balance {
-            showSendButton()
-        } else {
-            sendOutlet.isEnabled = false
+        switch denomination {
+        case "BTC":
+            if text.doubleValue > 0, text.doubleValue < btcBalance {
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+            }
+        case "SAT":
+            if text.doubleValue > 0, text.doubleValue < satsBalance {
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+            }
+        default:
+            if text.doubleValue > 0, text.doubleValue < fiatBalance {
+                showSendButton()
+            } else {
+                sendOutlet.isEnabled = false
+            }
         }
     }
     
@@ -286,7 +357,7 @@ class AmountInputViewController: UIViewController, UITextFieldDelegate {
             
             vc.rawTx = self.rawTx
             vc.destinationAddress = self.address
-            vc.destinationAmount = self.amount
+            vc.destinationAmount = self.btcAmountToSend
             vc.fee = self.fee
 
         default:

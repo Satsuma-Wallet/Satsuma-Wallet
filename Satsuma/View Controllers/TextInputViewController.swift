@@ -173,9 +173,7 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
     
     @objc func buttonAction() {
         textFieldOutlet.resignFirstResponder()
-    }
-    
-    
+    }    
     
      // MARK: - Navigation
      
@@ -187,7 +185,7 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
          case "segueToAmountInput":
              guard let vc = segue.destination as? AmountInputViewController else { return }
              vc.address = address
-             vc.amount = amount
+             vc.btcAmountToSend = amount
          default:
              break
          }

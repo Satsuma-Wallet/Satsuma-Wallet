@@ -14,8 +14,6 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     var standardFeeRate = 0
     var minimumFeeRate = 0
     let spinner = UIActivityIndicatorView(style: .medium)
-    //var toolBar = UIToolbar()
-    //var picker  = UIPickerView()
     var fiatValues:[Fiat_Value] = []
     
     @IBOutlet weak var settingsTable: UITableView!
@@ -135,14 +133,6 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-//    @objc func onDoneButtonTapped() {
-//        toolBar.removeFromSuperview()
-//        picker.removeFromSuperview()
-//        settingsTable.alpha = 1
-//        settingsTable.isUserInteractionEnabled = true
-//    }
-    
-    //
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
@@ -225,54 +215,7 @@ extension SettingsViewController: UITableViewDelegate {
         case .fiat:
             return "Fiat currency"
         }
-    }
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        switch indexPath.section {
-//        case 1:
-//            switch indexPath.row {
-//            case 0:
-//                UserDefaults.standard.set("high", forKey: "feePriority")
-//            case 1:
-//                UserDefaults.standard.set("standard", forKey: "feePriority")
-//            case 2:
-//                UserDefaults.standard.set("low", forKey: "feePriority")
-//            case 3:
-//                UserDefaults.standard.set("minimum", forKey: "feePriority")
-//            default:
-//                break
-//            }
-//            settingsTable.reloadData()
-////        case 2:
-////            self.settingsTable.alpha = 0.2
-////            settingsTable.isUserInteractionEnabled = false
-////            picker = UIPickerView.init()
-////            picker.delegate = self
-////            picker.dataSource = self
-////            picker.backgroundColor = view.backgroundColor
-////            picker.autoresizingMask = .flexibleWidth
-////            picker.contentMode = .center
-////            picker.frame = CGRect.init(x: 0, y: self.view.frame.height - 350, width: UIScreen.main.bounds.size.width, height: 300)
-////            self.view.addSubview(picker)
-////
-////            toolBar = UIToolbar.init(frame: CGRect.init(x: 0, y: self.view.frame.height - 350, width: UIScreen.main.bounds.size.width, height: 50))
-////            //toolBar.barStyle = .black
-////            //toolBar.ba
-////            toolBar.items = [UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(onDoneButtonTapped))]
-////            self.view.addSubview(toolBar)
-//        default:
-//            break
-//        }
-//    }
-    
-//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        switch indexPath.section {
-//        case 1:
-//            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-//        default:
-//            break
-//        }
-//    }
+    } 
 }
 
 extension SettingsViewController: UITableViewDataSource {
@@ -284,23 +227,3 @@ extension SettingsViewController: UITableViewDataSource {
         return 1
     }
 }
-
-//extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-//    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-//        return 1
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-//        fiatValues.count
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        return fiatValues[row].symbol
-//    }
-//
-//    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-//        UserDefaults.standard.set(fiatValues[row].symbol, forKey: "fiat")
-//        settingsTable.reloadData()
-//        print(fiatValues[row].symbol)
-//    }
-//}

@@ -23,15 +23,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if UserDefaults.standard.object(forKey: "torEnabled") == nil {
-            UserDefaults.standard.setValue(false, forKey: "torEnabled")
-        }
-        if UserDefaults.standard.object(forKey: "feePriority") == nil {
-            UserDefaults.standard.setValue("standard", forKey: "feePriority")
-        }
-        if UserDefaults.standard.object(forKey: "fiat") == nil {
-            UserDefaults.standard.setValue("USD", forKey: "fiat")
-        }
+        setDefaults()
         navigationController?.delegate = self
         satsumaLabel.title = "Satsuma"
         navigationItem.setLeftBarButton(satsumaLabel, animated: true)
@@ -40,7 +32,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {
         CoreDataService.retrieveEntity(entityName: .wallets) { wallets in
             guard let wallets = wallets else { return }
-            
+
             if wallets.count > 0 {
                 WalletTools.shared.addXprv { [weak self] updated in
                     guard let self = self else { return }
@@ -82,6 +74,21 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 // no biometry
                 self.showAlert(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.")
             }
+    }
+    
+    private func setDefaults() {
+        if UserDefaults.standard.object(forKey: "torEnabled") == nil {
+            UserDefaults.standard.setValue(false, forKey: "torEnabled")
+        }
+        if UserDefaults.standard.object(forKey: "feePriority") == nil {
+            UserDefaults.standard.setValue("standard", forKey: "feePriority")
+        }
+        if UserDefaults.standard.object(forKey: "fiat") == nil {
+            UserDefaults.standard.setValue("USD", forKey: "fiat")
+        }
+        if UserDefaults.standard.object(forKey: "denomination") == nil {
+            UserDefaults.standard.setValue("BTC", forKey: "denomination")
+        }
     }
     
     private func promptForPassphrase() {
@@ -225,11 +232,12 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 }
                 balance += utxo.doubleValueSats
             }
-            var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
-            if balance == 0 {
-                textBalance = "0.00000000 BTC"
-            }
-            self.showBtcBalance(balance: textBalance)
+            
+//            var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
+//            if balance == 0 {
+//                textBalance = "0.00000000 BTC"
+//            }
+            self.showBtcBalance(balance: balance.btcBalance)
         }
     }
     
@@ -242,38 +250,23 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     private func getFxRate(balance: Double) {
-        FiatConverter.sharedInstance.getFxRate { [weak self] fxRate in
+        let fiat = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+        FiatConverter.sharedInstance.getFxRate(currency: fiat) { [weak self] fxRate in
             guard let self = self else { return }
             guard let fxRate = fxRate else {
                 self.removeLoader()
                 self.showAlert(title: "", message: "Unable to fetch the fiat exchange rate.")
                 return
             }
-            let fiatTicker = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
-            var symbol = getSymbol(forCurrencyCode: fiatTicker) ?? ""
-            if fiatTicker == symbol {
-                symbol = ""
-            }
             
-            var textBalance = "\(symbol)\((balance.btcAmountDouble * fxRate).rounded(toPlaces: 2).avoidNotation) \(fiatTicker)"
-            if balance == 0 {
-                textBalance = "\(symbol)0.00 \(fiatTicker)"
-            }
+            let fiatBalance = balance.btcAmountDouble.fiatBalance(fxRate: fxRate)
+            
             if utxosConfirmed {
-                showFiatBalance(balance: textBalance)
+                showFiatBalance(balance: fiatBalance)
             } else {
-                showFiatBalance(balance: textBalance + "\n(pending confirmation)")
+                showFiatBalance(balance: fiatBalance + "\n(pending confirmation)")
             }
         }
-    }
-    
-    func getSymbol(forCurrencyCode code: String) -> String? {
-        let locale = NSLocale(localeIdentifier: code)
-        if locale.displayName(forKey: .currencySymbol, value: code) == code {
-            let newlocale = NSLocale(localeIdentifier: code.dropLast() + "_en")
-            return newlocale.displayName(forKey: .currencySymbol, value: code)
-        }
-        return locale.displayName(forKey: .currencySymbol, value: code)
     }
     
     private func showFiatBalance(balance: String) {
@@ -285,7 +278,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    private func delete() {
+//    private func delete() {
 //        CoreDataService.deleteAllData(entity: .wallets) { deleted in
 //            print("deleted: \(deleted)")
 //        }
@@ -295,11 +288,10 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
 //        CoreDataService.deleteAllData(entity: .changeAddr) { deleted in
 //            print("deleted: \(deleted)")
 //        }
-        CoreDataService.deleteAllData(entity: .utxos) { deleted in
-            print("utxo deleted: \(deleted)")
-        }
-        
-    }
+//        CoreDataService.deleteAllData(entity: .utxos) { deleted in
+//            print("utxo deleted: \(deleted)")
+//        }
+//    }
     
 
     

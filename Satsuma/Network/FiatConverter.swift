@@ -13,8 +13,7 @@ class FiatConverter {
     
     private init() {}
     
-    func getFxRate(completion: @escaping ((Double?)) -> Void) {
-        let currency = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+    func getFxRate(currency: String, completion: @escaping ((Double?)) -> Void) {
         let torClient = TorClient.sharedInstance
         let url = NSURL(string: "https://blockchain.info/ticker")
         let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? true

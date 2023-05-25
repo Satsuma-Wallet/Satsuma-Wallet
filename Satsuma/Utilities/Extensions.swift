@@ -155,6 +155,15 @@ public extension String {
         let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
         return String((0...length-1).map{ _ in letters.randomElement()! })
     }
+    
+    var currencySymbolFromCode: String {
+        let locale = NSLocale(localeIdentifier: self)
+        if locale.displayName(forKey: .currencySymbol, value: self) == self {
+            let newlocale = NSLocale(localeIdentifier: self.dropLast() + "_en")
+            return newlocale.displayName(forKey: .currencySymbol, value: self)!
+        }
+        return locale.displayName(forKey: .currencySymbol, value: self)!
+    }
 }
 
 public extension [String:Any] {
@@ -219,4 +228,45 @@ public extension Double {
     var satsAmount: Int {
         return Int(self * 100000000.0)
     }
+    
+    func fiatBalance(fxRate: Double) -> String {
+        // self is the btc amount as a double
+        let currencyCode = UserDefaults.standard.object(forKey: "fiat") as? String ?? "USD"
+        var currencySymbol = currencyCode.currencySymbolFromCode
+        if currencyCode == currencySymbol {
+            currencySymbol = ""
+        }
+        var textBalance = "\(currencySymbol)\((self * fxRate).rounded(toPlaces: 2).avoidNotation) \(currencyCode)"
+        if self == 0 {
+            textBalance = "\(currencySymbol)0.00 \(currencyCode)"
+        }
+        return textBalance
+    }
+    
+    var btcBalance: String {
+        var btcBalance = self.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
+        if self == 0 {
+            btcBalance = "0.00000000 BTC"
+        }
+        return btcBalance
+    }
+}
+
+public extension RecommendedFee {
+    var target: Int {
+        let priority = UserDefaults.standard.object(forKey: "feePriority") as? String ?? "high"
+        switch priority {
+        case "high":
+            return self.fastest
+        case "standard":
+            return self.hour
+        case "low":
+            return self.economy
+        case "minimum":
+            return self.minimum
+        default:
+            return self.hour
+        }
+    }
+    
 }
