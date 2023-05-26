@@ -493,16 +493,16 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   " textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fea-i8-3Cj">
-                                        <rect key="frame" x="39" y="0.0" width="278.33333333333331" height="34.333333333333336"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="278.32999999999998" id="CQz-H9-NOc"/>
-                                        </constraints>
+                                        <rect key="frame" x="39" y="0.0" width="277.33333333333331" height="34.333333333333336"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="trailing" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="saR-kR-bW6">
-                                        <rect key="frame" x="322.33333333333331" y="0.0" width="39" height="34.333333333333336"/>
+                                        <rect key="frame" x="321.33333333333331" y="0.0" width="40" height="34.333333333333336"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="eZ5-08-ptM"/>
+                                        </constraints>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title=" " titleAlignment="leading">
                                             <imageReference key="image" image="eye.fill" catalog="system" symbolScale="medium"/>
@@ -535,7 +535,7 @@
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                 <state key="normal" title="USD" image="chevron.down" catalog="system"/>
                                                 <buttonConfiguration key="configuration" style="plain" imagePlacement="trailing" title="BTC">
-                                                    <imageReference key="image" image="chevron.down" catalog="system" symbolScale="small"/>
+                                                    <imageReference key="image" image="chevron.right" catalog="system" symbolScale="small"/>
                                                 </buttonConfiguration>
                                                 <connections>
                                                     <segue destination="0Qq-bv-yZ5" kind="show" id="bky-CX-2jk"/>

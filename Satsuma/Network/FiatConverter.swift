@@ -8,52 +8,56 @@
 import Foundation
 
 class FiatConverter {
-    
+    // Allows us to resuse this class without recreating it everytime.
     static let sharedInstance = FiatConverter()
+    
+    // The url where we fetch our fiat exchange rates.
+    let url:URL = URL(string: "https://blockchain.info/ticker")!
     
     private init() {}
     
-    func getFxRate(currency: String, completion: @escaping ((Double?)) -> Void) {
-        let torClient = TorClient.sharedInstance
-        let url = NSURL(string: "https://blockchain.info/ticker")
+    // Returns a url session depending on whether Tor is enabled or not.
+    private func urlSession() -> URLSession {
         let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? true
         var session = URLSession(configuration: .default)
         if torEnabled {
-            session = torClient.session
+            session = TorClient.sharedInstance.session
         }
-        let task = session.dataTask(with: url! as URL) { (data, response, error) -> Void in
-            guard let urlContent = data,
-                  let json = try? JSONSerialization.jsonObject(with: urlContent, options: [.mutableContainers]) as? [String : Any],
-                  let data = json["\(currency)"] as? NSDictionary,
-                  let rateCheck = data["15m"] as? Double else {
+        return session
+    }
+    
+    // Returns the 15m average exchange rate based upon the provided currency code.
+    func getFxRate(currency: String, completion: @escaping ((Double?)) -> Void) {
+        self.getCurrencies { fiatValues in
+            guard let fiatValues = fiatValues else {
                 completion(nil)
                 return
             }
             
-            completion(rateCheck)
+            for fiatValue in fiatValues {
+                if fiatValue.symbol == currency {
+                    completion((fiatValue.price))
+                    return
+                }
+            }
         }
-        task.resume()
     }
     
+    // Returns all fiat currencies as a Fiat_Value array in alphabetic order.
     func getCurrencies(completion: @escaping (([Fiat_Value]?)) -> Void) {
-        let torClient = TorClient.sharedInstance
-        let url = NSURL(string: "https://blockchain.info/ticker")
-        let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? true
-        var session = URLSession(configuration: .default)
-        if torEnabled {
-            session = torClient.session
-        }
-        let task = session.dataTask(with: url! as URL) { (data, response, error) -> Void in
+        let task = urlSession().dataTask(with: url) { (data, response, error) -> Void in
             guard let urlContent = data,
                   let json = try? JSONSerialization.jsonObject(with: urlContent, options: [.mutableContainers]) as? [String : Any] else {
                 completion(nil)
                 return
             }
+            
             let fiatOptions = Fiat_Options(json)
             var currencies = fiatOptions.currencies
             currencies = currencies.sorted { $0.symbol < $1.symbol }
             completion(currencies)
         }
+        
         task.resume()
     }
 }

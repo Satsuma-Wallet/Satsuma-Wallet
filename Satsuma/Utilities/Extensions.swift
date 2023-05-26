@@ -8,6 +8,8 @@
 import Foundation
 import UIKit
 
+// A place for convenience and cleaner code, do dirty work here.
+
 public extension UIViewController {
     func showAlert(title: String, message: String) {
         DispatchQueue.main.async { [weak self] in

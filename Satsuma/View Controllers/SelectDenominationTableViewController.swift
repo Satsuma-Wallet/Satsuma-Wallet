@@ -9,17 +9,20 @@ import UIKit
 
 class SelectDenominationTableViewController: UITableViewController {
     
+    // Need separate arrays as the denomination setting can be either btc/sat/fiat. Whereas we show fiat and btc concurrently in most views.
     var btcDenominations:[Fiat_Value] = []
     var fiatCurrencies:[Fiat_Value] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        // Construct our btc denomination array.
         let btc:[String:Any] = ["symbol": "BTC", "15m": 1.0]
         let sats:[String:Any] = ["symbol": "SAT", "15m": 100000000.0]
         btcDenominations.append(Fiat_Value(btc))
         btcDenominations.append(Fiat_Value(sats))
         
+        // Construct our fiat denomination array.
         FiatConverter.sharedInstance.getCurrencies { [weak self] fiatValues in
             guard let self = self else { return }
             
@@ -94,6 +97,7 @@ class SelectDenominationTableViewController: UITableViewController {
         case 0:
             UserDefaults.standard.set(btcDenominations[indexPath.row].symbol, forKey: "denomination")
         case 1:
+            // If user selects a fiat currecny we automatically set it for the entire app fiat setting.
             UserDefaults.standard.set(fiatCurrencies[indexPath.row].symbol, forKey: "denomination")
             UserDefaults.standard.set(fiatCurrencies[indexPath.row].symbol, forKey: "fiat")
         default:
@@ -116,7 +120,7 @@ class SelectDenominationTableViewController: UITableViewController {
         let textLabel = UILabel()
         textLabel.textAlignment = .left
         textLabel.font = UIFont.systemFont(ofSize: 17, weight: .regular)
-        textLabel.frame = CGRect(x: 0, y: 0, width: 300, height: 50)
+        textLabel.frame = CGRect(x: 16, y: 0, width: 300, height: 50)
 
         if let section = Section(rawValue: section) {
             textLabel.text = headerName(for: section)

@@ -29,6 +29,7 @@
 		0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */; };
 		0AD6F1DB2A1EAA9100618E94 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6F1DA2A1EAA9100618E94 /* LaunchScreen.storyboard */; };
 		0AD6F1DD2A1FA15000618E94 /* 1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 0AD6F1DC2A1FA15000618E94 /* 1024.png */; };
+		0AD6F1DF2A1FC39000618E94 /* SelectDenominationTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1DE2A1FC39000618E94 /* SelectDenominationTableViewController.swift */; };
 		0AE78E6D2A09349B0024067D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E6C2A09349B0024067D /* AppDelegate.swift */; };
 		0AE78E6F2A09349B0024067D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE78E6E2A09349B0024067D /* SceneDelegate.swift */; };
 		0AE78E742A09349B0024067D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AE78E722A09349B0024067D /* Main.storyboard */; };
@@ -84,6 +85,7 @@
 		0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSettingTableViewController.swift; sourceTree = "<group>"; };
 		0AD6F1DA2A1EAA9100618E94 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0AD6F1DC2A1FA15000618E94 /* 1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1024.png; sourceTree = "<group>"; };
+		0AD6F1DE2A1FC39000618E94 /* SelectDenominationTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectDenominationTableViewController.swift; sourceTree = "<group>"; };
 		0AE78E692A09349B0024067D /* Satsuma.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Satsuma.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AE78E6C2A09349B0024067D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AE78E6E2A09349B0024067D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */,
 				0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */,
 				0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */,
+				0AD6F1DE2A1FC39000618E94 /* SelectDenominationTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				0AD6F1D32A1E938200618E94 /* FiatSettingTableViewController.swift in Sources */,
 				0AE78E922A0935590024067D /* Crypto.swift in Sources */,
 				0A828A642A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift in Sources */,
+				0AD6F1DF2A1FC39000618E94 /* SelectDenominationTableViewController.swift in Sources */,
 				0AEE78362A093B3B00643090 /* Entities.swift in Sources */,
 				0AE78E992A09392E0024067D /* HomeViewController.swift in Sources */,
 				0A3FD6EE2A0BEC5300B6F8E3 /* ReceiveViewController.swift in Sources */,
@@ -546,7 +550,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
@@ -563,7 +567,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.6;
+				MARKETING_VERSION = 0.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -580,7 +584,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
@@ -597,7 +601,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.6;
+				MARKETING_VERSION = 0.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
