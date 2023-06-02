@@ -534,7 +534,9 @@ class WalletTools {
                                                 }
                                             }
                                             
-                                        } else {
+                                        // Uncomment the below code to delete used receive addresses.
+                                        }/* else {
+                                          // MARK: - TODO Allow user to see list of "used" addresses and remove them from the keypool.
                                             // Its a receive address.
                                             print("delete receive address: \(addr.address)")
                                             
@@ -545,7 +547,7 @@ class WalletTools {
                                                     return
                                                 }
                                             }
-                                        }
+                                        }*/
                                         
                                         if i + 1 == filteredUtxos.count {
                                             // We have looped through all of our locally saved utxos, the above should be done and we are finished.
