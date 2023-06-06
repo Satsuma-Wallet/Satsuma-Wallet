@@ -14,6 +14,7 @@ public struct Wallet: CustomStringConvertible {
     let mnemonic:Data?
     let bip84Xprv:Data?
     let bip84Xpub:String?
+    let passphrase:Data?
     
     init(_ dictionary: [String: Any]) {
         id = dictionary["id"] as! UUID
@@ -22,6 +23,7 @@ public struct Wallet: CustomStringConvertible {
         mnemonic = dictionary["mnemonic"] as? Data
         bip84Xprv = dictionary["bip84Xprv"] as? Data
         bip84Xpub = dictionary["bip84Xpub"] as? String
+        passphrase = dictionary["passphrase"] as? Data
     }
     
     public var description: String {

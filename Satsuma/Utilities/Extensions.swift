@@ -10,6 +10,22 @@ import UIKit
 
 // A place for convenience and cleaner code, do dirty work here.
 
+public extension UIView {
+    func shake() {
+        let animation = CABasicAnimation(keyPath: "position")
+        animation.duration = 0.07
+        animation.repeatCount = 4
+        animation.autoreverses = true
+        animation.fromValue = NSValue(cgPoint: CGPoint(x: self.center.x - 10, y: self.center.y))
+        animation.toValue = NSValue(cgPoint: CGPoint(x: self.center.x + 10, y: self.center.y))
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.layer.add(animation, forKey: "position")
+        }
+    }
+}
+
 public extension UIViewController {
     func showAlert(title: String, message: String) {
         DispatchQueue.main.async { [weak self] in
@@ -165,6 +181,11 @@ public extension String {
             return newlocale.displayName(forKey: .currencySymbol, value: self)!
         }
         return locale.displayName(forKey: .currencySymbol, value: self)!
+    }
+    
+    func condenseWhitespace() -> String {
+        let components = self.components(separatedBy: .whitespacesAndNewlines)
+        return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
 }
 

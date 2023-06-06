@@ -22,6 +22,10 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
         configureViews()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        textFieldOutlet.becomeFirstResponder()
+    }
+    
     // The paste button action.
     @IBAction func pasteAction(_ sender: Any) {
         guard let content = UIPasteboard.general.string else {
@@ -53,7 +57,6 @@ class TextInputViewController: UIViewController, UITextFieldDelegate {
     // Configure the text input.
     private func configureTextField() {
         textFieldOutlet.delegate = self
-        textFieldOutlet.becomeFirstResponder()
         textFieldOutlet.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         if address != "" {
             textFieldOutlet.text = address

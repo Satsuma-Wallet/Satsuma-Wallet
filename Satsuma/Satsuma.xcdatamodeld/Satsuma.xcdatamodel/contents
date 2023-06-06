@@ -31,6 +31,7 @@
         <attribute name="changeIndex" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="mnemonic" optional="YES" attributeType="Binary"/>
+        <attribute name="passphrase" optional="YES" attributeType="Binary"/>
         <attribute name="receiveIndex" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
 </model>

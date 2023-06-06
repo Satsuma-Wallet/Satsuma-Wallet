@@ -52,6 +52,14 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self, selector: #selector(walletRecovered(_:)), name: Notification.Name(rawValue: "walletRecovered"), object: nil)
+    }
+    
+    @objc func walletRecovered(_ notification: Notification) {
+        showBalanceFromCache()
+    }
+    
     // The "Wallet backup" button action. It does not do anything yet except for a biometry authentication.
     @IBAction func backupAction(_ sender: Any) {
         let context = LAContext()
@@ -66,7 +74,11 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
 
                     DispatchQueue.main.async {
                         if success {
-                            print("Unlocked.")
+                            DispatchQueue.main.async { [weak self] in
+                                guard let self = self else { return }
+                                
+                                self.performSegue(withIdentifier: "segueToBackup", sender: self)
+                            }
                         } else {
                             self.showAlert(title: "Authentication failed", message: "You could not be verified; please try again.")
                         }
@@ -111,6 +123,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             alert.addAction(UIAlertAction(title: "No", style: .default, handler: { [weak self] action in
                 guard let self = self else { return }
                 // Creates a wallet without a passphrase.
+        
                 WalletTools.shared.create(passphrase: "") { (message, created) in
                     guard created else {
                         self.showAlert(title: "Wallet creation failed.", message: message ?? "Unknown")

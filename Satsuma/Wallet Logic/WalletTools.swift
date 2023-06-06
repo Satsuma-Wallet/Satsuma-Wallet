@@ -29,54 +29,19 @@ class WalletTools {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in /// "weak self" ensures we prevent memory leaks which are bad security and keeps memory usage in check.
             guard let self = self else { return }
             
-            // Gets our 24 seed words in string format.
             guard let mnemonic = self.seedWords() else {
-                completion(("Mnemonic creation failed", false))
-                return
-            }
-            
-            // Encrypts our mnmeonic, which converts it to data.
-            guard let encryptedMnemonic = Crypto.encrypt(mnemonic.utf8) else {
-                completion(("Menmonic encryption failed.", false))
-                return
-            }
-            
-            // Derives our master key (root xprv) from the mnemonic and passphrase.
-            guard let mk = masterKey(words: mnemonic, passphrase: passphrase) else {
-                completion(("Master key derivation failed.", false))
-                return
-            }
-            
-            // Derives our bip84 account xprv (m/84h/1h/0h) so we can encrypt it and save it. Used for deriving private keys for signing inputs.
-            guard let bip84Xprv = bip84Xprv(masterKey: mk) else {
-                completion(("Failed deriving bip84 xprv.", false))
-                return
-            }
-            
-            // Encrypts the string bip84 xprv and converts it to data.
-            guard let encryptedBip84Xprv = Crypto.encrypt(bip84Xprv.utf8) else {
-                completion(("Failed encrypting bip84 xprv.", false))
-                return
-            }
-            
-            // Derives the bip84 account xpub from the bip84 account xprv.
-            guard let bip84Xpub = HDKey(bip84Xprv)?.xpub else {
-                completion(("Failed derving bip84 xpub.", false))
+                completion(("No words.", false))
                 return
             }
             
             // Constructs our wallet dictionary which is saved to Core Data.
-            let dict:[String:Any] = [
-                "mnemonic": encryptedMnemonic,
-                "id": UUID(),
-                "receiveIndex": 0.0,
-                "changeIndex": 0.0,
-                "bip84Xprv": encryptedBip84Xprv,
-                "bip84Xpub": bip84Xpub
-            ]
+            guard let walletDict = walletDict(words: mnemonic, passphrase: passphrase) else {
+                completion(("Failed creating wallet dict.", false))
+                return
+            }
             
             // Saves our wallet dictionary.
-            CoreDataService.saveEntity(dict: dict, entityName: .wallets) { walletSaved in
+            CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { walletSaved in
                 
                 // Ensures it was saved.
                 guard walletSaved else {
@@ -85,8 +50,8 @@ class WalletTools {
                 }
                 
                 // Derive 20 receive addresses and 20 change addresses from our wallets bip84 xpub.
-                guard let recAddresses = self.addresses(wallet: Wallet(dict), change: 0),
-                      let changeAddresses = self.addresses(wallet: Wallet(dict), change: 1) else {
+                guard let recAddresses = self.addresses(wallet: Wallet(walletDict), change: 0),
+                      let changeAddresses = self.addresses(wallet: Wallet(walletDict), change: 1) else {
                     completion(("Address derivation failed.", false))
                     return
                 }
@@ -122,6 +87,288 @@ class WalletTools {
                 }
             }
         }
+    }
+    
+    func recover(words: String, passphrase: String, completion: @escaping ((message: String?, created: Bool)) -> Void) {
+        
+        // Ensures the wallet creation code happens on a background thread, makes the app run smoothly, otherwise it can interfere with the UI and make it jerky.
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in /// "weak self" ensures we prevent memory leaks which are bad security and keeps memory usage in check.
+            guard let self = self else { return }
+            
+            guard var walletDict = walletDict(words: words, passphrase: passphrase) else {
+                completion(("Failed creating wallet dict.", false))
+                return
+            }
+            
+//            walletDict["receiveIndex"] = 20.0
+//            walletDict["changeIndex"] = 20.0
+            
+            let wallet = Wallet(walletDict)
+            
+            guard let recAddresses = addresses(wallet: wallet, change: 0) else {
+                completion(("Failed deriving receive addresses.", false))
+                return
+            }
+            
+            guard let changeAddresses = addresses(wallet: wallet, change: 1) else {
+                completion(("Failed deriving change addresses.", false))
+                return
+            }
+            
+            // Delete existing wallet/addresses first
+            CoreDataService.deleteAllData(entity: .wallets) { walletsDeleted in
+                guard walletsDeleted else {
+                    return
+                }
+                
+                CoreDataService.deleteAllData(entity: .receiveAddr) { recAddrDeleted in
+                    guard recAddrDeleted else {
+                        return
+                    }
+                    
+                    CoreDataService.deleteAllData(entity: .changeAddr) { changeAddrDeleted in
+                        guard changeAddrDeleted else {
+                            return
+                        }
+                        
+                        CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { walletSaved in
+                            guard walletSaved else {
+                                completion(("Failed saving wallet data.", false))
+                                return
+                            }
+                            
+                            for (i, recAddress) in recAddresses.enumerated() {
+                                CoreDataService.saveEntity(dict: recAddress, entityName: .receiveAddr) { recAddrSaved in
+                                    guard recAddrSaved else {
+                                        completion(("Failed saving receive addresses.", false))
+                                        return
+                                    }
+                                    
+                                    if i + 1 == recAddresses.count {
+                                        
+                                        for (i, changeAddress) in changeAddresses.enumerated() {
+                                            
+                                            CoreDataService.saveEntity(dict: changeAddress, entityName: .changeAddr) { [weak self] changeAddrSaved in
+                                                guard let self = self else { return }
+                                                
+                                                guard changeAddrSaved else {
+                                                    completion(("Failed saving change addresses.", false))
+                                                    return
+                                                }
+                                                
+                                                if i + 1 == changeAddresses.count {
+                                                    // 0 - 19 addressess saved, we now update to index 20 to ensure wallet scans for first 20
+                                                    
+                                                    discoverUtxoForAddresses(addresses: recAddresses) { [weak self] (message, done) in
+                                                        guard let self = self else { return }
+                                                        
+                                                        guard done else {
+                                                            completion((message, done))
+                                                            return
+                                                        }
+                                                        
+                                                        currentIndex = 0
+                                                        
+                                                        discoverUtxoForAddresses(addresses: changeAddresses) { (message, done) in
+                                                            guard done else {
+                                                                completion((message, done))
+                                                                return
+                                                            }
+                                                            
+                                                            completion((nil, true))
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func discoverUtxoForAddresses(addresses: [[String:Any]], completion: @escaping ((message: String?, done: Bool)) -> Void) {
+        print("discoverUtxoForAddresses")
+        let address = Address_Cache(addresses[currentIndex])
+        let maxIndex = addresses.count - 1
+        
+        func finish() {
+            print("finish")
+            if currentIndex < maxIndex {
+                currentIndex += 1
+                discoverUtxoForAddresses(addresses: addresses, completion: completion)
+            } else {
+                completion((nil, true))
+            }
+        }
+        
+        MempoolRequest.sharedInstance.command(method: .utxo(address: address.address)) { [weak self] (response, errorDesc) in
+            guard let self = self else { return }
+            
+            print("check \(address.address), index \(address.index) for utxo.")
+            
+            // Ensures we received a valid response.
+            guard let fetchedUtxos = response as? [[String:Any]] else {
+                completion((errorDesc, false))
+                return
+            }
+            
+            if fetchedUtxos.count > 0 {
+                print("we found a utxo for that address.")
+                // if we find any address with a utxo we know we need to add another 20 addresses to keypool, then recursively call this function...
+                // Only need to add addresses to keypool once, so can run a check to see how many addresses we have before adding more for every address with a balance.
+                
+                for (i, utxo) in fetchedUtxos.enumerated() {
+                    let newUtxo = Utxo_Fetched(utxo)
+                    
+                    let dictToSave:[String:Any] = [
+                        "id": UUID(),                       /// Unique identifier so we can update/delete specific utxos later.
+                        "vout": newUtxo.vout,               /// Index of the utxo in the previous transaction outputs. Used when comparing utxos/creating inputs.
+                        "txid": newUtxo.txid,               /// String hex id of the utxo's previous transaction. Used when comparing utxos/creating inputs.
+                        "value": newUtxo.value,             /// Satoshi amount of our utxo.
+                        "confirmed": newUtxo.confirmed,     /// Boolean to display whether our balance is confirmed or not.
+                        "address": address.address,         /// The string address of the utxo, used to derive the scriptpubkey when creating an input.
+                        "pubkey": address.pubkey,           /// The data representation of the utxo's pubkey, used to derive the witness when creating an input.
+                        "derivation": address.derivation    /// Used to fetch the corresponding private key to sign the input.
+                    ]
+                    
+                    CoreDataService.saveEntity(dict: dictToSave, entityName: .utxos) { [weak self] utxoSaved in
+                        guard let self = self else { return }
+                        
+                        guard utxoSaved else { return }
+                                                
+                        if i + 1 == fetchedUtxos.count {
+                            if maxIndex - Int(address.index) < 20 {
+                                // need to add more addresses
+                                print("need to add more addresses")
+                                
+                                // check the index of the address, get 20 more addresses up from that index to query.
+                                let isChange = isChangeAddress(address)
+                                var change = 0
+                                var entity:ENTITY = .receiveAddr
+                                var keyToUpdate = "receiveIndex"
+                                if isChange {
+                                    change = 1
+                                    entity = .changeAddr
+                                    keyToUpdate = "changeIndex"
+                                }
+
+                                CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
+                                    guard let self = self else { return }
+
+                                    guard let wallets = wallets else { return }
+
+                                    let wallet = Wallet(wallets[0])
+                                    
+                                    CoreDataService.update(id: wallet.id, keyToUpdate: keyToUpdate, newValue: address.index, entity: .wallets) { [weak self] updatedWalletIndex in
+                                        guard let self = self else { return }
+                                        
+                                        guard updatedWalletIndex else {
+                                            completion(("Updating wallet index failed.", false))
+                                            return
+                                        }
+                                        
+                                        var newAddresses:[[String:Any]] = []
+
+                                        for i in maxIndex...maxIndex + 20 {
+                                            guard let (address, pubkey) = addressPubkey(xpub: wallet.bip84Xpub!, path: "/\(change)/\(i)") as? (String, Data) else {
+                                                completion(("Deriving a new address failed.", false))
+                                                return
+                                            }
+
+
+                                            let newAddress:[String:Any] = [
+                                                "address": address,
+                                                "index": Double(i),
+                                                "id": UUID(),
+                                                "pubkey": pubkey,
+                                                "derivation": "m/84h/\(coinType)h/0h/\(change)/\(i)"
+                                            ]
+
+                                            newAddresses.append(newAddress)
+                                            
+                                            CoreDataService.saveEntity(dict: newAddress, entityName: entity) { [weak self] addressSaved in
+                                                guard let self = self else { return }
+
+                                                guard addressSaved else {
+                                                    completion(("Saving new address failed.", false))
+                                                    return
+                                                }
+
+                                                if i + 1 == maxIndex + 20 {
+                                                    // call the function again if we are at the final address.
+                                                    currentIndex += 1
+                                                    print("currentIndex: \(currentIndex)")
+                                                    print(addresses.count + newAddresses.count)
+                                                    discoverUtxoForAddresses(addresses: addresses + newAddresses, completion: completion)
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                finish()
+                            }
+                        }
+                    }
+                }
+            } else {
+                print("no utxo for that address")
+                finish()
+            }
+        }
+    }
+    
+    private func walletDict(words: String, passphrase: String) -> [String:Any]? {
+        // Encrypts our mnmeonic, which converts it to data.
+        guard let encryptedMnemonic = Crypto.encrypt(words.utf8) else {
+            //completion(("Menmonic encryption failed.", false))
+            return nil
+        }
+        
+        // Derives our master key (root xprv) from the mnemonic and passphrase.
+        guard let mk = masterKey(words: words, passphrase: passphrase) else {
+            //completion(("Master key derivation failed.", false))
+            return nil
+        }
+        
+        // Derives our bip84 account xprv (m/84h/1h/0h) so we can encrypt it and save it. Used for deriving private keys for signing inputs.
+        guard let bip84Xprv = bip84Xprv(masterKey: mk) else {
+            //completion(("Failed deriving bip84 xprv.", false))
+            return nil
+        }
+        
+        // Encrypts the string bip84 xprv and converts it to data.
+        guard let encryptedBip84Xprv = Crypto.encrypt(bip84Xprv.utf8) else {
+            //completion(("Failed encrypting bip84 xprv.", false))
+            return nil
+        }
+        
+        // Derives the bip84 account xpub from the bip84 account xprv.
+        guard let bip84Xpub = HDKey(bip84Xprv)?.xpub else {
+            //completion(("Failed derving bip84 xpub.", false))
+            return nil
+        }
+        
+        var walletDict:[String:Any] = [
+            "mnemonic": encryptedMnemonic,
+            "id": UUID(),
+            "receiveIndex": 0.0,
+            "changeIndex": 0.0,
+            "bip84Xprv": encryptedBip84Xprv,
+            "bip84Xpub": bip84Xpub
+        ]
+        
+        if passphrase != "" {
+            let encryptedPassphrase = Crypto.encrypt(passphrase.utf8)
+            walletDict["passphrase"] = encryptedPassphrase
+        }
+        
+        return walletDict
     }
     
     // Generates a 24 word BIP39 mnemonic from 32 bytes of entropy created from the devices secure enclave.
@@ -197,7 +444,7 @@ class WalletTools {
             // add pubkey too
             addresses.append([
                 "address": address,
-                "index": i,
+                "index": Double(i),
                 "id": UUID(),
                 "pubkey": pubkey,
                 "derivation": "m/84h/\(coinType)h/0h/\(change)/\(i)"
@@ -375,12 +622,16 @@ class WalletTools {
                 return
             }
             
+            print("recAddresses: \(recAddresses)")
+            
             // Fetch all of our change addresses from Core Data.
             CoreDataService.retrieveEntity(entityName: .changeAddr) { changeAddresses in
                 guard let changeAddresses = changeAddresses else {
                     completion(("No change address Core Data entity.", false))
                     return
                 }
+                
+                print("changeAddresses: \(changeAddresses)")
                 
                 // Ensure we start from the first address.
                 self.currentIndex = 0
@@ -973,6 +1224,10 @@ class WalletTools {
     // Utility for checking whether an address is valid or not.
     func validAddress(string: String) -> Bool {
         return Address(string) != nil
+    }
+    
+    func validMnemonic(words: String) -> Bool {
+        return BIP39Mnemonic(words) != nil
     }
     
     // Returns a derived private key to be used when signing transaction inputs.

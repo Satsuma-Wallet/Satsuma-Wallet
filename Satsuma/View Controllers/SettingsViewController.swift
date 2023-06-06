@@ -60,6 +60,7 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         case network
         case fee
         case fiat
+        case recovery
     }
     
     func blankCell() -> UITableViewCell {
@@ -126,6 +127,14 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         return feeCell
     }
     
+    private func recoveryCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let recoveryCell = settingsTable.dequeueReusableCell(withIdentifier: "recoveryCell", for: indexPath)
+        let label = recoveryCell.viewWithTag(1) as! UILabel
+        label.text = "Recover"
+        recoveryCell.selectionStyle = .none
+        return recoveryCell
+    }
+    
     @objc func toggleTor(_ sender: UISwitch) {
         UserDefaults.standard.setValue(sender.isOn, forKey: "torEnabled")
         if !sender.isOn {
@@ -169,6 +178,9 @@ extension SettingsViewController: UITableViewDelegate {
             
         case .fiat:
             return fiatCell(indexPath)
+            
+        case .recovery:
+            return recoveryCell(indexPath)
         
         default:
             return blankCell()
@@ -214,13 +226,15 @@ extension SettingsViewController: UITableViewDelegate {
             return "Transaction fee"
         case .fiat:
             return "Fiat currency"
+        case .recovery:
+            return "Wallet tools"
         }
     } 
 }
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

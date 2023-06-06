@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A1B71CA2A2A649E00D20285 /* RecoverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1B71C92A2A649E00D20285 /* RecoverViewController.swift */; };
+		0A1B71CC2A2A679500D20285 /* BIP39WordList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1B71CB2A2A679500D20285 /* BIP39WordList.swift */; };
+		0A1B71CF2A2F8F1300D20285 /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */; };
 		0A2C1BB82A13C18200D973A4 /* BIP21InvoiceParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BB72A13C18200D973A4 /* BIP21InvoiceParser.swift */; };
 		0A2C1BBF2A15133B00D973A4 /* SendConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */; };
 		0A2C1BC32A17B8AB00D973A4 /* AddressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */; };
@@ -63,6 +66,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A1B71C92A2A649E00D20285 /* RecoverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoverViewController.swift; sourceTree = "<group>"; };
+		0A1B71CB2A2A679500D20285 /* BIP39WordList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP39WordList.swift; sourceTree = "<group>"; };
+		0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
 		0A2C1BB72A13C18200D973A4 /* BIP21InvoiceParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BIP21InvoiceParser.swift; sourceTree = "<group>"; };
 		0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendConfirmationViewController.swift; sourceTree = "<group>"; };
 		0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressView.xib; sourceTree = "<group>"; };
@@ -121,6 +127,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A1B71CD2A2F896F00D20285 /* Subviews */ = {
+			isa = PBXGroup;
+			children = (
+				0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */,
+				0A2C1BC42A17BA6500D973A4 /* AddressView.swift */,
+			);
+			path = Subviews;
+			sourceTree = "<group>";
+		};
 		0A2C1BB92A13C9B300D973A4 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +194,7 @@
 				0A3FD6EB2A0A96C300B6F8E3 /* Addresses.swift */,
 				0A2C1BC82A1BF46100D973A4 /* RecommendedFee.swift */,
 				0AD6F1D02A1E69FF00618E94 /* Fiat.swift */,
+				0A1B71CB2A2A679500D20285 /* BIP39WordList.swift */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -197,6 +213,8 @@
 				0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */,
 				0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */,
 				0AD6F1DE2A1FC39000618E94 /* SelectDenominationTableViewController.swift */,
+				0A1B71C92A2A649E00D20285 /* RecoverViewController.swift */,
+				0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -235,8 +253,7 @@
 				0AE78E752A09349B0024067D /* Satsuma.xcdatamodeld */,
 				0A3FD6EA2A097A9300B6F8E3 /* View Controllers */,
 				0A2C1BBD2A13CAB600D973A4 /* Wallet Logic */,
-				0A2C1BC22A17B8AB00D973A4 /* AddressView.xib */,
-				0A2C1BC42A17BA6500D973A4 /* AddressView.swift */,
+				0A1B71CD2A2F896F00D20285 /* Subviews */,
 				0AD6F1DA2A1EAA9100618E94 /* LaunchScreen.storyboard */,
 			);
 			path = Satsuma;
@@ -403,7 +420,10 @@
 				0AE78E992A09392E0024067D /* HomeViewController.swift in Sources */,
 				0A3FD6EE2A0BEC5300B6F8E3 /* ReceiveViewController.swift in Sources */,
 				0AEE783A2A09402E00643090 /* SettingsViewController.swift in Sources */,
+				0A1B71CA2A2A649E00D20285 /* RecoverViewController.swift in Sources */,
+				0A1B71CF2A2F8F1300D20285 /* BackupViewController.swift in Sources */,
 				0AE78E942A0935590024067D /* KeyChain.swift in Sources */,
+				0A1B71CC2A2A679500D20285 /* BIP39WordList.swift in Sources */,
 				0A2C1BC52A17BA6500D973A4 /* AddressView.swift in Sources */,
 				0A3FD6EC2A0A96C300B6F8E3 /* Addresses.swift in Sources */,
 				0A2C1BB82A13C18200D973A4 /* BIP21InvoiceParser.swift in Sources */,
@@ -550,13 +570,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Satsuma;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To scan bitcoin QR codes.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "To unlock the app.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To create a backup.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -567,7 +587,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.8;
+				MARKETING_VERSION = 0.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -584,13 +604,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Satsuma;
 				INFOPLIST_KEY_NSCameraUsageDescription = "To scan bitcoin QR codes.";
-				INFOPLIST_KEY_NSFaceIDUsageDescription = "To unlock the app.";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "To create a backup.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -601,7 +621,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.8;
+				MARKETING_VERSION = 0.0.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
