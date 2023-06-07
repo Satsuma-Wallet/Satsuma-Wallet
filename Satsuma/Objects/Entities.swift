@@ -13,4 +13,5 @@ public enum ENTITY: String {
     case utxos = "Utxos"
     case changeAddr = "ChangeAddr"
     case receiveAddr = "ReceiveAddr"
+    case pin = "Pin"
 }

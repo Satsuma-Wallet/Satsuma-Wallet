@@ -20,6 +20,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     var utxosConfirmed = true
     var navigatedToSend = false
     var initialLoad = true
+    var hasUnlocked = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,23 +32,45 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        // When the view appears we check if any wallets exist.
-        CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
-            guard let self = self else { return }
+        CoreDataService.retrieveEntity(entityName: .pin) { pins in
+            guard let pins = pins else {
+                print("no pin entity")
+                return
+            }
             
-            guard let wallets = wallets else { return }
-            
-            if wallets.count > 0 {
-                // A wallet exists.
-                // If the user navigated back from the send flow or it is the initial load we check for new/consumed utxos and update the balance.
-                if self.navigatedToSend || self.initialLoad {
-                    self.fetchBalance()
-                    self.navigatedToSend = false
-                    self.initialLoad = false
+            if pins.count == 0 {
+                print("no pin")
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    performSegue(withIdentifier: "segueToPinCreation", sender: self)
+                }
+            } else if !self.hasUnlocked {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    
+                    performSegue(withIdentifier: "segueToUnlock", sender: self)
                 }
             } else {
-                // No wallet exists so we first ask if a BIP39 passphrase is to be used.
-                self.promptForPassphrase()
+                // When the view appears we check if any wallets exist.
+                CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
+                    guard let self = self else { return }
+                    
+                    guard let wallets = wallets else { return }
+                    
+                    if wallets.count > 0 {
+                        // A wallet exists.
+                        // If the user navigated back from the send flow or it is the initial load we check for new/consumed utxos and update the balance.
+                        if self.navigatedToSend || self.initialLoad {
+                            self.fetchBalance()
+                            self.navigatedToSend = false
+                            self.initialLoad = false
+                        }
+                    } else {
+                        // No wallet exists so we first ask if a BIP39 passphrase is to be used.
+                        self.promptForPassphrase()
+                    }
+                }
             }
         }
     }
@@ -315,6 +338,15 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         switch segue.identifier {
         case "segueToSend":
             navigatedToSend = true
+            
+        case "segueToUnlock":
+            guard let vc = segue.destination as? PinEntryViewController else { fallthrough }
+            
+            vc.onDoneBlock = { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.hasUnlocked = true
+            }
         default:
             break
         }
