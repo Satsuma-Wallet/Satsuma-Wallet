@@ -91,17 +91,14 @@ class WalletTools {
     
     func recover(words: String, passphrase: String, completion: @escaping ((message: String?, created: Bool)) -> Void) {
         
-        // Ensures the wallet creation code happens on a background thread, makes the app run smoothly, otherwise it can interfere with the UI and make it jerky.
+        // Ensures the wallet recovery code happens on a background thread, makes the app run smoothly, otherwise it can interfere with the UI and make it jerky.
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in /// "weak self" ensures we prevent memory leaks which are bad security and keeps memory usage in check.
             guard let self = self else { return }
             
-            guard var walletDict = walletDict(words: words, passphrase: passphrase) else {
+            guard let walletDict = walletDict(words: words, passphrase: passphrase) else {
                 completion(("Failed creating wallet dict.", false))
                 return
             }
-            
-//            walletDict["receiveIndex"] = 20.0
-//            walletDict["changeIndex"] = 20.0
             
             let wallet = Wallet(walletDict)
             
@@ -116,68 +113,57 @@ class WalletTools {
             }
             
             // Delete existing wallet/addresses first
-            CoreDataService.deleteAllData(entity: .wallets) { walletsDeleted in
-                guard walletsDeleted else {
+            deleteExistingData { deleted in
+                guard deleted else {
+                    completion(("Failed deleting exisitng data.", false))
                     return
                 }
                 
-                CoreDataService.deleteAllData(entity: .receiveAddr) { recAddrDeleted in
-                    guard recAddrDeleted else {
+                CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { walletSaved in
+                    guard walletSaved else {
+                        completion(("Failed saving wallet data.", false))
                         return
                     }
                     
-                    CoreDataService.deleteAllData(entity: .changeAddr) { changeAddrDeleted in
-                        guard changeAddrDeleted else {
-                            return
-                        }
-                        
-                        CoreDataService.saveEntity(dict: walletDict, entityName: .wallets) { walletSaved in
-                            guard walletSaved else {
-                                completion(("Failed saving wallet data.", false))
+                    for (i, recAddress) in recAddresses.enumerated() {
+                        CoreDataService.saveEntity(dict: recAddress, entityName: .receiveAddr) { recAddrSaved in
+                            guard recAddrSaved else {
+                                completion(("Failed saving receive addresses.", false))
                                 return
                             }
                             
-                            for (i, recAddress) in recAddresses.enumerated() {
-                                CoreDataService.saveEntity(dict: recAddress, entityName: .receiveAddr) { recAddrSaved in
-                                    guard recAddrSaved else {
-                                        completion(("Failed saving receive addresses.", false))
-                                        return
-                                    }
+                            if i + 1 == recAddresses.count {
+                                
+                                for (i, changeAddress) in changeAddresses.enumerated() {
                                     
-                                    if i + 1 == recAddresses.count {
+                                    CoreDataService.saveEntity(dict: changeAddress, entityName: .changeAddr) { [weak self] changeAddrSaved in
+                                        guard let self = self else { return }
                                         
-                                        for (i, changeAddress) in changeAddresses.enumerated() {
+                                        guard changeAddrSaved else {
+                                            completion(("Failed saving change addresses.", false))
+                                            return
+                                        }
+                                        
+                                        if i + 1 == changeAddresses.count {
+                                            // 0 - 19 addressess saved, we now update to index 20 to ensure wallet scans for first 20
                                             
-                                            CoreDataService.saveEntity(dict: changeAddress, entityName: .changeAddr) { [weak self] changeAddrSaved in
+                                            discoverUtxoForAddresses(addresses: recAddresses) { [weak self] (message, done) in
                                                 guard let self = self else { return }
                                                 
-                                                guard changeAddrSaved else {
-                                                    completion(("Failed saving change addresses.", false))
+                                                guard done else {
+                                                    completion((message, done))
                                                     return
                                                 }
                                                 
-                                                if i + 1 == changeAddresses.count {
-                                                    // 0 - 19 addressess saved, we now update to index 20 to ensure wallet scans for first 20
-                                                    
-                                                    discoverUtxoForAddresses(addresses: recAddresses) { [weak self] (message, done) in
-                                                        guard let self = self else { return }
-                                                        
-                                                        guard done else {
-                                                            completion((message, done))
-                                                            return
-                                                        }
-                                                        
-                                                        currentIndex = 0
-                                                        
-                                                        discoverUtxoForAddresses(addresses: changeAddresses) { (message, done) in
-                                                            guard done else {
-                                                                completion((message, done))
-                                                                return
-                                                            }
-                                                            
-                                                            completion((nil, true))
-                                                        }
+                                                currentIndex = 0
+                                                
+                                                discoverUtxoForAddresses(addresses: changeAddresses) { (message, done) in
+                                                    guard done else {
+                                                        completion((message, done))
+                                                        return
                                                     }
+                                                    
+                                                    completion((nil, true))
                                                 }
                                             }
                                         }
@@ -191,10 +177,43 @@ class WalletTools {
         }
     }
     
+    private func deleteExistingData(completion: @escaping ((Bool)) -> Void) {
+        CoreDataService.deleteAllData(entity: .wallets) { walletsDeleted in
+            guard walletsDeleted else {
+                completion(false)
+                return
+            }
+            
+            CoreDataService.deleteAllData(entity: .receiveAddr) { recAddrDeleted in
+                guard recAddrDeleted else {
+                    completion(false)
+                    return
+                }
+                
+                CoreDataService.deleteAllData(entity: .utxos) { utxosDeleted in
+                    guard utxosDeleted else {
+                        completion(false)
+                        return
+                    }
+                    
+                    CoreDataService.deleteAllData(entity: .changeAddr) { changeAddrDeleted in
+                        guard changeAddrDeleted else {
+                            completion(false)
+                            return
+                        }
+                        
+                        completion(true)
+                    }
+                }
+            }
+        }
+    }
+    
     private func discoverUtxoForAddresses(addresses: [[String:Any]], completion: @escaping ((message: String?, done: Bool)) -> Void) {
         print("discoverUtxoForAddresses")
         let address = Address_Cache(addresses[currentIndex])
         let maxIndex = addresses.count - 1
+        print("maxIndex: \(maxIndex)")
         
         func finish() {
             print("finish")
@@ -223,24 +242,16 @@ class WalletTools {
                 // Only need to add addresses to keypool once, so can run a check to see how many addresses we have before adding more for every address with a balance.
                 
                 for (i, utxo) in fetchedUtxos.enumerated() {
-                    let newUtxo = Utxo_Fetched(utxo)
-                    
-                    let dictToSave:[String:Any] = [
-                        "id": UUID(),                       /// Unique identifier so we can update/delete specific utxos later.
-                        "vout": newUtxo.vout,               /// Index of the utxo in the previous transaction outputs. Used when comparing utxos/creating inputs.
-                        "txid": newUtxo.txid,               /// String hex id of the utxo's previous transaction. Used when comparing utxos/creating inputs.
-                        "value": newUtxo.value,             /// Satoshi amount of our utxo.
-                        "confirmed": newUtxo.confirmed,     /// Boolean to display whether our balance is confirmed or not.
-                        "address": address.address,         /// The string address of the utxo, used to derive the scriptpubkey when creating an input.
-                        "pubkey": address.pubkey,           /// The data representation of the utxo's pubkey, used to derive the witness when creating an input.
-                        "derivation": address.derivation    /// Used to fetch the corresponding private key to sign the input.
-                    ]
+                    let dictToSave = utxoDict(utxo: utxo, address: address)
                     
                     CoreDataService.saveEntity(dict: dictToSave, entityName: .utxos) { [weak self] utxoSaved in
                         guard let self = self else { return }
                         
-                        guard utxoSaved else { return }
-                                                
+                        guard utxoSaved else {
+                            completion(("Failed saving utxo.", false))
+                            return
+                        }
+                        
                         if i + 1 == fetchedUtxos.count {
                             if maxIndex - Int(address.index) < 20 {
                                 // need to add more addresses
@@ -251,6 +262,7 @@ class WalletTools {
                                 var change = 0
                                 var entity:ENTITY = .receiveAddr
                                 var keyToUpdate = "receiveIndex"
+                                
                                 if isChange {
                                     change = 1
                                     entity = .changeAddr
@@ -280,15 +292,7 @@ class WalletTools {
                                                 return
                                             }
 
-
-                                            let newAddress:[String:Any] = [
-                                                "address": address,
-                                                "index": Double(i),
-                                                "id": UUID(),
-                                                "pubkey": pubkey,
-                                                "derivation": "m/84h/\(coinType)h/0h/\(change)/\(i)"
-                                            ]
-
+                                            let newAddress = addressDict(address: address, index: i, pubkey: pubkey, change: change)
                                             newAddresses.append(newAddress)
                                             
                                             CoreDataService.saveEntity(dict: newAddress, entityName: entity) { [weak self] addressSaved in
@@ -302,8 +306,6 @@ class WalletTools {
                                                 if i + 1 == maxIndex + 20 {
                                                     // call the function again if we are at the final address.
                                                     currentIndex += 1
-                                                    print("currentIndex: \(currentIndex)")
-                                                    print(addresses.count + newAddresses.count)
                                                     discoverUtxoForAddresses(addresses: addresses + newAddresses, completion: completion)
                                                 }
                                             }
@@ -321,6 +323,31 @@ class WalletTools {
                 finish()
             }
         }
+    }
+    
+    private func addressDict(address: String, index: Int, pubkey: Data, change: Int) -> [String:Any] {
+        return [
+            "address": address,
+            "index": Double(index),
+            "id": UUID(),
+            "pubkey": pubkey,
+            "derivation": "m/84h/\(coinType)h/0h/\(change)/\(index)"
+        ]
+    }
+    
+    private func utxoDict(utxo: [String:Any], address: Address_Cache) -> [String:Any] {
+        let newUtxo = Utxo_Fetched(utxo)
+        
+        return [
+            "id": UUID(),                       /// Unique identifier so we can update/delete specific utxos later.
+            "vout": newUtxo.vout,               /// Index of the utxo in the previous transaction outputs. Used when comparing utxos/creating inputs.
+            "txid": newUtxo.txid,               /// String hex id of the utxo's previous transaction. Used when comparing utxos/creating inputs.
+            "value": newUtxo.value,             /// Satoshi amount of our utxo.
+            "confirmed": newUtxo.confirmed,     /// Boolean to display whether our balance is confirmed or not.
+            "address": address.address,         /// The string address of the utxo, used to derive the scriptpubkey when creating an input.
+            "pubkey": address.pubkey,           /// The data representation of the utxo's pubkey, used to derive the witness when creating an input.
+            "derivation": address.derivation    /// Used to fetch the corresponding private key to sign the input.
+        ]
     }
     
     private func walletDict(words: String, passphrase: String) -> [String:Any]? {
@@ -441,14 +468,10 @@ class WalletTools {
         for i in walletIndex...maxIndex {
             guard let (address, pubkey) = addressPubkey(xpub: bip84xpub, path: "/\(change)/\(i)") as? (String, Data) else { return nil }
             
+            let addressDict = addressDict(address: address, index: i, pubkey: pubkey, change: change)
+            
             // add pubkey too
-            addresses.append([
-                "address": address,
-                "index": Double(i),
-                "id": UUID(),
-                "pubkey": pubkey,
-                "derivation": "m/84h/\(coinType)h/0h/\(change)/\(i)"
-            ])
+            addresses.append(addressDict)
         }
         
         return addresses
@@ -908,9 +931,7 @@ class WalletTools {
                 completion(("Failed fetching recommended fees: \(errorDesc ?? "Unknown.")", nil))
                 return
             }
-            
-            let feeTarget = RecommendedFee(response).target /// Our fee target as per settings.
-            
+                        
             // Fetch our saved utxos from Core Data.
             CoreDataService.retrieveEntity(entityName: .utxos) { [weak self] utxos in
                 guard let self = self else { return }
@@ -940,20 +961,16 @@ class WalletTools {
                             return
                         }
                         
-                        // Calculate the WU (Weight Units) of our inputs, add 124 for the output and 42 for other tx data.
-                        // https://bitcoin.stackexchange.com/a/92600
-                        let estimatedTxSizeWu = (inputs.count * 272) + 124 + 42
-                        let estimatedVBytes = estimatedTxSizeWu / 4
-                        let estimtatedFee = UInt64(estimatedVBytes * feeTarget)
+                        let estimatedFee = estimatedFee(inputsCount: inputs.count, mempoolResponse: response, destinationAddress: destinationAddress, sweeping: true)
                         
                         // Ensure we have enough funds to cover our fee.
-                        guard totalInputAmount > estimtatedFee else {
+                        guard totalInputAmount > estimatedFee else {
                             completion(("Fee exceeds total available funds.", nil))
                             return
                         }
                         
                         // Get output amount by subtracting our fee from the total funds available.
-                        let amountToSend = totalInputAmount - UInt64(estimtatedFee)
+                        let amountToSend = totalInputAmount - UInt64(estimatedFee)
                         
                         // Create our single output.
                         guard let output = self.output(address: destinationAddress, amount: Satoshi(amountToSend)) else {
@@ -1013,7 +1030,8 @@ class WalletTools {
             outputs.append(output)
             
             // Fetch the recommended fee.
-            MempoolRequest.sharedInstance.command(method: .fee) { (response, errorDesc) in
+            MempoolRequest.sharedInstance.command(method: .fee) { [weak self] (response, errorDesc) in
+                guard let self = self else { return }
                 
                 // Ensure a valid response was returned.
                 guard let response = response as? [String:Any] else {
@@ -1021,18 +1039,12 @@ class WalletTools {
                     return
                 }
                 
-                let feeTarget = RecommendedFee(response).target /// Our fee target as per settings.
-                
-                // Calculate the WU (Weight Units) of our inputs, add 124 for the output and 42 for other tx data.
-                // https://bitcoin.stackexchange.com/a/92600
-                let estimatedTxSizeWu = (inputs.count * 272) + 248 + 42
-                let estimatedVBytes = estimatedTxSizeWu / 4 /// Divide WU by 4 to get vBytes.
-                let estimtatedFee = estimatedVBytes * feeTarget
+                let estimatedFee = estimatedFee(inputsCount: inputs.count, mempoolResponse: response, destinationAddress: destinationAddress, sweeping: false)
                 
                 // Checks whether we have enough funds and whether change is required.
-                if totalInputAmount + UInt64(estimtatedFee) > amountSats {
+                if totalInputAmount + UInt64(estimatedFee) > amountSats {
                     // Calculate change amount.
-                    let changeAmount = (totalInputAmount - amountSats) - UInt64(estimtatedFee)
+                    let changeAmount = (totalInputAmount - amountSats) - UInt64(estimatedFee)
                     
                     // Create our change output.
                     guard let changeOutput = self.output(address: changeAddress.address, amount: Satoshi(changeAmount)) else {
@@ -1046,13 +1058,13 @@ class WalletTools {
                     let tx = Transaction(inputs, outputs)
                     self.signTransaction(inputDerivs: inputDerivs, tx: tx, completion: completion)
                     
-                } else if totalInputAmount + UInt64(estimtatedFee) == amountSats {
+                } else if totalInputAmount + UInt64(estimatedFee) == amountSats {
                     // Input amount plus the fee exactly equals the output amount, do not need change.
                     // MARK: - TODO Test if this replaces our sweep function.
                     let tx = Transaction(inputs, outputs)
                     self.signTransaction(inputDerivs: inputDerivs, tx: tx, completion: completion)
                     
-                } else if totalInputAmount < UInt64(estimtatedFee) {
+                } else if totalInputAmount < UInt64(estimatedFee) {
                     completion(("Fee exceeds available funds.", nil))
                     
                 } else {
@@ -1061,6 +1073,34 @@ class WalletTools {
                 }
             }
         }
+    }
+    
+    private func estimatedFee(inputsCount: Int, mempoolResponse: [String:Any], destinationAddress: String, sweeping: Bool) -> Int {
+        // Calculate the WU (Weight Units) of our inputs, add 124 for the output and 42 for other tx data.
+        // https://bitcoin.stackexchange.com/a/92600
+        var changeOutputWU = 124 /// we know this is native segwit
+        if sweeping {
+            changeOutputWU = 0
+        }
+        var destinationAddressWU = 0
+        switch Address(destinationAddress)?.scriptPubKey.type {
+        case .payToPubKeyHash:
+            destinationAddressWU = 136
+        case .payToWitnessScriptHash:
+            destinationAddressWU = 128
+        case .payToWitnessPubKeyHash:
+            destinationAddressWU = 124
+        default:
+            destinationAddressWU = 136
+        }
+        
+        let outputsWU = destinationAddressWU + changeOutputWU
+        
+        let feeTarget = RecommendedFee(mempoolResponse).target
+        let estimatedTxSizeWu = (inputsCount * 272) + outputsWU + 42
+        let estimatedVBytes = estimatedTxSizeWu / 4 /// Divide WU by 4 to get vBytes.
+        let estimtatedFee = estimatedVBytes * feeTarget
+        return estimtatedFee
     }
     
     // Returns a LibWally TxInput. Converts local utxo object to TxInput.
@@ -1305,18 +1345,8 @@ class WalletTools {
                                   completion: @escaping ((message: String?, success: Bool)) -> Void) {
         
         for (i, fetchedUtxo) in fetchedUtxos.enumerated() {
-            let newUtxo = Utxo_Fetched(fetchedUtxo)
             
-            let dictToSave:[String:Any] = [
-                "id": UUID(),                       /// Unique identifier so we can update/delete specific utxos later.
-                "vout": newUtxo.vout,               /// Index of the utxo in the previous transaction outputs. Used when comparing utxos/creating inputs.
-                "txid": newUtxo.txid,               /// String hex id of the utxo's previous transaction. Used when comparing utxos/creating inputs.
-                "value": newUtxo.value,             /// Satoshi amount of our utxo.
-                "confirmed": newUtxo.confirmed,     /// Boolean to display whether our balance is confirmed or not.
-                "address": address.address,         /// The string address of the utxo, used to derive the scriptpubkey when creating an input.
-                "pubkey": address.pubkey,           /// The data representation of the utxo's pubkey, used to derive the witness when creating an input.
-                "derivation": address.derivation    /// Used to fetch the corresponding private key to sign the input.
-            ]
+            let dictToSave = utxoDict(utxo: fetchedUtxo, address: address)
             
             // Saves the utxo and returns the success bool.
             CoreDataService.saveEntity(dict: dictToSave, entityName: .utxos) { [weak self] saved in
