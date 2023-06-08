@@ -43,6 +43,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
+                    hasUnlocked = true
                     performSegue(withIdentifier: "segueToPinCreation", sender: self)
                 }
             } else if !self.hasUnlocked {
