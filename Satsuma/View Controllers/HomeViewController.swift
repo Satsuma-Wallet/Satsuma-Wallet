@@ -254,14 +254,8 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                         balance += utxo.doubleValueSats
                     }
                     
-                    // Gets the string we use to display our btc blance.
-                    var textBalance = balance.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
-                    if balance == 0 {
-                        textBalance = "0.00000000 BTC"
-                    }
-                    
                     // Displays our balance.
-                    self.showBtcBalance(balance: textBalance)
+                    self.showBtcBalance(balance: balance.btcBalance)
                     
                     // Fetches the exchange rate.
                     self.getFxRate(balance: balance)

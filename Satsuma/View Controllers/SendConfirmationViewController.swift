@@ -98,11 +98,11 @@ class SendConfirmationViewController: UIViewController {
     
     // Adds the btc amounts to our labels.
     private func confirgureBtcAmountLabels() {
-        let feeBtc = Double(fee).btcAmountDouble.avoidNotation
-        let destAmount = destinationAmount.avoidNotation
-        let total = (Double(fee).btcAmountDouble + destinationAmount).avoidNotation
-        networkFeeOutlet.text = "\(feeBtc) BTC"
-        amountOutlet.text = "\(destAmount) BTC"
-        totalAmountOutlet.text = "\(total) BTC"
+        let feeBtc = Double(fee).btcBalance
+        let destAmount = (destinationAmount * 100000000.0).btcBalance
+        let total = (Double(fee) + destinationAmount * 100000000.0).btcBalance
+        networkFeeOutlet.text = feeBtc
+        amountOutlet.text = destAmount
+        totalAmountOutlet.text = total
     }
 }

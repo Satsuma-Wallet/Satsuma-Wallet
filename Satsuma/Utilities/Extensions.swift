@@ -187,6 +187,17 @@ public extension String {
         let components = self.components(separatedBy: .whitespacesAndNewlines)
         return components.filter { !$0.isEmpty }.joined(separator: " ")
     }
+    
+    subscript (index: Int) -> Character {
+            let charIndex = self.index(self.startIndex, offsetBy: index)
+            return self[charIndex]
+        }
+
+    subscript (range: Range<Int>) -> Substring {
+        let startIndex = self.index(self.startIndex, offsetBy: range.startIndex)
+        let stopIndex = self.index(self.startIndex, offsetBy: range.startIndex + range.count)
+        return self[startIndex..<stopIndex]
+    }
 }
 
 public extension [String:Any] {
@@ -267,12 +278,41 @@ public extension Double {
     }
     
     var btcBalance: String {
-        var btcBalance = self.btcAmountDouble.rounded(toPlaces: 8).avoidNotation + " BTC"
+        var btcBalance = self.btcAmountDouble.rounded(toPlaces: 8).avoidNotation
+        
         if self == 0 {
-            btcBalance = "0.00000000 BTC"
+            btcBalance = "0.00 000 000 BTC"
+        } else {
+            var decimalLocation = 0
+            var btcBalanceArray:[String] = []
+            var digitsPastDecimal = 0
+            
+            for (i, c) in btcBalance.enumerated() {
+                btcBalanceArray.append("\(c)")
+                if c == "." {
+                    decimalLocation = i
+                }
+                if i > decimalLocation {
+                    digitsPastDecimal += 1
+                }
+            }
+            
+            if digitsPastDecimal < 7 {
+                let numberOfTrailingZerosNeeded = 7 - digitsPastDecimal
+
+                for _ in 0...numberOfTrailingZerosNeeded {
+                    btcBalanceArray.append("0")
+                }
+            }
+            
+            btcBalanceArray.insert(" ", at: decimalLocation + 3)
+            btcBalanceArray.insert(" ", at: decimalLocation + 7)
+            btcBalance = btcBalanceArray.joined() + " BTC"
         }
+        
         return btcBalance
     }
+    
 }
 
 public extension RecommendedFee {
