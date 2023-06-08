@@ -28,10 +28,13 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         navigationController?.delegate = self
         satsumaLabel.title = "Satsuma"
         navigationItem.setLeftBarButton(satsumaLabel, animated: true)
+        view.alpha = 0
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        CoreDataService.retrieveEntity(entityName: .pin) { pins in
+        CoreDataService.retrieveEntity(entityName: .pin) { [weak self] pins in
+            guard let self = self else { return }
+            
             guard let pins = pins else { return }
             
             if pins.count == 0 {
@@ -48,6 +51,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                     performSegue(withIdentifier: "segueToUnlock", sender: self)
                 }
             } else {
+                view.alpha = 1
                 // When the view appears we check if any wallets exist.
                 CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
                     guard let self = self else { return }
