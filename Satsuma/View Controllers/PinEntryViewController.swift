@@ -64,8 +64,31 @@ class PinEntryViewController: UIViewController, UITextFieldDelegate {
                     redCircle()
                     subHeaderLabel.shake()
                     Vibration.error.vibrate()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                        guard let self = self else { return }
+                        
+                        emptyCircle()
+                        subHeaderLabel.text = ""
+                    }
                 }
             }
+        }
+    }
+    
+    private func emptyCircle() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            circleOne.image = .init(systemName: "circle")
+            circleTwo.image = .init(systemName: "circle")
+            circleThree.image = .init(systemName: "circle")
+            circleFour.image = .init(systemName: "circle")
+            
+            circleOne.tintColor = .tintColor
+            circleTwo.tintColor = .tintColor
+            circleThree.tintColor = .tintColor
+            circleFour.tintColor = .tintColor
         }
     }
     
