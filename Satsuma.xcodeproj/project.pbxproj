@@ -30,6 +30,7 @@
 		0AD438732A310AC30004F923 /* PinCreationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438722A310AC30004F923 /* PinCreationViewController.swift */; };
 		0AD438752A3119460004F923 /* Vibrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438742A3119460004F923 /* Vibrate.swift */; };
 		0AD438772A311E320004F923 /* PinEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438762A311E320004F923 /* PinEntryViewController.swift */; };
+		0AD438792A323D9E0004F923 /* BlockExplorerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */; };
 		0AD6F1D12A1E69FF00618E94 /* Fiat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D02A1E69FF00618E94 /* Fiat.swift */; };
 		0AD6F1D32A1E938200618E94 /* FiatSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */; };
 		0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */; };
@@ -92,6 +93,7 @@
 		0AD438722A310AC30004F923 /* PinCreationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinCreationViewController.swift; sourceTree = "<group>"; };
 		0AD438742A3119460004F923 /* Vibrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibrate.swift; sourceTree = "<group>"; };
 		0AD438762A311E320004F923 /* PinEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEntryViewController.swift; sourceTree = "<group>"; };
+		0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockExplorerTableViewController.swift; sourceTree = "<group>"; };
 		0AD6F1D02A1E69FF00618E94 /* Fiat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fiat.swift; sourceTree = "<group>"; };
 		0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatSettingTableViewController.swift; sourceTree = "<group>"; };
 		0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSettingTableViewController.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */,
 				0AD438722A310AC30004F923 /* PinCreationViewController.swift */,
 				0AD438762A311E320004F923 /* PinEntryViewController.swift */,
+				0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -440,6 +443,7 @@
 				0A3FD6EC2A0A96C300B6F8E3 /* Addresses.swift in Sources */,
 				0A2C1BB82A13C18200D973A4 /* BIP21InvoiceParser.swift in Sources */,
 				0AE78E6F2A09349B0024067D /* SceneDelegate.swift in Sources */,
+				0AD438792A323D9E0004F923 /* BlockExplorerTableViewController.swift in Sources */,
 				0AEE78382A093BAC00643090 /* Commands.swift in Sources */,
 				0A3FD6E52A09719D00B6F8E3 /* Server.swift in Sources */,
 				0AE78E952A0935590024067D /* TorManager.swift in Sources */,

@@ -15,16 +15,13 @@ class Commands {
         case fee
         
         var stringValue:String {
-            let rootOnionUrl = "http://explorerzydxu5ecjrkwceayqybizmpjjznk5izmitf2modhcusuqlid.onion/testnet/api"
             var mempoolApiRoot = "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api/v1"
-            let rootClearnetUrl = "https://blockstream.info/testnet/api"//"https://mempool.space/api"
             let mempoolApiRootClear = "https://mempool.space/api/v1"
-            var rootUrl = rootOnionUrl
+            var rootUrl = UserDefaults.standard.object(forKey: "url") as? String ?? "https://blockstream.info/testnet/api"
             
             let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as? Bool ?? false
             
             if !torEnabled {
-                rootUrl = rootClearnetUrl
                 mempoolApiRoot = mempoolApiRootClear
             }
             

@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import LocalAuthentication
 
 class HomeViewController: UIViewController, UINavigationControllerDelegate {
     
@@ -33,13 +32,9 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         CoreDataService.retrieveEntity(entityName: .pin) { pins in
-            guard let pins = pins else {
-                print("no pin entity")
-                return
-            }
+            guard let pins = pins else { return }
             
             if pins.count == 0 {
-                print("no pin")
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     
@@ -86,32 +81,11 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     
     // The "Wallet backup" button action. It does not do anything yet except for a biometry authentication.
     @IBAction func backupAction(_ sender: Any) {
-        let context = LAContext()
-            var error: NSError?
-
-            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-                let reason = "Backup your wallet."
-
-                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
-                    [weak self] success, authenticationError in
-                    guard let self = self else { return }
-
-                    DispatchQueue.main.async {
-                        if success {
-                            DispatchQueue.main.async { [weak self] in
-                                guard let self = self else { return }
-                                
-                                self.performSegue(withIdentifier: "segueToBackup", sender: self)
-                            }
-                        } else {
-                            self.showAlert(title: "Authentication failed", message: "You could not be verified; please try again.")
-                        }
-                    }
-                }
-            } else {
-                // no biometry
-                self.showAlert(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.")
-            }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            self.performSegue(withIdentifier: "segueToBackup", sender: self)
+        }
     }
     
     // Sets the defaults.
@@ -127,6 +101,9 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         }
         if UserDefaults.standard.object(forKey: "denomination") == nil {
             UserDefaults.standard.setValue("BTC", forKey: "denomination")
+        }
+        if UserDefaults.standard.object(forKey: "url") == nil {
+            UserDefaults.standard.setValue("https://blockstream.info/testnet/api", forKey: "url")
         }
     }
     
@@ -157,6 +134,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                     self.fetchBalance()
                 }
             }))
+            
             alert.popoverPresentationController?.sourceView = self.view
             self.present(alert, animated: true, completion: nil)
         }

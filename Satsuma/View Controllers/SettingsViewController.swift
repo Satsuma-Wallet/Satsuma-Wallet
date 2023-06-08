@@ -60,7 +60,7 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         case network
         case fee
         case fiat
-        case recovery
+        case walletTools
     }
     
     func blankCell() -> UITableViewCell {
@@ -135,6 +135,14 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         return recoveryCell
     }
     
+    private func blockExplorerCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let blockExplorerCell = settingsTable.dequeueReusableCell(withIdentifier: "blockExplorerCell", for: indexPath)
+        let label = blockExplorerCell.viewWithTag(1) as! UILabel
+        label.text = "Block Explorer"
+        blockExplorerCell.selectionStyle = .none
+        return blockExplorerCell
+    }
+    
     @objc func toggleTor(_ sender: UISwitch) {
         UserDefaults.standard.setValue(sender.isOn, forKey: "torEnabled")
         if !sender.isOn {
@@ -179,9 +187,15 @@ extension SettingsViewController: UITableViewDelegate {
         case .fiat:
             return fiatCell(indexPath)
             
-        case .recovery:
-            return recoveryCell(indexPath)
-        
+        case .walletTools:
+            switch indexPath.row {
+            case 0:
+                return recoveryCell(indexPath)
+            case 1:
+                return blockExplorerCell(indexPath)
+            default:
+                return blankCell()
+            }
         default:
             return blankCell()
         }
@@ -226,7 +240,7 @@ extension SettingsViewController: UITableViewDelegate {
             return "Transaction fee"
         case .fiat:
             return "Fiat currency"
-        case .recovery:
+        case .walletTools:
             return "Wallet tools"
         }
     } 
@@ -238,6 +252,11 @@ extension SettingsViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        switch section {
+        case 3:
+            return 2
+        default:
+            return 1
+        }
     }
 }
