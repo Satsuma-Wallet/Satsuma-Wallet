@@ -16,11 +16,32 @@ class WalletTools {
     
     static let shared = WalletTools() /// So we can reuse the same instance of this class rather then recreating it, better memory usage.
     var currentIndex = 0 /// For looping through each address when updating our utxo database.
-    let coinType = 1/// Hardcoded for testnet.
-    let network:Network = .testnet
     
     private init() {}
     // MARK: - Wallet creation
+    
+    private func network() -> Network {
+        let blockchain = UserDefaults.standard.object(forKey: "blockchain") as? String ?? "Testnet"
+        switch blockchain {
+        case "Testnet":
+            return .testnet
+        case "Mainnet":
+            return .mainnet
+        default:
+            return .testnet
+        }
+    }
+    
+    private func coinType() -> Int {
+        switch network() {
+        case .testnet:
+            return 1
+        case .mainnet:
+            return 0
+        default:
+            return 1
+        }
+    }
     
     // Creates a wallet with a provided passphrase.
     func create(passphrase: String, completion: @escaping ((message: String?, created: Bool)) -> Void) {
@@ -331,7 +352,7 @@ class WalletTools {
             "index": Double(index),
             "id": UUID(),
             "pubkey": pubkey,
-            "derivation": "m/84h/\(coinType)h/0h/\(change)/\(index)"
+            "derivation": "m/84h/\(coinType())h/0h/\(change)/\(index)"
         ]
     }
     
@@ -426,7 +447,7 @@ class WalletTools {
         let seedHex = mnmemonic.seedHex(passphrase)
         
         // Gets the LibWally HDKey master key (root xprv) from the seed hex and provided network (testnet/mainnet).
-        guard let hdMasterKey = HDKey(seedHex, self.network),
+        guard let hdMasterKey = HDKey(seedHex, network()),
               let xpriv = hdMasterKey.xpriv else { return nil } /// Gets the xprv from the hd master key.
         
         return xpriv
@@ -436,7 +457,7 @@ class WalletTools {
     private func bip84Xprv(masterKey: String) -> String? {
         
         // The derivation path for the derived xpub. cointype == 0 is mainnet, cointype == 1 is testnet.
-        let path = "m/84h/\(coinType)h/0h"
+        let path = "m/84h/\(coinType())h/0h"
         
         // Converts the string master key to an HDKey object and derives the bip84 account hdkey from it.
         guard let hdMasterKey = HDKey(masterKey),
@@ -481,7 +502,7 @@ class WalletTools {
     private func bip84AccountXpub(masterKey: String) -> String? {
         
         // The derivation path for the derived xpub. cointype == 0 is mainnet, cointype == 1 is testnet.
-        let path = "m/84h/\(self.coinType)h/0h"
+        let path = "m/84h/\(coinType())h/0h"
         
         // Converts the string master key to an HDKey object and derives the bip84 account hdkey from it.
         guard let hdMasterKey = HDKey(masterKey),
@@ -1107,7 +1128,7 @@ class WalletTools {
     private func input(utxo: Utxo_Cache) -> TxInput? {
         // Get all values needed for an input.
         guard let prevTx = Transaction(utxo.txid) else { return nil }
-        guard let pubkey = PubKey(utxo.pubkey, self.network) else { print("pubkey nil"); return nil }
+        guard let pubkey = PubKey(utxo.pubkey, network()) else { print("pubkey nil"); return nil }
         guard let inputAddress = Address(utxo.address) else { return nil }
         let scriptPubKey = inputAddress.scriptPubKey
         let witness = Witness(.payToWitnessPubKeyHash(pubkey))
@@ -1127,7 +1148,7 @@ class WalletTools {
     private func output(address: String, amount: Satoshi) -> TxOutput? {
         guard let outputAddress = Address(address) else { return nil }
         let scriptPubKey = outputAddress.scriptPubKey
-        return TxOutput(scriptPubKey, amount, self.network)
+        return TxOutput(scriptPubKey, amount, network())
     }
     
     // Returns the input derivation paths, used for deriving the private keys to sign each input, an array of TxInput, and the total input amount in Satoshis.

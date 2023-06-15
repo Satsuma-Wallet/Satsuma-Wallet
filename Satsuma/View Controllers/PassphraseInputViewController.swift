@@ -69,11 +69,24 @@ class PassphraseInputViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             
-            // Wallet creation succeeeded, so we dismiss the view back to home and look for a balance.
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.navigationController?.popToRootViewController(animated: true)
-            }
+            walletCreated()
+        }
+    }
+    
+    private func walletCreated() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let alert = UIAlertController(title: "Wallet created ✓", message: "", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.navigationController?.popToRootViewController(animated: true)
+                }
+            }))
+            
+            alert.popoverPresentationController?.sourceView = self.view
+            self.present(alert, animated: true, completion: nil)
         }
     }
     

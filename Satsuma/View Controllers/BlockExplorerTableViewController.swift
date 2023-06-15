@@ -26,15 +26,15 @@ class BlockExplorerTableViewController: UITableViewController, UITextFieldDelega
         
         let torEnabled = UserDefaults.standard.object(forKey: "torEnabled") as! Bool
         
-        if let network = UserDefaults.standard.object(forKey: "network") as? String {
-            if network == "testnet" {
+        if let network = UserDefaults.standard.object(forKey: "blockchain") as? String {
+            if network == "Testnet" {
                 if torEnabled {
                     urls = [
                         [
                             "blockstream.info (via tor)": "http://explorerzydxu5ecjrkwceayqybizmpjjznk5izmitf2modhcusuqlid.onion/testnet/api"
                         ],
                         [
-                            "mempool.space (via tor)": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/testnet/api/v1"
+                            "mempool.space (via tor)": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/testnet/api"
                         ]
                     ]
                 }
@@ -45,13 +45,13 @@ class BlockExplorerTableViewController: UITableViewController, UITextFieldDelega
                             "blockstream.info (via tor)": "http://explorerzydxu5ecjrkwceayqybizmpjjznk5izmitf2modhcusuqlid.onion/api"
                         ],
                         [
-                            "mempool.space (via tor)": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api/v1"
+                            "mempool.space (via tor)": "http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion/api"
                         ]
                     ]
                 } else {
                     urls = [
                         [
-                            "mempool.space": "https://mempool.space/api/v1"
+                            "mempool.space": "https://mempool.space/api"
                         ],
                         [
                             "blockstream.info": "https://blockstream.info/api"

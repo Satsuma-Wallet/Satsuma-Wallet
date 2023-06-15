@@ -68,6 +68,8 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                         }
                     } else {
                         // No wallet exists so we first ask if a BIP39 passphrase is to be used.
+                        self.btcAmountLabel.text = "0.00 000 000 BTC"
+                        self.fiatBalanceOutlet.text = ""
                         self.promptForPassphrase()
                     }
                 }
@@ -109,6 +111,9 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         if UserDefaults.standard.object(forKey: "url") == nil {
             UserDefaults.standard.setValue("https://blockstream.info/testnet/api", forKey: "url")
         }
+        if UserDefaults.standard.object(forKey: "blockchain") == nil {
+            UserDefaults.standard.setValue("Testnet", forKey: "blockchain")
+        }
     }
     
     // Initiates wallet creation.
@@ -129,11 +134,15 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
                 guard let self = self else { return }
                 // Creates a wallet without a passphrase.
         
-                WalletTools.shared.create(passphrase: "") { (message, created) in
+                WalletTools.shared.create(passphrase: "") { [weak self] (message, created) in
+                    guard let self = self else { return }
+                    
                     guard created else {
                         self.showAlert(title: "Wallet creation failed.", message: message ?? "Unknown")
                         return
                     }
+                    
+                    showAlert(title: "Wallet created ✓", message: "")
                     // Once the wallet is created we update our utxo database.
                     self.fetchBalance()
                 }

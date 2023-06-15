@@ -138,9 +138,17 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     private func blockExplorerCell(_ indexPath: IndexPath) -> UITableViewCell {
         let blockExplorerCell = settingsTable.dequeueReusableCell(withIdentifier: "blockExplorerCell", for: indexPath)
         let label = blockExplorerCell.viewWithTag(1) as! UILabel
-        label.text = "Block Explorer"
+        label.text = "Block explorer"
         blockExplorerCell.selectionStyle = .none
         return blockExplorerCell
+    }
+    
+    private func blockchainCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let blockchainCell = settingsTable.dequeueReusableCell(withIdentifier: "blockchainCell", for: indexPath)
+        let label = blockchainCell.viewWithTag(1) as! UILabel
+        label.text = "Blockchain network"
+        blockchainCell.selectionStyle = .none
+        return blockchainCell
     }
     
     @objc func toggleTor(_ sender: UISwitch) {
@@ -193,6 +201,8 @@ extension SettingsViewController: UITableViewDelegate {
                 return recoveryCell(indexPath)
             case 1:
                 return blockExplorerCell(indexPath)
+            case 2:
+                return blockchainCell(indexPath)
             default:
                 return blankCell()
             }
@@ -254,7 +264,7 @@ extension SettingsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 3:
-            return 2
+            return 3
         default:
             return 1
         }

@@ -30,10 +30,6 @@ class Commands {
                 rootUrl = customUrl
             }
             
-            // https://mempool.space/testnet/api/v1/address/tb1q2l2w6mpmr7psm
-            // https://blockstream.info/testnet/api/address/tb1qz9q0cpglp3xvuhkzsjffklyf46le889vwlujgq/utxo
-            // https://mempool.space/testnet/api/address/tb1q4kgratttzjvkxfmgd95z54qcq7y6hekdm3w56u/utxo
-            
             switch self {
             case .utxo(let address):
                 return "\(rootUrl)/address/\(address)/utxo"

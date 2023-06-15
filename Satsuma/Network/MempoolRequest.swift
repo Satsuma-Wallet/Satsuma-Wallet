@@ -73,24 +73,16 @@ class MempoolRequest {
                 #if DEBUG
                 print("text result: \(text)")
                 #endif
-                completion((text, nil))
+                
+                if text == "Address on invalid network" {
+                    completion((nil, text))
+                } else {
+                    completion((text, nil))
+                }
                 
             } else {
                 completion((nil, "Error serializing response."))
             }
-                                    
-//            guard let jsonResult = try? JSONSerialization.jsonObject(with: urlContent, options: .mutableLeaves) as? NSArray else {
-//                if let text = urlContent.utf8String {
-//                    completion((text, nil))
-//                    return
-//                } else {
-//                    completion((nil, "Error serializing."))
-//                    return
-//                }
-//            }
-            
-            
-            
         }
         task.resume()
     }
