@@ -68,22 +68,18 @@ class SelectDenominationTableViewController: UITableViewController {
             if denomination == btcDenominations[indexPath.row].symbol {
                 cell.isSelected = true
                 cell.accessoryType = .checkmark
-                cell.textLabel!.alpha = 1.0
             } else {
                 cell.isSelected = false
                 cell.accessoryType = .none
-                cell.textLabel!.alpha = 0.2
             }
         case 1:
             cell.textLabel!.text = fiatCurrencies[indexPath.row].symbol
             if denomination == fiatCurrencies[indexPath.row].symbol {
                 cell.isSelected = true
                 cell.accessoryType = .checkmark
-                cell.textLabel!.alpha = 1.0
             } else {
                 cell.isSelected = false
                 cell.accessoryType = .none
-                cell.textLabel!.alpha = 0.2
             }
         default:
             break

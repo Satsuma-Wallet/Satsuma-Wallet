@@ -21,14 +21,14 @@ class WalletTools {
     // MARK: - Wallet creation
     
     private func network() -> Network {
-        let blockchain = UserDefaults.standard.object(forKey: "blockchain") as? String ?? "Testnet"
+        let blockchain = UserDefaults.standard.object(forKey: "blockchain") as? String ?? "Mainnet"
         switch blockchain {
         case "Testnet":
             return .testnet
         case "Mainnet":
             return .mainnet
         default:
-            return .testnet
+            return .mainnet
         }
     }
     
@@ -39,7 +39,7 @@ class WalletTools {
         case .mainnet:
             return 0
         default:
-            return 1
+            return 0
         }
     }
     

@@ -49,11 +49,9 @@ class FeeSettingTableViewController: UITableViewController {
             }
             if feePriority == "high" {
                 cell.setSelected(true, animated: true)
-                cell.textLabel!.alpha = 1
                 cell.accessoryType = .checkmark
             } else {
                 cell.setSelected(false, animated: true)
-                cell.textLabel!.alpha = 0.2
                 cell.accessoryType = .none
             }
     
@@ -64,11 +62,9 @@ class FeeSettingTableViewController: UITableViewController {
             }
             if feePriority == "standard" {
                 cell.setSelected(true, animated: true)
-                cell.textLabel!.alpha = 1
                 cell.accessoryType = .checkmark
             } else {
                 cell.setSelected(false, animated: true)
-                cell.textLabel!.alpha = 0.2
                 cell.accessoryType = .none
             }
         case 2:
@@ -78,11 +74,9 @@ class FeeSettingTableViewController: UITableViewController {
             }
             if feePriority == "low" {
                 cell.setSelected(true, animated: true)
-                cell.textLabel!.alpha = 1
                 cell.accessoryType = .checkmark
             } else {
                 cell.setSelected(false, animated: true)
-                cell.textLabel!.alpha = 0.2
                 cell.accessoryType = .none
             }
         case 3:
@@ -92,11 +86,9 @@ class FeeSettingTableViewController: UITableViewController {
             }
             if feePriority == "minimum" {
                 cell.setSelected(true, animated: true)
-                cell.textLabel!.alpha = 1
                 cell.accessoryType = .checkmark
             } else {
                 cell.setSelected(false, animated: true)
-                cell.textLabel!.alpha = 0.2
                 cell.accessoryType = .none
             }
         default:

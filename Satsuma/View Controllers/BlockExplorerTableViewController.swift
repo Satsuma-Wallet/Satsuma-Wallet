@@ -102,11 +102,9 @@ class BlockExplorerTableViewController: UITableViewController, UITextFieldDelega
                 
                 if value == selectedUrl {
                     urlCell.setSelected(true, animated: true)
-                    urlCell.textLabel!.alpha = 1
                     urlCell.accessoryType = .checkmark
                 } else {
                     urlCell.setSelected(false, animated: true)
-                    urlCell.textLabel!.alpha = 0.2
                     urlCell.accessoryType = .none
                 }
             }
@@ -122,11 +120,9 @@ class BlockExplorerTableViewController: UITableViewController, UITextFieldDelega
             
             if customUrl == selectedUrl {
                 customUrlCell.setSelected(true, animated: true)
-                customUrlCell.textLabel!.alpha = 1
                 customUrlCell.accessoryType = .checkmark
             } else {
                 customUrlCell.setSelected(false, animated: true)
-                customUrlCell.textLabel!.alpha = 0.2
                 customUrlCell.accessoryType = .none
             }
             
@@ -163,7 +159,6 @@ class BlockExplorerTableViewController: UITableViewController, UITextFieldDelega
         case 1:
             let cell = tableView.cellForRow(at: indexPath)!
             cell.setSelected(false, animated: true)
-            cell.textLabel!.alpha = 0.2
             cell.accessoryType = .none
             
         default:

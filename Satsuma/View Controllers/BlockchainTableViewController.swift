@@ -30,7 +30,7 @@ class BlockchainTableViewController: UITableViewController, UINavigationControll
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let blockchainCell = tableView.dequeueReusableCell(withIdentifier: "blockchainCell", for: indexPath)
         let label = blockchainCell.viewWithTag(1) as! UILabel
-        let blockchain = UserDefaults.standard.object(forKey: "blockchain") as? String ?? "Testnet"
+        let blockchain = UserDefaults.standard.object(forKey: "blockchain") as? String ?? "Mainnet"
         blockchainCell.selectionStyle = .none
         
         switch indexPath.row {
@@ -38,22 +38,18 @@ class BlockchainTableViewController: UITableViewController, UINavigationControll
             label.text = "Testnet"
             if blockchain == "Testnet" {
                 blockchainCell.setSelected(true, animated: true)
-                label.alpha = 1
                 blockchainCell.accessoryType = .checkmark
             } else {
                 blockchainCell.setSelected(false, animated: true)
-                label.alpha = 0.2
                 blockchainCell.accessoryType = .none
             }
         case 1:
             label.text = "Mainnet"
             if blockchain == "Mainnet" {
                 blockchainCell.setSelected(true, animated: true)
-                label.alpha = 1
                 blockchainCell.accessoryType = .checkmark
             } else {
                 blockchainCell.setSelected(false, animated: true)
-                label.alpha = 0.2
                 blockchainCell.accessoryType = .none
             }
             

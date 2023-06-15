@@ -29,10 +29,6 @@ class BackupViewController: UIViewController {
         getPassphrase()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        
-    }
-    
     @IBAction func showSeedWordsAction(_ sender: Any) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }

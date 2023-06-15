@@ -112,7 +112,7 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
             UserDefaults.standard.setValue("https://blockstream.info/testnet/api", forKey: "url")
         }
         if UserDefaults.standard.object(forKey: "blockchain") == nil {
-            UserDefaults.standard.setValue("Testnet", forKey: "blockchain")
+            UserDefaults.standard.setValue("Mainnet", forKey: "blockchain")
         }
     }
     
