@@ -31,6 +31,7 @@
 		0AD438752A3119460004F923 /* Vibrate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438742A3119460004F923 /* Vibrate.swift */; };
 		0AD438772A311E320004F923 /* PinEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438762A311E320004F923 /* PinEntryViewController.swift */; };
 		0AD438792A323D9E0004F923 /* BlockExplorerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */; };
+		0AD4387B2A3390BA0004F923 /* BlockchainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD4387A2A3390BA0004F923 /* BlockchainTableViewController.swift */; };
 		0AD6F1D12A1E69FF00618E94 /* Fiat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D02A1E69FF00618E94 /* Fiat.swift */; };
 		0AD6F1D32A1E938200618E94 /* FiatSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */; };
 		0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */; };
@@ -94,6 +95,7 @@
 		0AD438742A3119460004F923 /* Vibrate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vibrate.swift; sourceTree = "<group>"; };
 		0AD438762A311E320004F923 /* PinEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinEntryViewController.swift; sourceTree = "<group>"; };
 		0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockExplorerTableViewController.swift; sourceTree = "<group>"; };
+		0AD4387A2A3390BA0004F923 /* BlockchainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockchainTableViewController.swift; sourceTree = "<group>"; };
 		0AD6F1D02A1E69FF00618E94 /* Fiat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fiat.swift; sourceTree = "<group>"; };
 		0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiatSettingTableViewController.swift; sourceTree = "<group>"; };
 		0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSettingTableViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				0AD438722A310AC30004F923 /* PinCreationViewController.swift */,
 				0AD438762A311E320004F923 /* PinEntryViewController.swift */,
 				0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */,
+				0AD4387A2A3390BA0004F923 /* BlockchainTableViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -422,6 +425,7 @@
 				0AD438772A311E320004F923 /* PinEntryViewController.swift in Sources */,
 				0A2C1BC92A1BF46100D973A4 /* RecommendedFee.swift in Sources */,
 				0AD6F1D52A1E9A5300618E94 /* FeeSettingTableViewController.swift in Sources */,
+				0AD4387B2A3390BA0004F923 /* BlockchainTableViewController.swift in Sources */,
 				0AD6F1D12A1E69FF00618E94 /* Fiat.swift in Sources */,
 				0A3FD6E62A09719D00B6F8E3 /* Wallets.swift in Sources */,
 				0A2C1BC72A1BC56100D973A4 /* PassphraseInputViewController.swift in Sources */,
@@ -586,7 +590,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
@@ -603,7 +607,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.10;
+				MARKETING_VERSION = 0.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -620,7 +624,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = 9ZH57JV25G;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Satsuma/Info.plist;
@@ -637,7 +641,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.10;
+				MARKETING_VERSION = 0.0.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.satsumabtc.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
