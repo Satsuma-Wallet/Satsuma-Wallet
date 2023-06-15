@@ -1143,7 +1143,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="oKw-B5-sBM">
-                                <rect key="frame" x="127" y="189" width="139.66666666666663" height="145"/>
+                                <rect key="frame" x="126.66666666666667" y="189" width="139.66666666666663" height="145"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your PIN" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yOl-9R-mLi">
                                         <rect key="frame" x="0.0" y="0.0" width="139.66666666666666" height="20.333333333333332"/>
@@ -1195,6 +1195,7 @@
                             <constraint firstItem="oKw-B5-sBM" firstAttribute="centerX" secondItem="YCP-4t-xSB" secondAttribute="centerX" id="PES-pV-002"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="uLd-zd-Be2"/>
                     <connections>
                         <outlet property="circleFour" destination="7Tu-6R-3D6" id="CS6-JQ-8vl"/>
                         <outlet property="circleOne" destination="gbk-br-aj2" id="KXf-mZ-bEQ"/>
@@ -1543,13 +1544,21 @@
                                         <rect key="frame" x="0.0" y="0.0" width="361" height="34.333333333333336"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Seed words - BIP39" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rWc-Zd-CLZ">
-                                                <rect key="frame" x="0.0" y="0.0" width="321" height="34.333333333333336"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="152" height="34.333333333333336"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34.329999999999998" id="gjp-48-1og"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i11-Me-mZ9">
+                                                <rect key="frame" x="152" y="0.0" width="169" height="34.333333333333336"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="eye" catalog="system"/>
+                                                <connections>
+                                                    <action selector="showSeedWordsAction:" destination="Y7F-20-nwA" eventType="touchUpInside" id="UUX-An-QEc"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="top" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AZ4-sN-rfl">
                                                 <rect key="frame" x="321" y="0.0" width="40" height="34.333333333333336"/>
                                                 <constraints>
@@ -1641,6 +1650,7 @@
                         <outlet property="passphraseHeaderLabel" destination="ddP-Wd-u7f" id="PUr-OU-5e3"/>
                         <outlet property="passphraseLabel" destination="5JE-e1-UvE" id="8oU-Ja-OCb"/>
                         <outlet property="seedWordsLabel" destination="UaU-YS-X67" id="1jV-al-rd4"/>
+                        <segue destination="TFx-3O-6ZG" kind="presentation" identifier="segueToPinToShowWords" modalPresentationStyle="fullScreen" id="ahW-wB-Baa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zqB-p5-B6e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1666,10 +1676,14 @@
             <point key="canvasLocation" x="-3688" y="88"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="ahW-wB-Baa"/>
+    </inferredMetricsTieBreakers>
     <resources>
         <image name="chevron.down" catalog="system" width="128" height="70"/>
         <image name="chevron.right" catalog="system" width="97" height="128"/>
         <image name="circle" catalog="system" width="128" height="123"/>
+        <image name="eye" catalog="system" width="128" height="79"/>
         <image name="eye.fill" catalog="system" width="128" height="80"/>
         <image name="gearshape" catalog="system" width="128" height="123"/>
         <image name="info.circle" catalog="system" width="128" height="123"/>

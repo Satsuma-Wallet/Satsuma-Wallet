@@ -15,6 +15,8 @@ class BackupViewController: UIViewController {
     @IBOutlet weak var seedWordsLabel: UITextView!
     @IBOutlet weak var passphraseFooterLabel: UILabel!
     
+    var wordsToDisplay = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -23,15 +25,22 @@ class BackupViewController: UIViewController {
         passphraseHeaderLabel.alpha = 0
         deletePassphraseOutlet.alpha = 0
         passphraseFooterLabel.alpha = 0
-        
-        
-        
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
         getSeedWords()
         getPassphrase()
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+    }
+    
+    @IBAction func showSeedWordsAction(_ sender: Any) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            performSegue(withIdentifier: "segueToPinToShowWords", sender: self)
+        }
+    }
+    
     
     private func getSeedWords() {
         CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
@@ -56,13 +65,14 @@ class BackupViewController: UIViewController {
                 return
             }
             
-            var wordsToDisplay = ""
+            var censoredWordsToDisplay = ""
             let wordArray = words.components(separatedBy: " ")
             for (i, word) in wordArray.enumerated() {
                 wordsToDisplay += "\(i + 1). \(word)   "
+                censoredWordsToDisplay += "\(i + 1). *****   "
             }
             
-            showSeedWords(words: wordsToDisplay)
+            showSeedWords(words: censoredWordsToDisplay)
         }
     }
     
@@ -198,14 +208,21 @@ class BackupViewController: UIViewController {
     }
     
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "segueToPinToShowWords" {
+            guard let vc = segue.destination as? PinEntryViewController else { return }
+            
+            vc.onDoneBlock = { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.showSeedWords(words: wordsToDisplay)
+            }
+        }
     }
-    */
-
 }
