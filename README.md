@@ -1,7 +1,7 @@
 # Satsuma 🍊
 A simple onchain wallet.
 
-🛠 Satsuma is an early stage, "work in progress" although fully functional wallet. 
+🛠 Satsuma is an early stage, "work in progress", although fully functional wallet. 
 
 Satsuma is a native iOS wallet which focuses on security, simplicity and ease of use.
 
