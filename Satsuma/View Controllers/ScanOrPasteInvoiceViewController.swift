@@ -123,7 +123,6 @@ class ScanOrPasteInvoiceViewController: UIViewController, AVCaptureMetadataOutpu
     }
     
     private func showScanner() {
-        print("showScanner")
         scannerImageView.backgroundColor = UIColor.black
         captureSession = AVCaptureSession()
         
@@ -187,7 +186,6 @@ class ScanOrPasteInvoiceViewController: UIViewController, AVCaptureMetadataOutpu
     }
     
     func found(code: String) {
-        print("found: \(code)")
         if parseTextInput(text: code) {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }

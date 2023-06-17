@@ -26,7 +26,10 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
         
         setDefaults()
         navigationController?.delegate = self
-        satsumaLabel.title = "Satsuma"
+        //satsumaLabel.title = "Satsuma 🍊"
+        satsumaLabel = UIBarButtonItem(title: "Satsuma 🍊", style: .plain, target: self, action: #selector(satsumaWebsite(_:)))
+        satsumaLabel.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+        refreshButton.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
         navigationItem.setLeftBarButton(satsumaLabel, animated: true)
         view.alpha = 0
     }
@@ -80,6 +83,8 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self, selector: #selector(walletRecovered(_:)), name: Notification.Name(rawValue: "walletRecovered"), object: nil)
     }
+    
+    
     
     @objc func walletRecovered(_ notification: Notification) {
         showBalanceFromCache()
@@ -180,6 +185,11 @@ class HomeViewController: UIViewController, UINavigationControllerDelegate {
     @objc func refreshData(_ sender: Any) {
         addNavBarSpinner()
         fetchBalance()
+    }
+    
+    @objc func satsumaWebsite(_ sender: Any) {
+        guard let url = URL(string: "https://satsumawallet.com") else { return }
+        UIApplication.shared.open(url)
     }
     
     // Fetches the wallets balance.

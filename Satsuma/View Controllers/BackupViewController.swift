@@ -14,8 +14,10 @@ class BackupViewController: UIViewController {
     @IBOutlet weak var deletePassphraseOutlet: UIButton!
     @IBOutlet weak var seedWordsLabel: UITextView!
     @IBOutlet weak var passphraseFooterLabel: UILabel!
+    @IBOutlet weak var showPassphraseOutlet: UIButton!
     
     var wordsToDisplay = ""
+    var passphrase = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +27,7 @@ class BackupViewController: UIViewController {
         passphraseHeaderLabel.alpha = 0
         deletePassphraseOutlet.alpha = 0
         passphraseFooterLabel.alpha = 0
+        showPassphraseOutlet.alpha = 0
         getSeedWords()
         getPassphrase()
     }
@@ -37,6 +40,13 @@ class BackupViewController: UIViewController {
         }
     }
     
+    @IBAction func showPassphraseAction(_ sender: Any) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            performSegue(withIdentifier: "segueToPinToShowPassphrase", sender: self)
+        }
+    }
     
     private func getSeedWords() {
         CoreDataService.retrieveEntity(entityName: .wallets) { [weak self] wallets in
@@ -98,7 +108,9 @@ class BackupViewController: UIViewController {
                 return
             }
             
-            showPassphrase(passphrase: passphrase)
+            self.passphrase = passphrase
+            
+            showPassphrase(passphrase: "*******")
         }
     }
     
@@ -122,6 +134,7 @@ class BackupViewController: UIViewController {
             passphraseHeaderLabel.alpha = 1
             deletePassphraseOutlet.alpha = 1
             passphraseFooterLabel.alpha = 1
+            showPassphraseOutlet.alpha = 1
         }
     }
     
@@ -211,7 +224,8 @@ class BackupViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        if segue.identifier == "segueToPinToShowWords" {
+        switch segue.identifier {
+        case "segueToPinToShowWords":
             guard let vc = segue.destination as? PinEntryViewController else { return }
             
             vc.onDoneBlock = { [weak self] _ in
@@ -219,6 +233,17 @@ class BackupViewController: UIViewController {
                 
                 self.showSeedWords(words: wordsToDisplay)
             }
+            
+        case "segueToPinToShowPassphrase":
+            guard let vc = segue.destination as? PinEntryViewController else { return }
+            
+            vc.onDoneBlock = { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.showPassphrase(passphrase: passphrase)
+            }
+        default:
+            break
         }
     }
 }

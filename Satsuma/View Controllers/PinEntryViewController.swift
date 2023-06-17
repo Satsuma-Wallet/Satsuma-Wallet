@@ -85,10 +85,10 @@ class PinEntryViewController: UIViewController, UITextFieldDelegate {
             circleThree.image = .init(systemName: "circle")
             circleFour.image = .init(systemName: "circle")
             
-            circleOne.tintColor = .tintColor
-            circleTwo.tintColor = .tintColor
-            circleThree.tintColor = .tintColor
-            circleFour.tintColor = .tintColor
+            circleOne.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleTwo.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleThree.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleFour.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
         }
     }
     
@@ -133,10 +133,10 @@ class PinEntryViewController: UIViewController, UITextFieldDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             
-            circleOne.tintColor = .green
-            circleTwo.tintColor = .green
-            circleThree.tintColor = .green
-            circleFour.tintColor = .green
+            circleOne.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleTwo.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleThree.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
+            circleFour.tintColor = #colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)
         }
     }
     

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import StoreKit
 
 class SettingsViewController: UIViewController, UINavigationControllerDelegate {
     
@@ -61,6 +62,7 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         case fee
         case fiat
         case walletTools
+        case links
     }
     
     func blankCell() -> UITableViewCell {
@@ -151,6 +153,45 @@ class SettingsViewController: UIViewController, UINavigationControllerDelegate {
         return blockchainCell
     }
     
+    private func linkCell(_ indexPath: IndexPath) -> UITableViewCell {
+        let linkCell = settingsTable.dequeueReusableCell(withIdentifier: "linkCell", for: indexPath)
+        let label = linkCell.viewWithTag(1) as! UILabel
+        let imageView = linkCell.viewWithTag(2) as! UIImageView
+        imageView.layer.cornerRadius = 8
+        linkCell.selectionStyle = .none
+        
+        switch indexPath.row {
+        case 0:
+            label.text = "Buy Bitcoin"
+            imageView.image = .init(systemName: "bitcoinsign.circle")
+            //imageView.tintColor = .systemOrange
+        case 1:
+            label.text = "Shop"
+            imageView.image = .init(systemName: "cart.circle")
+            //imageView.tintColor = .systemPurple
+        case 2:
+            label.text = "Send Feedback"
+            imageView.image = .init(systemName: "envelope.circle")
+            //imageView.tintColor = .systemGreen
+        case 3:
+            label.text = "Rate this app"
+            imageView.image = .init(systemName: "heart.circle")
+            //imageView.tintColor = .systemPink
+        case 4:
+            label.text = "Follow us on Twitter"
+            imageView.image = #imageLiteral(resourceName: "twitter.png")
+            //imageView.image = .init(systemName: "bird")
+        case 5:
+            label.text = "News"
+            imageView.image = .init(systemName: "globe")
+            //imageView.tintColor = .systemIndigo
+        default:
+            break
+        }
+        
+        return linkCell
+    }
+    
     @objc func toggleTor(_ sender: UISwitch) {
         UserDefaults.standard.setValue(sender.isOn, forKey: "torEnabled")
         if !sender.isOn {
@@ -206,6 +247,10 @@ extension SettingsViewController: UITableViewDelegate {
             default:
                 return blankCell()
             }
+        
+        case .links:
+            return linkCell(indexPath)
+            
         default:
             return blankCell()
         }
@@ -252,21 +297,64 @@ extension SettingsViewController: UITableViewDelegate {
             return "Fiat currency"
         case .walletTools:
             return "Wallet tools"
+        case .links:
+            return "Links"
         }
     } 
 }
 
 extension SettingsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 5
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 3:
             return 3
+        case 4:
+            return 6
         default:
             return 1
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 4:
+            switch indexPath.row {
+            case 0:
+                guard let url = URL(string: "https://satsumawallet.com/buy") else { return }
+                UIApplication.shared.open(url)
+                
+            case 1:
+                guard let url = URL(string: "https://satsumawallet.com/shop") else { return }
+                UIApplication.shared.open(url)
+                
+            case 2:
+                guard let url = URL(string: "https://satsumawallet.com/contact") else { return }
+                UIApplication.shared.open(url)
+                
+            case 3:
+                    if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+                        DispatchQueue.main.async {
+                            SKStoreReviewController.requestReview(in: scene)
+                        }
+                    }
+                
+            case 4:
+                guard let url = URL(string: "https://twitter.com/SatsumaWallet") else { return }
+                UIApplication.shared.open(url)
+                
+            case 5:
+                guard let url = URL(string: "https://satsumawallet.com/blog") else { return }
+                UIApplication.shared.open(url)
+                
+            default:
+                break
+            }
+        default:
+            break
         }
     }
 }
