@@ -15,7 +15,7 @@ The only network commands the wallet makes are for fetching utxo's via address, 
 
 Users may utilize their own Esplora instance via the "custom server" setting. It works with mempool.space, blockstream.info or any Esplora powered API.
 
-Onion endpoints will work if the user toggles on [Tor.framework](https://github.com/iCepa/Tor.framework), onion endpoints are automatically utilized if Tor is on for public servers.
+Onion endpoints will work if the user toggles on [Tor](https://github.com/iCepa/Tor.framework), onion endpoints are automatically utilized if Tor is on for public servers.
 
 For a list of todo items see the issues.
 
