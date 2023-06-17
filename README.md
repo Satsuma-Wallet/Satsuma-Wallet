@@ -1,4 +1,4 @@
-# Satsuma
+# Satsuma 🍊
 A simple onchain wallet.
 
 🛠 Satsuma is an early stage, "work in progress" although fully functional wallet. 
