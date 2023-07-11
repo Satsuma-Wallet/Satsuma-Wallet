@@ -297,7 +297,7 @@ public extension Double {
                 }
             }
             
-            if digitsPastDecimal < 7 {
+            if digitsPastDecimal <= 7 {
                 let numberOfTrailingZerosNeeded = 7 - digitsPastDecimal
 
                 for _ in 0...numberOfTrailingZerosNeeded {
