@@ -221,23 +221,47 @@
 			children = (
 				0A3FD6ED2A0BEC5300B6F8E3 /* ReceiveViewController.swift */,
 				0AE78E982A09392E0024067D /* HomeViewController.swift */,
-				0AEE78392A09402E00643090 /* SettingsViewController.swift */,
+				0A6532722A5D9ACB000F911A /* Settings */,
+				0A6532712A5D9AAB000F911A /* Send */,
+				0A6532732A5D9AE0000F911A /* Onboarding */,
+				0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		0A6532712A5D9AAB000F911A /* Send */ = {
+			isa = PBXGroup;
+			children = (
 				0A828A632A0D3F8600447ACC /* ScanOrPasteInvoiceViewController.swift */,
 				0A828A692A0D61BC00447ACC /* TextInputViewController.swift */,
 				0A828A6B2A0D721800447ACC /* AmountInputViewController.swift */,
 				0A2C1BBE2A15133B00D973A4 /* SendConfirmationViewController.swift */,
-				0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */,
+			);
+			path = Send;
+			sourceTree = "<group>";
+		};
+		0A6532722A5D9ACB000F911A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0AEE78392A09402E00643090 /* SettingsViewController.swift */,
 				0AD6F1D22A1E938200618E94 /* FiatSettingTableViewController.swift */,
 				0AD6F1D42A1E9A5300618E94 /* FeeSettingTableViewController.swift */,
 				0AD6F1DE2A1FC39000618E94 /* SelectDenominationTableViewController.swift */,
 				0A1B71C92A2A649E00D20285 /* RecoverViewController.swift */,
-				0A1B71CE2A2F8F1300D20285 /* BackupViewController.swift */,
-				0AD438722A310AC30004F923 /* PinCreationViewController.swift */,
-				0AD438762A311E320004F923 /* PinEntryViewController.swift */,
 				0AD438782A323D9E0004F923 /* BlockExplorerTableViewController.swift */,
 				0AD4387A2A3390BA0004F923 /* BlockchainTableViewController.swift */,
 			);
-			path = "View Controllers";
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		0A6532732A5D9AE0000F911A /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				0A2C1BC62A1BC56000D973A4 /* PassphraseInputViewController.swift */,
+				0AD438722A310AC30004F923 /* PinCreationViewController.swift */,
+				0AD438762A311E320004F923 /* PinEntryViewController.swift */,
+			);
+			path = Onboarding;
 			sourceTree = "<group>";
 		};
 		0AE78E602A09349B0024067D = {
@@ -610,7 +634,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -644,7 +668,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

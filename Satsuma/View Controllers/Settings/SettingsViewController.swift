@@ -338,7 +338,11 @@ extension SettingsViewController: UITableViewDataSource {
             case 3:
                     if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
                         DispatchQueue.main.async {
-                            SKStoreReviewController.requestReview(in: scene)
+                            if #available(iOS 14.0, *) {
+                                SKStoreReviewController.requestReview(in: scene)
+                            } else {
+                                SKStoreReviewController.requestReview()
+                            }
                         }
                     }
                 
