@@ -12,9 +12,10 @@ platform :ios do
     build_app(
       export_method: "app-store",
       export_options: {
-      method: "app-store",
-      provisioningProfiles: {
-        "com.satsumabtc.app" => ENV["sigh_com.satsumabtc.app_appstore_profile-name"]
+        method: "app-store",
+        provisioningProfiles: {
+          "com.satsumabtc.app" => ENV["sigh_com.satsumabtc.app_appstore_profile-name"]
+        }
       }
     )
     upload_to_testflight(skip_waiting_for_build_processing: true)
