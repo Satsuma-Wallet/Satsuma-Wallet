@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
-      - run: brew install automake autoconf libtool
+      - run: brew install automake autoconf libtool gnu-sed
       - run: bundle install
       - run: pod install
       - run: bundle exec fastlane ios beta
