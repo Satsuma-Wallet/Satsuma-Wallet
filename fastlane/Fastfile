@@ -3,9 +3,7 @@ platform :ios do
     setup_ci if ENV['CI']
     match(type: 'appstore', readonly: true)
     disable_automatic_code_signing(path: "Satsuma.xcodeproj")
-    build_app(
-          export_method: options[:export_method],
-    )
+    build_app
     upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 
