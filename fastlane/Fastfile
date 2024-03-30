@@ -1,8 +1,13 @@
 platform :ios do
   lane :beta do
     setup_ci if ENV['CI']
-    match(type: 'appstore')
+    match(type: 'appstore', readonly: true)
     build_app
     upload_to_testflight(skip_waiting_for_build_processing: true)
   end
+
+  lane :certificates do
+    match(type: 'appstore')
+  end
+
 end
