@@ -9,6 +9,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - run: brew install automake
       - run: bundle install
       - run: pod install
       - run: bundle exec fastlane ios beta
