@@ -2,7 +2,7 @@ platform :ios do
   lane :beta do
     setup_ci if ENV['CI']
     match(type: 'appstore', readonly: true)
-    disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
+    #disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
     update_project_provisioning(
       xcodeproj: "Satsuma.xcodeproj",
       target_filter: "Satsuma",
@@ -11,6 +11,7 @@ platform :ios do
     )
     build_app(
       export_method: "app-store",
+      configuration: "Release",
       export_options: {
         method: "app-store",
         provisioningProfiles: {
