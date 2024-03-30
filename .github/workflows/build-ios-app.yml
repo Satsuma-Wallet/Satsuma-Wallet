@@ -10,6 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: bundle install
-      - run: bundle exec fastlane beta
+      - run: bundle exec fastlane ios beta
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
