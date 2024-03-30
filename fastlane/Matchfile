@@ -1,0 +1,2 @@
+git_url("https://github.com/Satsuma-Wallet/match-certificates.git")
+app_identifier("com.satsumabtc.app")
