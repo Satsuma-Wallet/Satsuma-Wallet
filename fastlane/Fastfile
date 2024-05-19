@@ -17,7 +17,7 @@ platform :ios do
     app_store_connect_api_key(
       key_id: "T597TR8H2D",
       issuer_id: "40c1f6c4-5c7f-43fb-8a24-3e048298f88b",
-      key_content: ENV['APP_STORE_CONNECT_API_KEY']
+      key_content: ENV['APPSTORE_CONNECT_API_KEY']
     )
 
     upload_to_testflight(skip_waiting_for_build_processing: true, username: "taccolaaless@gmail.com")
