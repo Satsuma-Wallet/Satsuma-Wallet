@@ -1,6 +1,6 @@
 platform :ios do
   lane :beta do
-    #setup_ci if ENV['CI']
+    setup_ci if ENV['CI']
     match(type: 'appstore', readonly: true)
     #disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
     #update_project_provisioning(
