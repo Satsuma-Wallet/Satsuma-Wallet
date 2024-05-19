@@ -9,6 +9,9 @@ platform :ios do
     #  profile:ENV["sigh_com.satsumabtc.app_appstore_profile-path"],
     #  build_configuration: "Release"
     #)
+   increment_build_number(
+     build_number: ENV['CI_RUN_ID'] # set a specific number
+    )
     build_app(
       workspace: 'Satsuma.xcworkspace',
       export_method: "app-store",
