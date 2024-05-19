@@ -9,11 +9,11 @@ platform :ios do
     #  profile:ENV["sigh_com.satsumabtc.app_appstore_profile-path"],
     #  build_configuration: "Release"
     #)
-    build_app(
-      workspace: 'Satsuma.xcworkspace',
-      export_method: "app-store",
-      configuration: "Release"
-    )
+    #build_app(
+   #   workspace: 'Satsuma.xcworkspace',
+   #   export_method: "app-store",
+    #  configuration: "Release"
+   # )
     #upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 
