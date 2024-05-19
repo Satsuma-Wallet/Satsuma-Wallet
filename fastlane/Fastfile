@@ -2,22 +2,17 @@ platform :ios do
   lane :beta do
     setup_ci if ENV['CI']
     match(type: 'appstore', readonly: true)
-    disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
-    update_project_provisioning(
-      xcodeproj: "Satsuma.xcodeproj",
-      target_filter: "Satsuma",
-      profile:ENV["sigh_com.satsumabtc.app_appstore_profile-path"],
-      build_configuration: "Release"
-    )
+    #disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
+    #update_project_provisioning(
+    #  xcodeproj: "Satsuma.xcodeproj",
+    #  target_filter: "Satsuma",
+    #  profile:ENV["sigh_com.satsumabtc.app_appstore_profile-path"],
+    #  build_configuration: "Release"
+    #)
     build_app(
+      workspace: 'Satsuma.xcworkspace',
       export_method: "app-store",
-      configuration: "Release",
-      export_options: {
-        method: "app-store",
-        provisioningProfiles: {
-          "com.satsumabtc.app" => ENV["sigh_com.satsumabtc.app_appstore_profile-name"]
-        }
-      }
+      configuration: "Release"
     )
     #upload_to_testflight(skip_waiting_for_build_processing: true)
   end
