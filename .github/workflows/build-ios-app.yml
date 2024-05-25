@@ -1,9 +1,8 @@
 name: build-ios-app
 on:
-  push:
+  workflow_dispatch:
     branches:
-      - 'master'
-      - 'ci/build'
+      - main
 jobs:
   build:
     runs-on: macos-latest
