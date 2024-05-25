@@ -1,0 +1,33 @@
+platform :ios do
+  lane :beta do
+    setup_ci if ENV['CI']
+    match(type: 'appstore', readonly: true)
+    #disable_automatic_code_signing(path: "Satsuma.xcodeproj", team_id: "9ZH57JV25G")
+    #update_project_provisioning(
+    #  xcodeproj: "Satsuma.xcodeproj",
+    #  target_filter: "Satsuma",
+    #  profile:ENV["sigh_com.satsumabtc.app_appstore_profile-path"],
+    #  build_configuration: "Release"
+    #)
+   increment_build_number(
+     build_number: ENV['CI_RUN_ID'] # set a specific number
+    )
+    build_app(
+      workspace: 'Satsuma.xcworkspace',
+      export_method: "app-store",
+      configuration: "Release"
+    )
+    app_store_connect_api_key(
+      key_id: "T597TR8H2D",
+      issuer_id: "40c1f6c4-5c7f-43fb-8a24-3e048298f88b",
+      key_content: ENV['APPSTORE_CONNECT_API_KEY']
+    )
+
+    upload_to_testflight(skip_waiting_for_build_processing: true, username: "taccolaaless@gmail.com")
+  end
+
+  lane :certificates do
+    match(type: 'appstore')
+  end
+
+end

@@ -1,0 +1,3 @@
+git_url("git@github.com:Satsuma-Wallet/match-certificates.git")
+app_identifier("com.satsumabtc.app")
+username("taccolaaless@gmail.com")
